@@ -1,0 +1,531 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>C:\w\b7e0dd2fe37e34b\UnitySdk\Improbable.Unity\build\Editor\Improbable.EditorDll</name>
+    </assembly>
+    <members>
+        <member name="T:Improbable.Unity.Editor.Addons.SpatialCommand">
+            <summary>
+            Allow each user to specify the location of the spatial command.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Addons.SpatialCommand.Name">
+            <inheritdoc cref="ISpatialOsEditorAddon" />
+        </member>
+        <member name="P:Improbable.Unity.Editor.Addons.SpatialCommand.Vendor">
+            <inheritdoc cref="ISpatialOsEditorAddon" />
+        </member>
+        <member name="P:Improbable.Unity.Editor.Addons.SpatialCommand.Icon">
+            <inheritdoc cref="ISpatialOsEditorAddon" />
+        </member>
+        <member name="P:Improbable.Unity.Editor.Addons.SpatialCommand.SpatialPath">
+            <summary>
+            Returns the user-configured location of spatial[.exe], or simply "spatial" if it's not set.
+            </summary>
+            <remarks>
+            If +spatialCommandPath "/path/to/spatial" is specified on the command line, it is used in preference to any user
+            settings.
+            By default, it is assumed that "spatial" will be on the system PATH.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Addons.SpatialCommand.OnSettingsGui(UnityEngine.Rect)">
+            <inheritdoc cref="ISpatialOsEditorAddonSettings" />
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.IPackager.Prepare(System.String)">
+            <param name="packagePath">the working directory that unity has built into.</param>
+            <remarks>
+            An IPackager takes a built Unity player and calls Prepare with the path where it's located.
+            It gives you the opportunity to copy over any extra files that the worker needs to be run,
+            before it is packaged, ready for consumption by SpatialOS.
+            To configure the IPackager in use, set the UnityPlayerBuilder.GetPackager function to return your custom packager.
+            </remarks>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents">
+            <summary>
+            Inherit from this interface to provide custom behavior related to the SpatialOS player building process.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents.BeginBuild">
+            <summary>
+            Called before any players are built.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents.EndBuild">
+            <summary>
+            Called after all players are built.
+            </summary>
+            <remarks>
+            This will always be called, even if all players are not successfully built.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents.GetScenes(Improbable.Unity.WorkerPlatform)">
+            <summary>
+            Called between <see cref="M:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents.BeginBuild" /> and <see cref="M:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents.EndBuild" />, for each worker type that is built.
+            Please reference <see cref="P:UnityEditor.BuildPlayerOptions.scenes" /> for more information about how the returned array of scenes is used by Unity's build process.
+            </summary>
+            <param name="workerType">The type of the worker being built.</param>
+            <returns>An array of all scenes that should be included in the build.</returns>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents.BeginPackage(Improbable.Unity.WorkerPlatform,UnityEditor.BuildTarget,Improbable.Unity.EditorTools.Build.Config,System.String)">
+            <summary>
+            Called between <see cref="M:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents.BeginBuild" /> and <see cref="M:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents.EndBuild" />, for each worker type that is packaged.
+            Implement this to modify the contents of the <paramref name="packagePath" /> directory before packaging.
+            </summary>
+            <param name="workerType">The type of the worker being packaged.</param>
+            <param name="target">The target platform for the player being packaged.</param>
+            <param name="config">The configuration associated with the player being packaged.</param>
+            <param name="packagePath">The path that will be packaged.</param>
+        </member>
+        <member name="P:Improbable.Unity.EditorTools.Build.NativePluginManager.PlatformPlugin.PluginName">
+            <summary>
+            The name of the plugin.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.EditorTools.Build.NativePluginManager.PlatformPlugin.CompatibleWithEditor">
+            <summary>
+            Whether the plugin should be marked as compatible with the editor.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.PlayerBuildConfiguation">
+            <summary>
+            The class that represents the structure of the whole player-build-config.json file, i.e.
+            the configuration for building Unity players.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.GlobalConfig">
+            <summary>
+            The global build configuration that applies to all built players.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.PluginConfig">
+            <summary>
+            The global build configuration for Unity plugins.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.Enviroment">
+            <summary>
+            The configuration for a particular build environment when building Unity players.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.Config">
+            <summary>
+            The build configuration for a particular Unity player.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.PlayerCompression">
+            <summary>
+            Indicate whether or not built-out players should be compressed.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.ProtoMessagesTypeModelPrecompiler">
+            <summary>
+            Precompiles all schema-generated code and their (de)serializers into a .dll
+            to be included for for iOS build target compatibility.
+            Also precompiles the (de)serializers of proto messages defined and included
+            within Improbable.WorkerSdkCsharp.dll.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.SimpleBuildSystem">
+            <summary>
+            This is a simple default build system that will compile assets and build workers.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.AllWorkerTypes">
+            <summary>
+            A list of all default types of players to build.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.BuildAction">
+            <summary>
+            Override this to customize the actions that occur during "spatial worker build".
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.CleanAction">
+            <summary>
+            Override this to customize the actions that occur during "spatial worker clean".
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.CodegenAction">
+            <summary>
+            Override this to customize the actions that occur during "spatial worker codegen".
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.CreatePlayerBuildEventsAction">
+            <summary>
+            Override this to provide custom build events when building players.
+            This will be called once each time <see cref="M:Improbable.Unity.EditorTools.Build.UnityPlayerBuilders.BuildDeploymentPlayers(System.Collections.Generic.IList{System.String})" /> and <see cref="M:Improbable.Unity.EditorTools.Build.UnityPlayerBuilders.BuildDevelopmentPlayers(System.Collections.Generic.IList{System.String})" /> is called.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.Target">
+            <summary>
+            The name of the build target to run. If empty (the default) all targets will run.
+            Can be overridden with the IMPROBABLE_BUILD_TARGET environment variable.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.WorkersToBuild">
+            <summary>
+            A list of Worker names to build. If it is null or empty, then all available workers will be used.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.GetWorkerTypesToBuild(System.String[])">
+            <summary>
+            The name(s) of the workers to build. Specify multiple targets by separating them with a comma.
+            For example: "UnityClient,UnityWorker".
+            </summary>
+            <remarks>
+            Currently, the only possible values are "UnityWorker" and "UnityClient".
+            Defaults to AllWorkerTypes if the flag is not specified.
+            If commandLine is null, defaults to using <code>Environment.GetCommandLineArgs();</code>.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.Build">
+            <summary>
+            This is meant to be invoked by external build processes.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.Clean">
+            <summary>
+            This is meant to be invoked by external build processes.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.CleanPlayers">
+            <summary>
+            Cleans player build directories and assemblies.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.CleanPlayerAssemblies(System.Collections.Generic.IList{Improbable.Unity.EditorTools.Build.UnityPlayerBuilder})">
+            <summary>
+            Cleans assemblies generated by the given player builders.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.RetrievePlugins">
+            <summary>
+            Retrieves plugins for a Unity worker.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.DefaultBuild">
+            <summary>
+            Performs default build steps for a Unity worker.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.DefaultClean">
+            <summary>
+            Performs default clean steps for a Unity worker.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.DefaultCodegen">
+            <summary>
+            Performs default codegen steps for a Unity workers.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SimpleBuildSystem.CleanDeployedFramework">
+            <summary>
+            Removes all the elements of the framework that were deployed via spatial build.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Build.SingleScenePlayerBuildEvents">
+            <summary>
+            Opens a single Unity scene per worker type.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.EditorTools.Build.SingleScenePlayerBuildEvents.WorkerToScene">
+            <summary>
+            Provides a mapping from the worker type to a path to a scene to load.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SingleScenePlayerBuildEvents.BeginBuild">
+            <inheritdoc cref="IPlayerBuildEvents" />
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SingleScenePlayerBuildEvents.EndBuild">
+            <inheritdoc cref="IPlayerBuildEvents" />
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SingleScenePlayerBuildEvents.GetScenes(Improbable.Unity.WorkerPlatform)">
+            <inheritdoc cref="IPlayerBuildEvents" />
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SingleScenePlayerBuildEvents.BeginPackage(Improbable.Unity.WorkerPlatform,UnityEditor.BuildTarget,Improbable.Unity.EditorTools.Build.Config,System.String)">
+            <inheritdoc cref="IPlayerBuildEvents" />
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.SingleScenePlayerBuildEvents.ProcessScene(System.String)">
+            <summary>
+            Override to modify the scene before building.
+            </summary>
+            <remarks>This is called just after the scene is loaded by <see cref="M:Improbable.Unity.EditorTools.Build.SingleScenePlayerBuildEvents.GetScenes(Improbable.Unity.WorkerPlatform)" />.</remarks>
+            <param name="sceneName">The name of the scene to modify</param>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.Build.UnityPlayerBuilder.GetPackager">
+            <remarks>This is obsolete, please see <see cref="T:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents" /> to customize player packaging.</remarks>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.Build.UnityPlayerBuilder.ProcessScene">
+            <remarks>This is obsolete, please see <see cref="T:Improbable.Unity.EditorTools.Build.IPlayerBuildEvents" /> to customize scene processing.</remarks>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.Build.UnityPlayerBuilders.RetrievePlayerPlugins(System.Collections.Generic.IList{Improbable.Unity.EditorTools.Build.UnityPlayerBuilder})">
+            <summary>
+            Retrieves plugins for deployment players.
+            </summary>
+        </member>
+        <member name="T:Improbable.Editor.Configuration.ConfigNames">
+            <summary>
+            Provides command line arguments to control editor-related operations.
+            </summary>
+        </member>
+        <member name="F:Improbable.Editor.Configuration.ConfigNames.BuildWorkerTypes">
+            <summary>
+            The name(s) of the worker types that should be built.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Core.DefaultWorkerProvider">
+            <summary>
+            Provides workers from the worker.json files scanned from the worker's folder.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Editor.Core.ISpatialOsEditorAddon">
+            <summary>
+            Implements a SpatialOS Addon for the Unity Editor.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.ISpatialOsEditorAddon.Name">
+            <summary>
+            The name of the editor, as displayed to the user.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.ISpatialOsEditorAddon.Vendor">
+            <summary>
+            The name of the vendor, as displayed to the user.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.ISpatialOsEditorAddon.Icon">
+            <summary>
+            An optional icon to display.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Editor.Core.ISpatialOsEditorAddonBuild">
+            <summary>
+            Allows an addon to present a user interface.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.ISpatialOsEditorAddonBuild.OnDevGui(UnityEngine.Rect)">
+            <summary>
+            Called by the <see cref="T:Improbable.Unity.EditorTools.SpatialOsWindow" /> when the addon is visible.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Editor.Core.ISpatialOsEditorAddonSettings">
+            <summary>
+            Allows an addon to present an interface for modifying its settings.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.ISpatialOsEditorAddonSettings.OnSettingsGui(UnityEngine.Rect)">
+            <summary>
+            Called by the <see cref="T:Improbable.Unity.EditorTools.SpatialOsWindow" /> when the addon needs to render settings.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Editor.Core.ISpatialOsEditorAddonToolbar">
+            <summary>
+            Allows an addon to present an interface in the development toolbar.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.ISpatialOsEditorAddonToolbar.OnToolbarGui(UnityEngine.Rect)">
+            <summary>
+            Called by the <see cref="T:Improbable.Unity.EditorTools.SpatialOsWindow" /> when the addon needs to render to the toolbar.
+            </summary>
+        </member>
+        <member name="T:Improbable.Editor.Core.SharedGuiContent">
+            <summary>
+            Gui-related content to provide a cohesive user experience.
+            </summary>
+        </member>
+        <member name="P:Improbable.Editor.Core.SharedGuiContent.MinimalLabelStyle">
+            <summary>
+            Draws a label that is sized to its content.
+            </summary>
+        </member>
+        <member name="P:Improbable.Editor.Core.SharedGuiContent.BoldFoldout">
+            <summary>
+            A foldout header with bold text.
+            </summary>
+        </member>
+        <member name="M:Improbable.Editor.Core.SharedGuiContent.LoadAndCacheImage(UnityEngine.Texture2D@,System.String)">
+            <summary>
+            Creates or finds a texture from a Base64-encoded string.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Editor.Core.SpatialOsAuxWindow.AddonUiStateDictinoary">
+            <summary>
+            Unity can't serialize generics directly.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Editor.Core.SpatialOsEditor">
+            <summary>
+            Provides SpatialOS-specific functionality for the Unity Editor.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.SpatialOsEditor.WorkerRootDir">
+            <summary>
+            The absolute path of the worker.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.SpatialOsEditor.ApplicationRootDir">
+            <summary>
+            The absolute path of the SpatialOS project.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.SpatialOsEditor.ProjectDescriptor">
+            <summary>
+            Contains information about the SpatialOS project as a whole.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.SpatialOsEditor.WorkerSelection">
+            <summary>
+            Manages the selection of available workers.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.SpatialOsEditor.Workers">
+            <summary>
+            Workers that exist within the current Unity project.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.SpatialOsEditor.GetAddon``1">
+            <summary>
+            Gets an instance of a specific addon.
+            </summary>
+            <exception cref="T:System.Collections.Generic.KeyNotFoundException">If the addon is not registered.</exception>
+            &gt;</member>
+        <member name="M:Improbable.Unity.Editor.Core.SpatialOsEditor.RegisterAddon(Improbable.Unity.Editor.Core.ISpatialOsEditorAddon)">
+            <summary>
+            Registers an instance
+            </summary>
+            <exception cref="T:System.InvalidOperationException">If the addon is already registered.</exception>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.SpatialOsEditor.Addons">
+            <summary>
+            Returns a list of all currently-registered addons.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.SpatialOsEditor.RunProcess(System.String,System.String,System.String)">
+            <summary>
+            Temporary solution for running external processes.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.SpatialOsEditor.RunPausedProcess(System.String,System.String,System.String)">
+            <summary>
+            Temporary solution for running external processes.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.SpatialOsEditor.InitializeWorkerSelection(Improbable.Unity.Editor.Core.WorkerSelection)">
+            <summary>
+            Read the names of workers from a text file, one worker name per line. Empty lines are ignored.
+            </summary>
+            <remarks>
+            This exists because we want to store these per-unity project, so the filesystem is the best place.
+            EditorPrefs is global to all Unity instances.
+            </remarks>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.SpatialOsWindow">
+            <summary>
+            Provides a user interface to common SpatialOS-related development commands.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.EditorTools.SpatialOsWindow.SharedContent">
+            <summary>
+            Accesses common GUI system content and helpers.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Editor.Core.SpatialOsWorker">
+            <summary>
+            Represents a worker in the current project.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.SpatialOsWorker.Name">
+            <summary>
+            The name of the worker.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Editor.Core.WorkerSelection">
+            <summary>
+            Manages the selection of the available workers in the Unity project.
+            </summary>
+        </member>
+        <member name="E:Improbable.Unity.Editor.Core.WorkerSelection.OnWorkerSelectionChanged">
+            <summary>
+            Invoked when the set of selected workers changes.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.WorkerSelection.SelectedWorkers">
+            <summary>
+            A set of selected worker instances.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Editor.Core.WorkerSelection.AnyWorkersSelected">
+            <summary>
+            Returns true if any workers are selected.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.WorkerSelection.SelectWorker(Improbable.Unity.Editor.Core.SpatialOsWorker,System.Boolean)">
+            <summary>
+            Selects or deselects a worker.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Editor.Core.WorkerSelection.IsWorkerSelected(Improbable.Unity.Editor.Core.SpatialOsWorker)">
+            <summary>
+            Returns true if the worker is selected.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Internal.EditorObjectStateManager">
+            <summary>
+            Utility class for storing state of Unity editor components.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.EditorTools.PrefabExport.EntityPrefabExporter.ExportEntityPrefabs(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{UnityEditor.BuildTarget})">
+            <summary>
+            Exports all entity prefabs for Development and Deployment, for each worker type.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.PrefabExport.EntityPrefabExportMenus.OnExportAllEntityPrefabs">
+            <summary>
+            This is called whenever entity prefabs need to be exported for all build targets.
+            This can be done from within the editor, or from external sources like build systems.
+            By default its value is the baseline behaviour, which can be saved off and invoked
+            as part of a custom chain of events.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.PrefabExport.EntityPrefabExportMenus.OnExportDevelopmentEntityPrefabs">
+            <summary>
+            This is called whenever entity prefabs need to be exported for development targets.
+            This can be done from within the editor, or from external sources like build systems.
+            By default its value is the baseline behaviour, which can be saved off and invoked
+            as part of a custom chain of events.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.PrefabExport.EntityPrefabExportMenus.OnExportSelectedEntityPrefabs">
+            <summary>
+            This is called when we need to export the entity prefabs that are currently selected in the Project view.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.PrefabExport.EntityPrefabExportMenus.OnExportSelectedDevelopmentEntityPrefabs">
+            <summary>
+            This is called when we need to export the entity prefabs that are currently selected in the Project view.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.EditorTools.PrefabExport.EntityPrefabExportMenus.OnCleanEntityPrefabs">
+            <summary>
+            This is called whenever entity prefabs need to be cleaned.
+            This can be done from within the editor, or from external sources like build systems.
+            By default its value is the baseline behaviour, which can be saved off and invoked
+            as part of a custom chain of events.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Util.EditorPaths">
+            <summary>
+            Contains common directories related to building assets and players.
+            </summary>
+            <remarks>
+            All directories should be in Unity path format e.g. "Foo/Bar".
+            </remarks>
+        </member>
+        <member name="T:Improbable.Unity.EditorTools.Util.SerializableDictionary`2">
+            <summary>
+            Unity's serialization system can't handle Dictionary by default.
+            Users must inherit their from this type to serialize it.
+            </summary>
+        </member>
+    </members>
+</doc>

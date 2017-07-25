@@ -1,0 +1,70 @@
+==========> Opened at 2017-07-24 08:05:13.867899291 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Mac --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=True --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Mac.zip
+info 'spatial file zip ./**' succeeded duration=2.4s category=success
+==========> Opened at 2017-07-24 08:05:37.858268184 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Mac --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-24 08:05:45.806241519 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Linux --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Linux --relativePath=. ./** --compression=True --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Linux/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Linux.zip
+info 'spatial file zip ./**' succeeded duration=2.5s category=success
+==========> Opened at 2017-07-24 18:34:56.654968731 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Windows --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Windows --relativePath=. ./** --compression=True --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Windows/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Windows.zip
+info 'spatial file zip ./**' succeeded category=success duration=1.0s
+==========> Opened at 2017-07-24 18:35:00.176705485 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Mac --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=True --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Mac.zip
+info 'spatial file zip ./**' succeeded duration=2.4s category=success
+==========> Opened at 2017-07-24 18:35:03.435376025 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Linux --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Linux --relativePath=. ./** --compression=True --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Linux/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Linux.zip
+info 'spatial file zip ./**' succeeded category=success duration=2.2s
+==========> Opened at 2017-07-24 18:38:11.726931499 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Mac --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-24 18:38:14.739770483 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Mac --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-24 18:45:38.588054154 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Mac --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityClient@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityClient@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-24 18:45:41.469336577 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Mac --basePath=/Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/expand/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/expand
+info Finding /Users/trefethen/Documents/unity/expand/workers/unity/build/worker/UnityWorker@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/expand/build/assembly/worker/UnityWorker@Mac.zip
+info 'spatial file zip ./**' succeeded category=success duration=0.1s

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>C:\w\b7e0dd2fe37e34b\UnitySdk\Improbable.Unity\build\EditorAddon\Improbable.Unity.EditorAddon.SpatialUpload\Improbable.Unity.EditorAddon.SpatialUpload</name>
+    </assembly>
+    <members>
+        <member name="P:Improbable.Editor.Addons.SpatialUpload.SpatialUpload.Name">
+            <inheritdoc cref="ISpatialOsEditorAddon" />
+        </member>
+        <member name="P:Improbable.Editor.Addons.SpatialUpload.SpatialUpload.Vendor">
+            <inheritdoc cref="ISpatialOsEditorAddon" />
+        </member>
+        <member name="P:Improbable.Editor.Addons.SpatialUpload.SpatialUpload.Icon">
+            <inheritdoc cref="ISpatialOsEditorAddon" />
+        </member>
+        <member name="M:Improbable.Editor.Addons.SpatialUpload.SpatialUpload.OnDevGui(UnityEngine.Rect)">
+            <inheritdoc cref="ISpatialOsEditorAddonBuild" />
+        </member>
+    </members>
+</doc>

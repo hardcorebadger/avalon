@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>C:\w\b7e0dd2fe37e34b\UnitySdk\Improbable.Unity\build\EditorAddon\Improbable.Unity.EditorAddon.SpatialConnect\Improbable.Unity.EditorAddon.SpatialConnect</name>
+    </assembly>
+    <members>
+        <member name="P:Improbable.Editor.Addons.SpatialConnect.SpatialConnect.Name">
+            <inheritdoc cref="ISpatialOsEditorAddon" />
+        </member>
+        <member name="P:Improbable.Editor.Addons.SpatialConnect.SpatialConnect.Vendor">
+            <inheritdoc cref="ISpatialOsEditorAddon" />
+        </member>
+        <member name="P:Improbable.Editor.Addons.SpatialConnect.SpatialConnect.Icon">
+            <inheritdoc cref="ISpatialOsEditorAddon" />
+        </member>
+        <member name="M:Improbable.Editor.Addons.SpatialConnect.SpatialConnect.OnDevGui(UnityEngine.Rect)">
+            <inheritdoc cref="ISpatialOsEditorAddonBuild" />
+        </member>
+    </members>
+</doc>

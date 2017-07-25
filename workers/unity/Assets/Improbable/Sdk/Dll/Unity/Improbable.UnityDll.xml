@@ -1,0 +1,1962 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>C:\w\b7e0dd2fe37e34b\UnitySdk\Improbable.Unity\build\Unity\Improbable.UnityDll</name>
+    </assembly>
+    <members>
+        <member name="T:Improbable.Assets.IAssetDatabase`1">
+            <summary>
+            Maintains a cache of assets
+            </summary>
+        </member>
+        <member name="M:Improbable.Assets.IAssetDatabase`1.TryGet(System.String,`0@)">
+            <summary>
+            Returns <c>true</c> and sets the prefab game object output parameter to a valid instance if the prefab has been
+            successfully loaded via <see cref="M:Improbable.Assets.IAssetDatabase{`0}.LoadAsset(System.String,System.Action{`0},System.Action{System.Exception})" />.
+            If the prefab has not been loaded yet, then this method returns <c>false</c> and sets the prefab game object output
+            parameter to <c>null</c>.
+            </summary>
+            <param name="prefabName">the name of the prefab to obtain</param>
+            <param name="prefabGameObject">the prefab game object</param>
+            <returns>true if successful, otherwise false</returns>
+            <remarks>
+                <para>Subsequent calls to this method will return the same prefab game object instance (due to caching).</para>
+                <para>You must clone the returned prefab game object to make your own instance.</para>
+            </remarks>
+        </member>
+        <member name="M:Improbable.Assets.IAssetLoader`1.LoadAsset(System.String,System.Action{`0},System.Action{System.Exception})">
+            <summary>
+            Downloads an asset and invokes the callback when succeeded.
+            </summary>
+            <param name="prefabName">the name of the prefab for which to load the asset.</param>
+            <param name="onAssetLoaded">called after the asset has been loaded. This callback is called in the calling thread.</param>
+            <param name="onError">called if for any reason the asset loading failed. This callback is called in the calling thread.</param>
+            <remarks>
+                <para>This method is not blocking.</para>
+            </remarks>
+        </member>
+        <member name="T:Improbable.Assets.Platform">
+            <summary>
+            Platform provides methods to get prefab asset bundle suffixes for different platforms and build targets.
+            </summary>
+        </member>
+        <member name="T:Improbable.Assets.Platform.BuildPlatform">
+            <summary>
+            BuildPlatform is used instead of BuildTarget (which is defined only in UnityEditor).
+            </summary>
+        </member>
+        <member name="M:Improbable.Assets.Platform.RuntimePlatformToAssetBundleSuffix(UnityEngine.RuntimePlatform)">
+            <summary>
+            Returns the asset bundle suffix for the given platform.
+            </summary>
+        </member>
+        <member name="M:Improbable.Assets.Platform.BuildPlatformToAssetBundleSuffix(Improbable.Assets.Platform.BuildPlatform)">
+            <summary>
+            Returns the asset bundle suffix for the given build target.
+            </summary>
+        </member>
+        <member name="M:Improbable.Assets.Platform.PrefabNameToAssetBundleName(System.String)">
+            <summary>
+            Gets the asset bundle name for the given prefab name, by appending the correct suffix for the platform.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.CodeGeneration.ISpatialOsComponent">
+            <summary>
+            Unity companion component to SpatialOS component.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.CodeGeneration.ISpatialOsComponent.ComponentId">
+            <summary>
+            Gets the component ID of this component.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.CodeGeneration.ISpatialOsComponent.HasAuthority">
+            <summary>
+            Returns whether or not we have authority on this component.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.CodeGeneration.ISpatialOsComponent.EntityId">
+            <summary>
+            Returns the entity ID of this component.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.CodeGeneration.ISpatialOsComponent.IsComponentReady">
+            <summary>
+            Returns whether or not the component has received its first set of values and is listening for updates.
+            </summary>
+        </member>
+        <member name="E:Improbable.Unity.CodeGeneration.ISpatialOsComponentInternal.OnAuthorityChange">
+            <summary>
+            Invoked when authority changes for this component.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.CodeGeneration.ISpatialOsComponentInternal.Init(Improbable.Unity.Core.ISpatialCommunicator,Improbable.Unity.Internal.EntityObject)">
+            <summary>
+            Initializes the SpatialOsComponent
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.Commander.SendCommand``3(Improbable.Entity.Component.ICommandDescriptor{``0,``1,``2},``1,Improbable.EntityId,System.Nullable{System.TimeSpan})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.Commander.SendCommand``3(Improbable.Entity.Component.IComponentWriter,Improbable.Entity.Component.ICommandDescriptor{``0,``1,``2},``1,Improbable.EntityId,System.Nullable{System.TimeSpan})">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.Core.CommandResponseHandler`1">
+            <summary>
+            The default implementation of <see cref="!:ICommandResponseHandler&lt;TResponse&gt;" />.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.CommandResponseHandler`1.Wrap(System.Action{Improbable.Unity.Core.CommandCallback{`0}})">
+            <summary>
+            Utility function for wrapping callbacks into CommandResponseHandler objects.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.CommandResponseHandler`1.OnSuccess(Improbable.Unity.Core.CommandSuccessCallback{`0})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.CommandResponseHandler`1.OnFailure(Improbable.Unity.Core.CommandFailureCallback)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.ReserveEntityId(Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.ReserveEntityIdResult},System.Nullable{System.TimeSpan})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.CreateEntity(Improbable.EntityId,Improbable.Worker.Entity,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.CreateEntityResult},System.Nullable{System.TimeSpan})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.CreateEntity(Improbable.Worker.Entity,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.CreateEntityResult},System.Nullable{System.TimeSpan})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.DeleteEntity(Improbable.EntityId,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.DeleteEntityResult},System.Nullable{System.TimeSpan})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.SendQuery(Improbable.Worker.Query.EntityQuery,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.EntityQueryResult},System.Nullable{System.TimeSpan})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.SendCommand``2(Improbable.EntityId,Improbable.Worker.ICommandRequest{``0},System.Func{Improbable.Worker.ICommandResponse{``0},``1},Improbable.Unity.Core.CommandCallback{``1},System.Nullable{System.TimeSpan})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.RegisterCommandResponse``2(System.Func{Improbable.Worker.ICommandResponse{``0},``1})">
+            <summary>
+            This method is required to prevent Unity compiler issues.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.ExtractResponse``2(System.Func{Improbable.Worker.ICommandResponse{``0},``1},Improbable.Worker.CommandResponseOp{``0})">
+            <summary>
+            This method is required to prevent Unity compiler issues.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.SendCommandRequest``1(Improbable.EntityId,Improbable.Worker.ICommandRequest{``0},System.UInt32)">
+            <summary>
+            This method is required to prevent Unity compiler issues.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ComponentCommander.ForgetRequestId(System.UInt32)">
+            <summary>
+            Removes requestId from the dictionary of known request ids.
+            </summary>
+            <remarks>
+            This is used by the old Commander implementation, and should be removed when possible.
+            </remarks>
+        </member>
+        <member name="T:Improbable.Unity.Core.ICommandCallbackResponse`1">
+            <summary>
+            This wraps up the response from a command call.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.ICommandCallbackResponse`1.Response">
+            <summary>
+            The value returned by the callee. Might be null in case no response was received.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.ICommandErrorDetails">
+            <summary>
+            Contains the details of the command invocation error.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.ICommandErrorDetails.StatusCode">
+            <summary>
+            Whether or not the command was successful.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.ICommandErrorDetails.ErrorMessage">
+            <summary>
+            The error message returned in case the command was not successful.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.CommandCallbackResponse`1">
+            <summary>
+            This wraps up the response from a command call.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.CommandCallbackResponse`1.StatusCode">
+            <summary>
+            Whether or not the command was successful.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.CommandCallbackResponse`1.ErrorMessage">
+            <summary>
+            The error message returned in case the command was not successful.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.CommandCallbackResponse`1.Response">
+            <summary>
+            The value returned by the callee. Might be null in case no response was received.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.ICommandResponseHandler`1">
+            <summary>
+            Allows for registration of callbacks for success or failure of commands.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandResponseHandler`1.OnSuccess(Improbable.Unity.Core.CommandSuccessCallback{`0})">
+            <summary>
+            Registers callback to be invoked when command succeeded.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandResponseHandler`1.OnFailure(Improbable.Unity.Core.CommandFailureCallback)">
+            <summary>
+            Registers callback to be invoked when command failed.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.ICommandSender">
+            <summary>
+            An interface to the old style of sending commands from component writers.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.SendCommand``3(Improbable.Entity.Component.IComponentWriter,Improbable.Entity.Component.ICommandDescriptor{``0,``1,``2},``1,Improbable.EntityId,Improbable.Unity.Core.CommandCallback{``2},System.Nullable{System.TimeSpan})">
+            <summary>
+            Invokes a command on an entity's component.
+            The callback may be null if you wish to 'fire and forget'.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.SendCommand``3(Improbable.Entity.Component.IComponentWriter,Improbable.Entity.Component.ICommandDescriptor{``0,``1,``2},``1,Improbable.EntityId,System.Nullable{System.TimeSpan})">
+            <summary>
+            Invokes a command on an entity's component.
+            Returns an object that allows you to specify
+            callbacks to be invoked in case of the command's success
+            or failure. <see cref="!:ICommandResponseHandler&lt;TResponse&gt;" /></summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.ReserveEntityId(Improbable.Entity.Component.IComponentWriter,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.ReserveEntityIdResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Reserves an entity ID for later use in creating an entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.ReserveEntityId(Improbable.Entity.Component.IComponentWriter,System.Nullable{System.TimeSpan})">
+            <summary>
+            Reserves an entity ID for later use in creating an entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.CreateEntity(Improbable.Entity.Component.IComponentWriter,Improbable.EntityId,Improbable.Worker.Entity,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.CreateEntityResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Creates an entity with a previously reserved entity id.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.CreateEntity(Improbable.Entity.Component.IComponentWriter,Improbable.EntityId,Improbable.Worker.Entity,System.Nullable{System.TimeSpan})">
+            <summary>
+            Creates an entity with a previously reserved entity id.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.CreateEntity(Improbable.Entity.Component.IComponentWriter,Improbable.Worker.Entity,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.CreateEntityResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Creates an entity without needing to manually reserve an entity id.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.CreateEntity(Improbable.Entity.Component.IComponentWriter,Improbable.Worker.Entity,System.Nullable{System.TimeSpan})">
+            <summary>
+            Creates an entity without needing to manually reserve an entity id.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.DeleteEntity(Improbable.Entity.Component.IComponentWriter,Improbable.EntityId,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.DeleteEntityResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Deletes an entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.DeleteEntity(Improbable.Entity.Component.IComponentWriter,Improbable.EntityId,System.Nullable{System.TimeSpan})">
+            <summary>
+            Deletes an entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.SendQuery(Improbable.Entity.Component.IComponentWriter,Improbable.Worker.Query.EntityQuery,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.EntityQueryResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Sends a query and gets back a response.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ICommandSender.SendQuery(Improbable.Entity.Component.IComponentWriter,Improbable.Worker.Query.EntityQuery,System.Nullable{System.TimeSpan})">
+            <summary>
+            Sends a query and gets back a response.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IComponentCommander.SendCommand``2(Improbable.EntityId,Improbable.Worker.ICommandRequest{``0},System.Func{Improbable.Worker.ICommandResponse{``0},``1},Improbable.Unity.Core.CommandCallback{``1},System.Nullable{System.TimeSpan})">
+            <summary>
+            Sends a command. This method should not need to be used directly, as extension methods on ICommander are generated
+            for each command defined in the schema.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.IDescriptorCommander">
+            <summary>
+            An interface to the commander that uses command descriptors to send commands.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IDescriptorCommander.SendCommand``3(Improbable.Entity.Component.ICommandDescriptor{``0,``1,``2},``1,Improbable.EntityId,Improbable.Unity.Core.CommandCallback{``2},System.Nullable{System.TimeSpan})">
+            <summary>
+            Invokes a command on an entity's component.
+            The callback may be null if you wish to 'fire and forget'.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IDescriptorCommander.SendCommand``3(Improbable.Entity.Component.ICommandDescriptor{``0,``1,``2},``1,Improbable.EntityId,System.Nullable{System.TimeSpan})">
+            <summary>
+            Invokes a command on an entity's component.
+            Returns an object that allows you to specify
+            callbacks to be invoked in case of the command's success
+            or failure. <see cref="!:ICommandResponseHandler&lt;TResponse&gt;" /></summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.IWorkerCommandSender">
+            <summary>
+            An interface to the old style of sending commands from workers.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.IWorldCommander">
+            <summary>
+            An interface to the commander that sends world commands.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.ReserveEntityId(Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.ReserveEntityIdResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Reserves an entity ID for later use in creating an entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.ReserveEntityId(System.Nullable{System.TimeSpan})">
+            <summary>
+            Reserves an entity ID for later use in creating an entity.
+            Returns an object that allows you to specify
+            callbacks to be invoked in case of the command's success
+            or failure. <see cref="!:ICommandResponseHandler&lt;EntityId&gt;" /></summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.CreateEntity(Improbable.EntityId,Improbable.Worker.Entity,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.CreateEntityResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Creates an entity with a previously reserved entity id.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.CreateEntity(Improbable.EntityId,Improbable.Worker.Entity,System.Nullable{System.TimeSpan})">
+            <summary>
+            Creates an entity with a previously reserved entity id.
+            Returns an object that allows you to specify
+            callbacks to be invoked in case of the command's success
+            or failure. <see cref="!:ICommandResponseHandler&lt;EntityId&gt;" /></summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.CreateEntity(Improbable.Worker.Entity,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.CreateEntityResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Creates an entity without needing to manually reserve an entity id.
+            May take up to 2 * timeout to complete.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.CreateEntity(Improbable.Worker.Entity,System.Nullable{System.TimeSpan})">
+            <summary>
+            Creates an entity without needing to manually reserve an entity id.
+            May take up to 2 * timeout to complete.
+            Returns an object that allows you to specify
+            callbacks to be invoked in case of the command's success
+            or failure. <see cref="!:ICommandResponseHandler&lt;EntityId&gt;" /></summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.DeleteEntity(Improbable.EntityId,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.DeleteEntityResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Deletes an entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.DeleteEntity(Improbable.EntityId,System.Nullable{System.TimeSpan})">
+            <summary>
+            Deletes an entity.
+            Returns an object that allows you to specify
+            callbacks to be invoked in case of the command's success
+            or failure. <see cref="!:ICommandResponseHandler&lt;EntityId&gt;" /></summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.SendQuery(Improbable.Worker.Query.EntityQuery,Improbable.Unity.Core.CommandCallback{Improbable.Unity.Core.EntityQueries.EntityQueryResult},System.Nullable{System.TimeSpan})">
+            <summary>
+            Sends a query and gets back a response.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IWorldCommander.SendQuery(Improbable.Worker.Query.EntityQuery,System.Nullable{System.TimeSpan})">
+            <summary>
+            Sends a query and gets back a response.
+            Returns an object that allows you to specify
+            callbacks to be invoked in case of the command's success
+            or failure. <see cref="!:ICommandResponseHandler&lt;EntityQueryResult&gt;" /></summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.SpatialCommunicator">
+            <summary>
+            Implementation of <see cref="T:Improbable.Unity.Core.ISpatialCommunicator" /></summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.#ctor(Improbable.Worker.Connection,Improbable.Worker.Dispatcher,Improbable.Unity.Core.IDeferredActionDispatcher)">
+            <summary>
+            Creates a new Communicator with the given connection and dispatcher.
+            </summary>
+        </member>
+        <member name="E:Improbable.Unity.Core.SpatialCommunicator.ComponentAuthorityChanged">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.SendComponentUpdate``1(Improbable.EntityId,Improbable.Worker.IComponentUpdate{``0},System.Boolean)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.SendCommandResponse``1(Improbable.Worker.RequestId{Improbable.Worker.IncomingCommandRequest{``0}},Improbable.Worker.ICommandResponse{``0})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.SendCommandRequest``1(Improbable.EntityId,Improbable.Worker.ICommandRequest{``0},Improbable.Collections.Option{System.UInt32})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.SendReserveEntityIdRequest(Improbable.Collections.Option{System.UInt32})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.SendCreateEntityRequest(Improbable.Worker.Entity,Improbable.Collections.Option{Improbable.EntityId},Improbable.Collections.Option{System.UInt32})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.SendDeleteEntityRequest(Improbable.EntityId,Improbable.Collections.Option{System.UInt32})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.SendEntityQueryRequest(Improbable.Worker.Query.EntityQuery,Improbable.Collections.Option{System.UInt32})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.Defer(System.Action)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterAddComponent``1(System.Action{Improbable.Worker.AddComponentOp{``0}})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterRemoveComponent``1(System.Action{Improbable.Worker.RemoveComponentOp})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterComponentUpdate``1(System.Action{Improbable.Worker.ComponentUpdateOp{``0}})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterCommandRequest``1(System.Action{Improbable.Worker.CommandRequestOp{``0}})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterAuthorityChange``1(System.Action{Improbable.Worker.AuthorityChangeOp})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RemoveDispatcherCallback(System.UInt64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterCommandResponse``1(System.Action{Improbable.Worker.CommandResponseOp{``0}})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterReserveEntityIdResponse(System.Action{Improbable.Worker.ReserveEntityIdResponseOp})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterCreateEntityResponse(System.Action{Improbable.Worker.CreateEntityResponseOp})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterDeleteEntityResponse(System.Action{Improbable.Worker.DeleteEntityResponseOp})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterEntityQueryResponse(System.Action{Improbable.Worker.EntityQueryResponseOp})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.Remove(System.UInt64)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.RegisterComponentInterest(Improbable.EntityId,System.Collections.Generic.Dictionary{System.UInt32,Improbable.Worker.InterestOverride})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.SpatialCommunicator.HasAuthority(Improbable.EntityId,System.UInt32)">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.Core.DeferredActionDispatcher">
+            <summary>
+            Defers actions to be executed at a later time.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.DeferredActionDispatcher.DeferAction(System.Action)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.DeferredActionDispatcher.ProcessEvents">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.DeferredActionDispatcher.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.Core.IDeferredActionDispatcher">
+            <summary>
+            Defers actions to be executed at a later time.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IDeferredActionDispatcher.DeferAction(System.Action)">
+            <summary>
+            Defers the supplied action until the next call to ProcessEvents().
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IDeferredActionDispatcher.ProcessEvents">
+            <summary>
+            Invokes all deferred actions accumulated in the queue.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.IDispatchEventHandler">
+            <summary>
+            Exposes events to listen for incoming SpatialOS operations such as authority changes.
+            </summary>
+        </member>
+        <member name="E:Improbable.Unity.Core.IDispatchEventHandler.OnAuthorityChanged">
+            <summary>
+            Subscribed callbacks will be invoked whenever authority changes for any entity/component pair checked out on this worker.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.ISpatialCommunicator">
+            <summary>
+            Provides an interface between Unity classes such as the Commander and the generated component MonoBehaviours
+            and the classes used to communicate with SpatialOS: the Connection and the Dispatcher.
+            </summary>
+        </member>
+        <member name="E:Improbable.Unity.Core.ISpatialCommunicator.ComponentAuthorityChanged">
+            <summary>
+            Called when authority over a component changes.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.SendComponentUpdate``1(Improbable.EntityId,Improbable.Worker.IComponentUpdate{``0},System.Boolean)">
+            <summary>
+            Send a component update.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.SendCommandResponse``1(Improbable.Worker.RequestId{Improbable.Worker.IncomingCommandRequest{``0}},Improbable.Worker.ICommandResponse{``0})">
+            <summary>
+            Send a command response.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.SendCommandRequest``1(Improbable.EntityId,Improbable.Worker.ICommandRequest{``0},Improbable.Collections.Option{System.UInt32})">
+            <summary>
+            Send a command request.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.SendReserveEntityIdRequest(Improbable.Collections.Option{System.UInt32})">
+            <summary>
+            Send a reserve entity ID request.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.SendCreateEntityRequest(Improbable.Worker.Entity,Improbable.Collections.Option{Improbable.EntityId},Improbable.Collections.Option{System.UInt32})">
+            <summary>
+            Send a create entity request.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.SendDeleteEntityRequest(Improbable.EntityId,Improbable.Collections.Option{System.UInt32})">
+            <summary>
+            Send a delete entity request.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.SendEntityQueryRequest(Improbable.Worker.Query.EntityQuery,Improbable.Collections.Option{System.UInt32})">
+            <summary>
+            Send an entity query request.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.Defer(System.Action)">
+            <summary>
+            Defer an action until next time ProcessEvents() is called.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterAddComponent``1(System.Action{Improbable.Worker.AddComponentOp{``0}})">
+            <summary>
+            Register a callback to be invoked when a component is added.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterRemoveComponent``1(System.Action{Improbable.Worker.RemoveComponentOp})">
+            <summary>
+            Register a callback to be invoked when a component is removed.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterComponentUpdate``1(System.Action{Improbable.Worker.ComponentUpdateOp{``0}})">
+            <summary>
+            Register a callback to be invoked when a component is updated.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterCommandRequest``1(System.Action{Improbable.Worker.CommandRequestOp{``0}})">
+            <summary>
+            Register a callback to be invoked when a command request is received.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterAuthorityChange``1(System.Action{Improbable.Worker.AuthorityChangeOp})">
+            <summary>
+            Register a callback to be invoked when authority for a component changes.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterCommandResponse``1(System.Action{Improbable.Worker.CommandResponseOp{``0}})">
+            <summary>
+            Register a callback to be invoked whne a command response is received.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterReserveEntityIdResponse(System.Action{Improbable.Worker.ReserveEntityIdResponseOp})">
+            <summary>
+            Register a callback to be invoked when a reserve entity ID response is received.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterCreateEntityResponse(System.Action{Improbable.Worker.CreateEntityResponseOp})">
+            <summary>
+            Register a callback to be invoked when a create entity response is received.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterDeleteEntityResponse(System.Action{Improbable.Worker.DeleteEntityResponseOp})">
+            <summary>
+            Register a callback to be invoked when a delete entity response is received.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterEntityQueryResponse(System.Action{Improbable.Worker.EntityQueryResponseOp})">
+            <summary>
+            Register a callback to be invoked when an entity query response is received.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.Remove(System.UInt64)">
+            <summary>
+            Deregister a previously registered callback with the given callback key.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterComponentInterest(Improbable.EntityId,System.Collections.Generic.Dictionary{System.UInt32,Improbable.Worker.InterestOverride})">
+            <summary>
+            Register what components a given entity is interested in.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.HasAuthority(Improbable.EntityId,System.UInt32)">
+            <summary>
+            Return whether the worker has authority over a given entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterCriticalSection(System.Action{Improbable.Worker.CriticalSectionOp})">
+            <summary>
+            Registers a callback for <see cref="T:Improbable.Worker.CriticalSectionOp" />.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterAddEntity(System.Action{Improbable.Worker.AddEntityOp})">
+            <summary>
+            Registers a callback for <see cref="T:Improbable.Worker.AddEntityOp" />.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.ISpatialCommunicator.RegisterRemoveEntity(System.Action{Improbable.Worker.RemoveEntityOp})">
+            <summary>
+            Registers a callback for <see cref="T:Improbable.Worker.RemoveEntityOp" />.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.ProjectDescriptor">
+            <summary>
+            Represents a subset of the information in a SpatialOS project's spatialos.json.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.EntityObjectStorage">
+            <summary>
+            Used to associate an Unity Object with our EntityObject.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.EntityObjectStorage.Entity">
+            <summary>
+            The associated EntityObject.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IComponentInterestOverridesUpdateReceiver">
+            <summary>
+            Can be registered to an IEntityInterestedComponentsReporter to listen to updates to component interest overrides.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IComponentInterestOverridesUpdateReceiver.OnComponentInterestOverridesUpdated(Improbable.EntityId,System.Collections.Generic.Dictionary{System.UInt32,Improbable.Worker.InterestOverride})">
+            <summary>
+            Callback to be invoked when an entity's component interest overrides have changed.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IEntityComponentInterestOverridesUpdater">
+            <summary>
+            Calculates interested components of an entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityComponentInterestOverridesUpdater.InvalidateEntity(Improbable.EntityId,Improbable.Unity.Entity.IEntityObject)">
+            <summary>
+            Request recalculation of interested components for an entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityComponentInterestOverridesUpdater.RemoveEntity(Improbable.EntityId)">
+            <summary>
+            Cancels recalculation of interested components for an entity.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityComponentInterestOverridesUpdater.AddUpdateReceiver(Improbable.Unity.Entity.IComponentInterestOverridesUpdateReceiver)">
+            <summary>
+            Add an IComponentInterestOverridesUpdateReceiver which listens to update events.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityComponentInterestOverridesUpdater.RemoveUpdateReceiver(Improbable.Unity.Entity.IComponentInterestOverridesUpdateReceiver)">
+            <summary>
+            Remove an IComponentInterestOverridesUpdateReceiver and stop it from getting notified about update events.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IEntityComponents">
+            <summary>
+            Manages components attached to an entity.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.IEntityComponents.RegisteredComponents">
+            <summary>
+            Returns a set of interested component ids.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityComponents.RegisterInterestedComponent(System.UInt32,Improbable.Unity.CodeGeneration.ISpatialOsComponentInternal)">
+            <summary>
+            Add an interested component.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityComponents.DeregisterInterestedComponent(System.UInt32)">
+            <summary>
+            Removes an interested component.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityComponents.AddInvalidator(Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator)">
+            <summary>
+            Add an IEntityInterestedComponentsInvalidator which listens to potential changes in interested components.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityComponents.RemoveInvalidator(Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator)">
+            <summary>
+            Remove an IEntityInterestedComponentsInvalidator and stop it from getting notified about potential changes in interested components.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator">
+            <summary>
+            Can be registered to an IEntityComponents or IEntityVisualizers to listen to potential changes in interested components.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator.OnInterestedComponentsPotentiallyChanged(Improbable.EntityId)">
+            <summary>
+            Callback to be invoked when an entity's interested components have potentially changed.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IEntityObject">
+            <summary>
+            Contains information about a SpatialOS entity and its associated GameObject.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.IEntityObject.EntityId">
+            <summary>
+            Returns the entity's entity id.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.IEntityObject.PrefabName">
+            <summary>
+            Returns the entity's prefab name.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.IEntityObject.UnderlyingGameObject">
+            <summary>
+            Returns the GameObject associated with this entity.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.IEntityObject.Visualizers">
+            <summary>
+            Object for managing visualizers.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.IEntityObject.Components">
+            <summary>
+            Object for managing components.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IEntityTemplateProvider">
+            <summary>
+            An IEntityTemplateProvider can look up a GameObject to use as a template for a prefabName.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityTemplateProvider.PrepareTemplate(System.String,System.Action{System.String},System.Action{System.Exception})">
+            <summary>
+            PrepareTemplate is an asynchronous method guaranteed to be called at least once before the GameObject template required for a particular prefabName is requested.
+            Implementors must call onSuccess once the IEntityTemplateProvider is ready to accept GetEntityTemplate calls, and onError if it was unable to get ready.
+            </summary>
+            <param name="prefabName">The prefabName of the entity.</param>
+            <param name="onSuccess">the continuation to call if preparation for the entity asset was successful.</param>
+            <param name="onError">the continuation to call if preparation for the entity asset failed.</param>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityTemplateProvider.GetEntityTemplate(System.String)">
+            <summary>
+            GetEntityTemplate must return a template GameObject that will be instantiated to make new instances of entities with the same prefabName.
+            Subsequent calls with the same prefabName should return the same GameObject.
+            PrepareTemplate will always have been called at least once with this prefabName.
+            </summary>
+            <param name="prefabName">The prefab name of the entity.</param>
+            <returns>A GameObject respresenting the prefab with the given prefabName.</returns>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IEntityVisualizers">
+            <summary>
+            Manages the enabling and disabling of visualizers
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.IEntityVisualizers.ExtractedVisualizers">
+            <summary>
+            Returns a list of MonoBehaviours that use RequireAttribute to acquire Component readers and writers.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.IEntityVisualizers.OnUserException">
+            <summary>
+            Called when an exception is caught during the process of enabling or disabling a MonoBehaviour.
+            </summary>
+            <remarks>
+            Defaults to Debug.LogException.
+            </remarks>
+        </member>
+        <member name="P:Improbable.Unity.Entity.IEntityVisualizers.RequiredComponents">
+            <summary>
+            Returns a set of required component ids.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityVisualizers.AddInvalidator(Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator)">
+            <summary>
+            Add an IEntityInterestedComponentsInvalidator which listens to potential changes in interested components.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityVisualizers.RemoveInvalidator(Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator)">
+            <summary>
+            Remove an IEntityInterestedComponentsInvalidator and stop it from getting notified about potential changes in interested components.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityVisualizers.DisableVisualizers(System.Collections.Generic.IList{UnityEngine.MonoBehaviour})">
+            <summary>
+            Manually disable visualizers.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityVisualizers.HasAnyAuthority">
+            <summary>
+            Gets a value indicating that this entity has authority over at least one component.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityVisualizers.HasAuthority(System.UInt32)">
+            <summary>
+            Gets a value indicating whether or not the entity has authority over a particular component.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IEntityVisualizers.TryEnableVisualizers(System.Collections.Generic.IList{UnityEngine.MonoBehaviour})">
+            <summary>
+            Tries to manually enable visualizers.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IInterestedComponentUpdaterProvider">
+            <summary>
+            Interface for classes able to provide IEntityComponentInterestOverridesUpdater objects.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IInterestedComponentUpdaterProvider.GetEntityInterestedComponentsUpdater">
+            <summary>
+            Return an IEntityComponentInterestOverridesUpdater.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.ILocalEntities">
+            <summary>
+            Provides a view of all entities that exist on this worker.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IMutableLocalEntities">
+            <summary>
+            Interface for interacting with the <see cref="T:Improbable.Unity.Entity.IMutableLocalEntities" /> instances.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IMutableUniverse">
+            <summary>
+            Interface for interacting with the <see cref="T:Improbable.Unity.Entity.IUniverse" /> instances.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IMutableUniverse.AddEntity(Improbable.EntityId,Improbable.Unity.Entity.IEntityObject)">
+            <summary>
+            Adds the object to the universe with the given EntityId.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IMutableUniverse.Remove(Improbable.EntityId)">
+            <summary>
+            Removes the object with the given EntityId from the universe.
+            </summary>
+            <param name="entityId">
+            </param>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IMutableUniverse.Clear">
+            <summary>
+            Removes all objects from the universe.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IPipelineEntityComponentOpsReceiver">
+            <summary>
+            Provides an interface for accepting component related entity pipeline ops.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IPipelineEntityComponentOpsReceiver.OnAddComponentPipelineOp(Improbable.Unity.Core.AddComponentPipelineOp)">
+            <summary>
+            Endpoint for incoming AddComponent pipeline ops.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IPipelineEntityComponentOpsReceiver.OnRemoveComponentPipelineOp(Improbable.Unity.Core.RemoveComponentPipelineOp)">
+            <summary>
+            Endpoint for incoming RemoveComponent pipeline ops.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IPipelineEntityComponentOpsReceiver.OnComponentUpdatePipelineOp(Improbable.Unity.Core.UpdateComponentPipelineOp)">
+            <summary>
+            Endpoint for incoming UpdateComponent pipeline ops.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IPipelineEntityComponentOpsReceiver.OnAuthorityChangePipelineOp(Improbable.Unity.Core.ChangeAuthorityPipelineOp)">
+            <summary>
+            Endpoint for incoming ChangeAuthority pipeline ops.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IPrefabFactory`1">
+            <summary>
+            Provides methods to create and destroy entities.
+            </summary>
+            <typeparam name="T">
+            </typeparam>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IPrefabFactory`1.MakeComponent(`0,System.String)">
+            <summary>
+            Instantiates a GameObject from the given prefab.
+            </summary>
+            <param name="prefabGameObject">The prefab to instantiate.</param>
+            <param name="prefabName">The prefab name.</param>
+            <returns>A new instance of the given prefabGameObject.</returns>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IPrefabFactory`1.DespawnComponent(`0,System.String)">
+            <summary>
+            Destroys an existing GameObject.
+            </summary>
+            <param name="gameObject">The object that is in the game.</param>
+            <param name="prefabName">The prefab name of the prefab that the object was instantiated from.</param>
+        </member>
+        <member name="T:Improbable.Unity.Entity.IUniverse">
+            <summary>
+            Contains all of the entities that currently exist on this worker.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IUniverse.ContainsEntity(Improbable.EntityId)">
+            <summary>
+            Checks if the entityId currently exists on this worker.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IUniverse.Get(Improbable.EntityId)">
+            <summary>
+            Get the EntityObject associated with entityId, or null if it doesn't exist.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Entity.IUniverse.IterateOverAllEntityObjects(System.Action{Improbable.EntityId,Improbable.Unity.Entity.IEntityObject})">
+            <summary>
+            Applies the supplied action to every member of the Universe.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Entity.LocalEntities">
+            <summary>
+            Provides a view of all entities that exist on this worker.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.LocalEntities.Instance">
+            <summary>
+            Singleton instance of <see cref="T:Improbable.Unity.Entity.ILocalEntities" />.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Entity.LocalEntities.Internal">
+            <summary>
+            Mutable interface to <see cref="T:Improbable.Unity.Entity.IMutableLocalEntities" />.
+            </summary>
+            <remarks>
+            Should only be accessed from code related to entity lifecycle.
+            </remarks>
+        </member>
+        <member name="T:Improbable.Unity.Entity.LocalEntitiesImpl">
+            <summary>
+            Contains all of the entities that currently exist on this worker.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.EntityQueries.CreateEntityResult">
+            <summary>
+            Contains the result of CreateEntity command.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.EntityQueries.CreateEntityResult.CreatedEntityId">
+            <summary>
+            Returns the EntityId of the created entity.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.EntityQueries.DeleteEntityResult">
+            <summary>
+            Contains the result of DeleteEntity command.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.EntityQueries.DeleteEntityResult.DeletedEntityId">
+            <summary>
+            Returns the EntityId that was deleted.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.EntityQueries.EntityQueryResult">
+            <summary>
+            Contains the result of a query.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.EntityQueries.EntityQueryResult.EntityCount">
+            <summary>
+            Returns the number of entities in the result set.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.EntityQueries.EntityQueryResult.Entities">
+            <summary>
+            Returns a map of entities keyed by their entity ids.
+            Empty if the query was just for a count.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.EntityQueries.ReserveEntityIdResult">
+            <summary>
+            Contains the result of ReserveEntityId command.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.EntityQueries.ReserveEntityIdResult.ReservedEntityId">
+            <summary>
+            Returns the EntityId that was reserved.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Internal.ComponentEditorDataObject`1">
+            <summary>
+            Class for bridging SpatialOS component classes with component editors in Unity Editor.
+            </summary>
+            <typeparam name="TComponent">
+            </typeparam>
+        </member>
+        <member name="P:Improbable.Unity.Internal.ComponentEditorDataObject`1.ComponentUpdateLogArray">
+            <summary>
+            Component update logs.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Internal.ComponentEditorDataObject`1.CommandRequestLogArray">
+            <summary>
+            Command request logs.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Internal.ComponentEditorDataObject`1.AverageComponentUpdatesPerSecond">
+            <summary>
+            Average component updates per second.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Internal.ComponentEditorDataObject`1.AverageCommandRequestsPerSecond">
+            <summary>
+            Average command requests per second.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.ComponentEditorDataObject`1.AttachComponent(`0)">
+            <summary>
+            Attaches SpatialOS generated component to this ComponentEditorDataObject.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.ComponentEditorDataObject`1.DetachComponent">
+            <summary>
+            Releases the reference to the component.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.ComponentEditorDataObject`1.UpdateEditorLogs">
+            <summary>
+            Called regularly to calculate wall time - based stats.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.ComponentEditorDataObject`1.LogComponentUpdate(System.String,System.Object)">
+            <summary>
+            Logs component update.
+            </summary>
+            <remarks>
+            Component update will only propagate to the log when SendUpdateLog() is called.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Internal.ComponentEditorDataObject`1.LogCommandRequest(System.DateTime,System.String,System.Object)">
+            <summary>
+            Logs command request.
+            </summary>
+            <remarks>
+            Component update will only propagate to the log when SendUpdateLog() is called.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Internal.ComponentEditorDataObject`1.SendUpdateLog">
+            <summary>
+            Writes the combined update message to the log.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityComponents.#ctor(Improbable.EntityId)">
+            <summary>
+            Creates a new instance of <c>EntityComponents</c>.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Internal.EntityComponents.RegisteredComponents">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityComponents.RegisterInterestedComponent(System.UInt32,Improbable.Unity.CodeGeneration.ISpatialOsComponentInternal)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityComponents.DeregisterInterestedComponent(System.UInt32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityComponents.AddInvalidator(Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityComponents.RemoveInvalidator(Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator)">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.Internal.EntityObject">
+            <summary>
+            Contains information about a SpatialOS entity and its associated GameObject.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityObject.#ctor(Improbable.EntityId,UnityEngine.GameObject,System.String,Improbable.Unity.Entity.IInterestedComponentUpdaterProvider)">
+            <summary>
+            Creates a new instance of <c>EntityObject</c>.
+            </summary>
+            <param name="entityId">The associated EntityId.</param>
+            <param name="underlyingGameObject">The GameObject associated with the Entity.</param>
+            <param name="prefabName">The prefab name associated with the Entity.</param>
+            <param name="interestedComponentUpdaterProvider">IInterestedComponentUpdaterProvider for callign OnInterestedComponentsPotentiallyChanged().</param>
+        </member>
+        <member name="P:Improbable.Unity.Internal.EntityObject.Visualizers">
+            <inheritdoc />
+        </member>
+        <member name="P:Improbable.Unity.Internal.EntityObject.Components">
+            <inheritdoc />
+        </member>
+        <member name="P:Improbable.Unity.Internal.EntityObject.PrefabName">
+            <inheritdoc />
+        </member>
+        <member name="P:Improbable.Unity.Internal.EntityObject.UnderlyingGameObject">
+            <inheritdoc />
+        </member>
+        <member name="P:Improbable.Unity.Internal.EntityObject.EntityId">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityObject.OnInterestedComponentsPotentiallyChanged(Improbable.EntityId)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityObject.Dispose">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityObject.OnAddComponentPipelineOp(Improbable.Unity.Core.AddComponentPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityObject.OnRemoveComponentPipelineOp(Improbable.Unity.Core.RemoveComponentPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityObject.OnComponentUpdatePipelineOp(Improbable.Unity.Core.UpdateComponentPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityObject.OnAuthorityChangePipelineOp(Improbable.Unity.Core.ChangeAuthorityPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.Internal.EntityVisualizers">
+            <summary>
+            Manages the enabling and disabling of visualizers
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.#ctor(Improbable.EntityId,UnityEngine.GameObject)">
+            <summary>
+            Create a new instance of <c>EntityVisualizers</c>.
+            </summary>
+            <param name="entityId">The EntityId associated with the entity.</param>
+            <param name="underlyingGameObject">The GameObject associated with the entity.</param>
+        </member>
+        <member name="P:Improbable.Unity.Internal.EntityVisualizers.ExtractedVisualizers">
+            <inheritdoc />
+        </member>
+        <member name="P:Improbable.Unity.Internal.EntityVisualizers.RequiredComponents">
+            <inheritdoc />
+        </member>
+        <member name="P:Improbable.Unity.Internal.EntityVisualizers.OnUserException">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.GetCopyOfRequiredComponents">
+            <summary>
+            For testing use only, i.e. this method should not be called by user code.
+            </summary>
+            <returns>A copy of the required components.</returns>
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.RegisterActivationController(Improbable.Unity.Internal.IMonobehaviourActivator)">
+            <summary>
+            Registers <see cref="T:Improbable.Unity.Internal.IMonobehaviourActivator" /> to be used intead
+            of the simple default implementation.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.Dispose">
+            <summary>
+            Disposing of entity visualizers is a subtle process. First, the visualisers are deactivated,
+            which can run user code --- this user code must run in an environment where everything
+            generally still works as expected; the exception is that calls to public methods of this
+            class will be ignored, because they could interfere with the disposal. Then, all event
+            handlers are removed; this should not trigger any events in itself. Only then, it is safe
+            to null visualizer fields.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.HasAnyAuthority">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.HasAuthority(System.UInt32)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.TryEnableVisualizers(System.Collections.Generic.IList{UnityEngine.MonoBehaviour})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.DisableVisualizers(System.Collections.Generic.IList{UnityEngine.MonoBehaviour})">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.OnComponentAdded(Improbable.EntityId,Improbable.Worker.IComponentMetaclass,System.Object)">
+            <summary>
+            For internal use only, i.e. this method should not be called by user code.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.OnComponentRemoved(Improbable.EntityId,Improbable.Worker.IComponentMetaclass,System.Object)">
+            <summary>
+            For internal use only, i.e. this method should not be called by user code.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.OnAuthorityChanged(Improbable.EntityId,Improbable.Worker.IComponentMetaclass,System.Boolean,System.Object)">
+            <summary>
+            For internal use only, i.e. this method should not be called by user code.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.AddInvalidator(Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Internal.EntityVisualizers.RemoveInvalidator(Improbable.Unity.Entity.IEntityInterestedComponentsInvalidator)">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.Internal.ICanAttachEditorDataObject">
+            <summary>
+            Implementing class can accept attaching of Editor Data Object.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.ICanAttachEditorDataObject.AttachEditorDataObject(Improbable.Unity.Internal.IComponentEditorDataObject)">
+            <summary>
+            Attaches the supplied editor data object.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.ICanAttachEditorDataObject.RemoveEditorDataObject">
+            <summary>
+            Removes attached editor data object.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Internal.IComponentEditorDataObject`1">
+            <summary>
+            Bridges SpatialOS component classes with component editors in Unity Editor.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Internal.IComponentEditorDataObject">
+            <summary>
+            Bridges SpatialOS component classes with component editors in Unity Editor.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Internal.IMonobehaviourActivator">
+            <summary>
+            Implementing class can enable or disable MonoBehaviours.
+            </summary>
+            <remarks>
+            Used in <see cref="T:Improbable.Unity.Internal.EntityVisualizers" />.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Internal.IMonobehaviourActivator.Enable(UnityEngine.MonoBehaviour)">
+            <summary>
+            Enable MonoBehaviour.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Internal.IMonobehaviourActivator.Disable(UnityEngine.MonoBehaviour)">
+            <summary>
+            Disable MonoBehaviour.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Internal.InternalLogicAttribute">
+            <summary>
+            This part of the public SpatialOS API is used for internal logic
+            of the SDK and may not follow the standard deprecation cycle.
+            </summary>
+            <remarks>
+            Do not take any dependency on this code, it may break between releases.
+            </remarks>
+        </member>
+        <member name="T:Improbable.Unity.Metrics.WorkerMetrics">
+            <summary>
+            This class is responsible for all of the metrics tracked by the application.
+            </summary>
+            <remarks>
+            It is not safe to access any members of this class from any thread other than the main thread.
+            </remarks>
+        </member>
+        <member name="P:Improbable.Unity.Metrics.WorkerMetrics.RawMetrics">
+            <summary>
+            Provides access to the underlying metrics object.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Metrics.WorkerMetrics.Gauges">
+            <summary>
+            Provides access to user-defined gauges.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Metrics.WorkerMetrics.Histograms">
+            <summary>
+            Provides access to user-defined histograms.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Metrics.WorkerMetrics.SetLoad(System.Double)">
+            <summary>
+            Sets the current worker load metric.
+            </summary>
+            <param name="load">
+            </param>
+        </member>
+        <member name="M:Improbable.Unity.Metrics.WorkerMetrics.IncrementGauge(System.String)">
+            <summary>
+            Increments the specified gauge by 1.
+            </summary>
+            <remarks>
+            If a gauge does not already exist, a new zeroed gauge will be created and then incremented.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Metrics.WorkerMetrics.DecrementGauge(System.String)">
+            <summary>
+            Decrements the specified gauge by 1.
+            </summary>
+            <remarks>
+            If a gauge does not already exist, a new zeroed gauge will be created and then incremented.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Metrics.WorkerMetrics.SetGauge(System.String,System.Double)">
+            <summary>
+            Sets the specified gauge to the value.
+            </summary>
+            <remarks>
+            If a gauge does not already exist, a new zeroed gauge will be created.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Metrics.WorkerMetrics.IncrementGaugeBy(System.String,System.Int32)">
+            <summary>
+            Increments the specified gauge by the specified amount.
+            </summary>
+            <remarks>
+            If a gauge does not already exist, a new zeroed gauge will be created and then incremented.
+            </remarks>
+        </member>
+        <member name="T:UnityEngine.GameObjectExtensions">
+            <summary>
+            Helper methods for dealing with associations between Unity's GameObjects and SpatialOS entities.
+            </summary>
+        </member>
+        <member name="M:UnityEngine.GameObjectExtensions.EntityId(UnityEngine.GameObject)">
+            <summary>
+            Returns the SpatialOS entity ID associated with this GameObject.
+            </summary>
+            <remarks>
+            Call <seealso cref="M:UnityEngine.GameObjectExtensions.IsSpatialOsEntity(UnityEngine.GameObject)" /> or <seealso cref="M:UnityEngine.GameObjectExtensions.IsParentedBySpatialOsEntity(UnityEngine.GameObject)" /> to check that there is a SpatialOS entity associated with the GameObject.
+            This method searches the GameObject's parent hierarchy to find the root GameObject associated with a SpatialOS entity.
+            Returns an invalid entity ID if neither the GameObject, nor any of its parents, are a SpatialOS entity.
+            </remarks>
+        </member>
+        <member name="M:UnityEngine.GameObjectExtensions.IsSpatialOsEntity(UnityEngine.GameObject)">
+            <summary>
+            Returns true if the specific GameObject is associated with a SpatialOS entity.
+            </summary>
+        </member>
+        <member name="M:UnityEngine.GameObjectExtensions.IsParentedBySpatialOsEntity(UnityEngine.GameObject)">
+            <summary>
+            Returns true if the GameObject, or any of its parents, is associated with a SpatialOS entity.
+            </summary>
+        </member>
+        <member name="M:UnityEngine.GameObjectExtensions.GetSpatialOsEntity(UnityEngine.GameObject)">
+            <summary>
+            Finds the SpatialOS entity that belongs to the GameObject , or null if there is none associated.
+            </summary>
+            <remarks>
+            This method searches the GameObject's parent hierarchy to find the root GameObject associated with a SpatialOS entity.
+            The result is cached.
+            To clean the cache, call the <seealso cref="M:UnityEngine.GameObjectExtensions.RemoveFromLookupCache(Improbable.Unity.Entity.IEntityObject)" /> method.
+            </remarks>
+        </member>
+        <member name="M:UnityEngine.GameObjectExtensions.HasAuthority``1(UnityEngine.GameObject)">
+            <summary>
+            Returns true if the GameObject has authority over the specified component.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            If the GameObject is not a SpatialOS entity.
+            </exception>
+        </member>
+        <member name="M:UnityEngine.GameObjectExtensions.HasAuthority(UnityEngine.GameObject,System.UInt32)">
+            <summary>
+            Returns true if the GameObject has authority over the specified component.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">
+            If the GameObject is not a SpatialOS entity.
+            </exception>
+        </member>
+        <member name="M:UnityEngine.GameObjectExtensions.RemoveFromLookupCache(Improbable.Unity.Entity.IEntityObject)">
+            <summary>
+            Removes an entityObject from the lookup cache.
+            It will be re-added the next time it is looked up with <seealso cref="M:UnityEngine.GameObjectExtensions.GetSpatialOsEntity(UnityEngine.GameObject)" />.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Util.CircularBuffer`1">
+            <summary>
+            An array based circular buffer implementation.
+            </summary>
+            <typeparam name="T">The type of objects stored in the buffer.</typeparam>
+        </member>
+        <member name="M:Improbable.Unity.Util.CircularBuffer`1.#ctor(System.Int32)">
+            <summary>
+            Create a circular buffer with the given size.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Util.CircularBuffer`1.Add(`0)">
+            <summary>
+            Add an item to the buffer.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Util.CircularBuffer`1.GetItemsInMostRecentOrder(T[]@)">
+            <summary>
+            Populates an array with the values in the buffer with the most recently added items first.
+            The given array must be of the same size as the buffer.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Util.CircularIntBuffer">
+            <summary>
+            A circular buffer to hold integers.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Util.CircularIntBuffer.#ctor(System.Int32)">
+            <summary>
+            Creates a circular buffer to hold integers.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Util.CircularIntBuffer.GetAverage">
+            <summary>
+            Returns the average of the values in the circular buffer.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Util.CommandLineUtil">
+            <summary>
+            Utilities to aid in parsing command line arguments and their default values.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Util.CommandLineUtil.GetCommandLineValue``1(System.Collections.Generic.IList{System.String},System.String,``0)">
+            <summary>
+            Gets a value specified on the command line, in the form "+key" "value"
+            </summary>
+            <typeparam name="T">The type of the value.</typeparam>
+            <param name="arguments">The arguments to inspect.</param>
+            <param name="configKey">The name of the key, without the leading +, e.g. "key"</param>
+            <param name="defaultValue">The value to return if the key was not specified on the command line.</param>
+            <returns>The value of the key, or defaultValue if the key was not specified on the command line.</returns>
+        </member>
+        <member name="M:Improbable.Unity.Util.CommandLineUtil.TryGetCommandLineValue``1(System.Collections.Generic.IList{System.String},System.String,``0@)">
+            <summary>
+            Tries to get a value specified on the command line, in the form "+key" "value"
+            </summary>
+            <typeparam name="T">The type of the value.</typeparam>
+            <param name="arguments">The arguments to inspect.</param>
+            <param name="configKey">The name of the key, without the leading +, e.g. "key"</param>
+            <param name="configValue">The variable to store the result in, if found.</param>
+            <returns>True if the key was found.</returns>
+        </member>
+        <member name="M:Improbable.Unity.Util.CommandLineUtil.TryGetConfigValue``1(System.Collections.Generic.Dictionary{System.String,System.String},System.String,``0@)">
+            <summary>
+            Try to get am explicitly-typed value from the dictionary.
+            </summary>
+            <returns>True if the value was found, false otherwise.</returns>
+        </member>
+        <member name="M:Improbable.Unity.Util.CommandLineUtil.ParseCommandLineArgs(System.Collections.Generic.IList{System.String})">
+            <summary>
+            Parses a series of command line option pairs, beginning with '+' into a dictionary.
+            </summary>
+            <remarks>
+            The arguments must be in the form: "+flag1 value1 +flag2 value2".
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Util.PathUtil.Combine(System.String[])">
+            <summary>
+            Combines multiple path components via <c>Path.Combine</c>.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Util.PathUtil.EnsureDirectoryExists(System.String)">
+            <summary>
+            Attempts to create a directory if it does not already exist.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Util.PathUtil.EnsureTrailingSlash(System.String)">
+            <summary>
+            Ensures a path is terminated with a <c>Path.DirectorySeparatorChar</c> .
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Util.PathUtil.ToUnityPath(System.String)">
+            <summary>
+            Converts the path in platform-native format to Unity path format "Foo/Bar".
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Visualizer.AssemblyDependencyResolver.GetAssemblyDependencyDictionary(System.Reflection.Assembly,System.Collections.Generic.IList{System.Reflection.Assembly})">
+            <summary>
+            Given a rootAssembly and a list of all assemblies to consider, builds a dictionary that maps each assembly to
+            a boolean indicating whether or not it depends on the rootAssembly.
+            </summary>
+        </member>
+        <member name="M:Improbable.Util.Injection.InjectionCache.#ctor(System.Type[])">
+            <param name="injectionAttributeTypes">Attributes that mark injectable members.</param>
+        </member>
+        <member name="M:Improbable.Util.Injection.MemberReflectionUtil.GetMembersWithMatchingAttributes(System.Type)">
+            <returns>
+            A MemberAdapter list of properties and fields declared in given type that match at least one of given attributes.
+            </returns>
+        </member>
+        <member name="T:Improbable.Unity.Core.EmptyEntityBlock">
+            <summary>
+            Empty entity block, added at the end of the pipeline to
+            make sure that <see cref="P:Improbable.Unity.Core.IEntityPipelineBlock.NextEntityBlock" />
+            does not need to be checked for null in all block implementations.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.EmptyEntityBlock.NextEntityBlock">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EmptyEntityBlock.AddEntity(Improbable.Unity.Core.AddEntityPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EmptyEntityBlock.RemoveEntity(Improbable.Unity.Core.RemoveEntityPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EmptyEntityBlock.CriticalSection(Improbable.Unity.Core.CriticalSectionPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EmptyEntityBlock.AddComponent(Improbable.Unity.Core.AddComponentPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EmptyEntityBlock.RemoveComponent(Improbable.Unity.Core.RemoveComponentPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EmptyEntityBlock.ChangeAuthority(Improbable.Unity.Core.ChangeAuthorityPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EmptyEntityBlock.UpdateComponent(Improbable.Unity.Core.UpdateComponentPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EmptyEntityBlock.ProcessOps">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.Core.EntityPipeline">
+            <summary>
+            Logic for handling operations related to the lifetime
+            of SpatialOS entity and component objects.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.EntityPipeline.Instance">
+            <summary>
+            Instance of the EntityPipeline.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.EntityPipeline.Internal">
+            <summary>
+            Non-public interface of the entity pipeline.
+            </summary>
+            <remarks>
+            Should only be used from inside the SDK.
+            </remarks>
+        </member>
+        <member name="T:Improbable.Unity.Core.EntityPipelineExtensions">
+            <summary>
+            A collection of utility extension methods to use with <see cref="T:Improbable.Unity.Core.IEntityPipelineBlock" /> objects.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.EntityPipelineExtensions.FactoryCallbackWrapper">
+            <summary>
+            Class for wrapping the (EntityId, IComponentMetaclass, object)
+            method argument sets into a discrete ops.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.EntityPipelineExtensions.ToComponentFactoryCallbacks(Improbable.Unity.Core.IEntityPipelineBlock)">
+            <summary>
+            Registers the given <see cref="T:Improbable.Unity.Core.IEntityPipelineBlock" /> as <see cref="T:Improbable.Entity.Component.ComponentFactoryCallbacks" />
+            objects used in base SDK <see cref="T:Improbable.Entity.Component.IComponentFactory" /> instances in generated code.
+            </summary>
+            <param name="block">
+            </param>
+            <returns>
+            </returns>
+        </member>
+        <member name="M:Improbable.Unity.Core.EntityPipelineExtensions.DispatchOp(Improbable.Unity.Core.IEntityPipelineBlock,Improbable.Unity.Core.IEntityPipelineOp)">
+            <summary>
+            Convenience method for dispatching the supplied op to the
+            appropriate method in the entity pipeline block.
+            </summary>
+            <exception cref="T:System.ArgumentException">
+            Thrown when op object is of an unrecognised type.
+            </exception>
+        </member>
+        <member name="T:Improbable.Unity.Core.EntityPipelineImpl">
+            <summary>
+            Implementation of the Entity Pipeline.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.EntityPipelineImpl.IsEmpty">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EntityPipelineImpl.Start(Improbable.Unity.Core.ISpatialCommunicator)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EntityPipelineImpl.ProcessOps">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EntityPipelineImpl.RegisterComponentFactories(Improbable.Worker.Connection,Improbable.Worker.Dispatcher)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.EntityPipelineImpl.UnregisterComponentFactories">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.Core.IEntityPipelineOp">
+            <summary>
+            Common parent interface for all pipeline ops.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.AddEntityPipelineOp">
+            <summary>
+            Pipeline op emitted when an entity is added to the worker.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.AddEntityPipelineOp.DispatcherOp">
+            <summary>
+            Dispatcher op corresponding to the pipeline op.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.AddEntityPipelineOp.EntityId">
+            <summary>
+            Entity id of corresponding entity.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.RemoveEntityPipelineOp">
+            <summary>
+            Pipeline op emitted when an entity is removed from the worker.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.RemoveEntityPipelineOp.DispatcherOp">
+            <summary>
+            Dispatcher op corresponding to the pipeline op.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.RemoveEntityPipelineOp.EntityId">
+            <summary>
+            Entity id of corresponding entity.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.CriticalSectionPipelineOp">
+            <summary>
+            Pipeline Op emitted when the worker enters/exits a critical section.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.CriticalSectionPipelineOp.DispatcherOp">
+            <summary>
+            Dispatcher op corresponding to the pipeline op.
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.CriticalSectionPipelineOp.InCriticalSection">
+            <summary>
+            Indicate whether worker is about to enter a critical section (true) or exit a critical section (false).
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.AddComponentPipelineOp">
+            <summary>
+            Pipeline op emitted when a SpatialOS component is added to an entity.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.AddComponentPipelineOp.EntityId">
+            <summary>
+            Id of the SpatialOS entity the component was added to.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.AddComponentPipelineOp.ComponentObject">
+            <summary>
+            The object that corresponds to the affected SpatialOS component.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.AddComponentPipelineOp.ComponentMetaClass">
+            <summary>
+            Type of the added component.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.RemoveComponentPipelineOp">
+            <summary>
+            Pipeline op emitted when a SpatialOS component is removed from an entity.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.RemoveComponentPipelineOp.EntityId">
+            <summary>
+            Id of the SpatialOS entity the component was removed from.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.RemoveComponentPipelineOp.ComponentObject">
+            <summary>
+            The object that corresponds to the affected SpatialOS component.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.RemoveComponentPipelineOp.ComponentMetaClass">
+            <summary>
+            Type of the removed component.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.ChangeAuthorityPipelineOp">
+            <summary>
+            Pipeline op emitted when authority for a SpatialOS component changes.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.ChangeAuthorityPipelineOp.EntityId">
+            <summary>
+            Id of the SpatialOS entity on which the authority over a component changed.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.ChangeAuthorityPipelineOp.ComponentObject">
+            <summary>
+            The object that corresponds to the affected SpatialOS component.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.ChangeAuthorityPipelineOp.ComponentMetaClass">
+            <summary>
+            Type of the affected component.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.ChangeAuthorityPipelineOp.HasAuthority">
+            <summary>
+            Indicates whether the worker received authority over the component.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.UpdateComponentPipelineOp">
+            <summary>
+            Pipeline op emitted when a component update is received.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.UpdateComponentPipelineOp.EntityId">
+            <summary>
+            Id of the SpatialOS entity that is receiving the component update.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.UpdateComponentPipelineOp.UpdateObject">
+            <summary>
+            The update object that corresponds to the affected SpatialOS component.
+            </summary>
+        </member>
+        <member name="F:Improbable.Unity.Core.UpdateComponentPipelineOp.ComponentMetaClass">
+            <summary>
+            Type of the affected component.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.IEntityPipeline">
+            <summary>
+            Logic for handling operations related to the lifetime
+            of SpatialOS entity and component objects.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipeline.AddBlock(Improbable.Unity.Core.IEntityPipelineBlock)">
+            <summary>
+            Adds a processing block at the end of the pipeline.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.IEntityPipelineBlock">
+            <summary>
+            Operational block of the
+            </summary>
+        </member>
+        <member name="P:Improbable.Unity.Core.IEntityPipelineBlock.NextEntityBlock">
+            <summary>
+            Reference to the next block in the pipeline.
+            </summary>
+            <remarks>
+            Guaranteed to be non-null when block is registered with <see cref="T:Improbable.Unity.Core.IEntityPipeline" />
+            and the worker is connected.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineBlock.AddEntity(Improbable.Unity.Core.AddEntityPipelineOp)">
+            <summary>
+            Called when <see cref="!:AddEntityOp" /> is received by the worker.
+            </summary>
+            <remarks>
+            The op will not be automatically passed to the next block.
+            Use <see cref="P:Improbable.Unity.Core.IEntityPipelineBlock.NextEntityBlock" />.<see cref="M:Improbable.Unity.Core.IEntityPipelineBlock.AddEntity(Improbable.Unity.Core.AddEntityPipelineOp)" />(addEntityOp)
+            to pass the op to the next block in the pipeline.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineBlock.RemoveEntity(Improbable.Unity.Core.RemoveEntityPipelineOp)">
+            <summary>
+            Called when <see cref="!:RemoveEntityOp" /> is received by the worker.
+            </summary>
+            <remarks>
+            The op will not be automatically passed to the next block.
+            Use <see cref="P:Improbable.Unity.Core.IEntityPipelineBlock.NextEntityBlock" />.<see cref="M:Improbable.Unity.Core.IEntityPipelineBlock.RemoveEntity(Improbable.Unity.Core.RemoveEntityPipelineOp)" />(removeEntityOp)
+            to pass the op to the next block in the pipeline.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineBlock.CriticalSection(Improbable.Unity.Core.CriticalSectionPipelineOp)">
+            <summary>
+            Called when <see cref="!:CriticalSectionOp" /> is received by the worker.
+            </summary>
+            <remarks>
+            The op will not be automatically passed to the next block.
+            Use <see cref="P:Improbable.Unity.Core.IEntityPipelineBlock.NextEntityBlock" />.<see cref="M:Improbable.Unity.Core.IEntityPipelineBlock.CriticalSection(Improbable.Unity.Core.CriticalSectionPipelineOp)" />(criticalSectionOp)
+            to pass the op to the next block in the pipeline.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineBlock.AddComponent(Improbable.Unity.Core.AddComponentPipelineOp)">
+            <summary>
+            Called when <see cref="T:Improbable.Unity.Core.AddComponentPipelineOp" /> is received by the worker.
+            </summary>
+            <remarks>
+            The op will not be automatically passed to the next block.
+            Use <see cref="P:Improbable.Unity.Core.IEntityPipelineBlock.NextEntityBlock" />.<see cref="M:Improbable.Unity.Core.IEntityPipelineBlock.AddComponent(Improbable.Unity.Core.AddComponentPipelineOp)" />(addComponentOp)
+            to pass the op to the next block in the pipeline.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineBlock.RemoveComponent(Improbable.Unity.Core.RemoveComponentPipelineOp)">
+            <summary>
+            Called when <see cref="T:Improbable.Unity.Core.RemoveComponentPipelineOp" /> is received by the worker.
+            </summary>
+            <remarks>
+            The op will not be automatically passed to the next block.
+            Use <see cref="P:Improbable.Unity.Core.IEntityPipelineBlock.NextEntityBlock" />.<see cref="T:Improbable.Unity.Core.RemoveComponentPipelineOp" />(removeComponentOp)
+            to pass the op to the next block in the pipeline.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineBlock.ChangeAuthority(Improbable.Unity.Core.ChangeAuthorityPipelineOp)">
+            <summary>
+            Called when <see cref="T:Improbable.Unity.Core.ChangeAuthorityPipelineOp" /> is received by the worker.
+            </summary>
+            <remarks>
+            The op will not be automatically passed to the next block.
+            Use <see cref="P:Improbable.Unity.Core.IEntityPipelineBlock.NextEntityBlock" />.<see cref="M:Improbable.Unity.Core.IEntityPipelineBlock.ChangeAuthority(Improbable.Unity.Core.ChangeAuthorityPipelineOp)" />(changeAuthorityOp)
+            to pass the op to the next block in the pipeline.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineBlock.UpdateComponent(Improbable.Unity.Core.UpdateComponentPipelineOp)">
+            <summary>
+            Called when <see cref="T:Improbable.Unity.Core.UpdateComponentPipelineOp" /> is received by the worker.
+            </summary>
+            <remarks>
+            The op will not be automatically passed to the next block.
+            Use <see cref="P:Improbable.Unity.Core.IEntityPipelineBlock.NextEntityBlock" />.<see cref="M:Improbable.Unity.Core.IEntityPipelineBlock.UpdateComponent(Improbable.Unity.Core.UpdateComponentPipelineOp)" />(updateComponentOp)
+            to pass the op to the next block in the pipeline.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineBlock.ProcessOps">
+            <summary>
+            Method called every frame that allows the block to execute logic dependent
+            on its internal state.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.IEntityPipelineInternal">
+            <summary>
+            Internal interface of the entity pipeline.
+            </summary>
+            <remarks>
+            Should only be used from within the SDK.
+            </remarks>
+        </member>
+        <member name="P:Improbable.Unity.Core.IEntityPipelineInternal.IsEmpty">
+            <summary>
+            True if the pipeline contains any processing blocks.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineInternal.ProcessOps">
+            <summary>
+            Process any buffered ops.
+            </summary>
+            <remarks>
+            Needs to be called regularly (e.g. every frame) for the ops
+            to progress through the pipeline.
+            </remarks>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineInternal.Start(Improbable.Unity.Core.ISpatialCommunicator)">
+            <summary>
+            Enables the processing of ops inside the pipeline.
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineInternal.RegisterComponentFactories(Improbable.Worker.Connection,Improbable.Worker.Dispatcher)">
+            <summary>
+            Registers the pipeline as the receiver of component-related ops
+            (<see cref="!:AddComponentOp&lt;&gt;" />, <see cref="!:RemoveComponentOp&lt;&gt;" />,
+            <see cref="!:AuthorityChangeOp&lt;&gt;" />).
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.Core.IEntityPipelineInternal.UnregisterComponentFactories">
+            <summary>
+            Unregisters the pipeline as the receiver of component-related ops
+            (<see cref="!:AddComponentOp&lt;&gt;" />, <see cref="!:RemoveComponentOp&lt;&gt;" />,
+            <see cref="!:AuthorityChangeOp&lt;&gt;" />).
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.PassOpsBlock">
+            <summary>
+            Entity pipeline block that passes through all operations.
+            </summary>
+            <remarks>
+            You may use this as a base class to avoid boilerplate code when
+            writing entity pipeline blocks that only process some of the
+            op streams exposed via the interface.
+            The class is abstract, as it does nothing meaningful on its own.
+            </remarks>
+        </member>
+        <member name="P:Improbable.Unity.Core.PassOpsBlock.NextEntityBlock">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.PassOpsBlock.AddEntity(Improbable.Unity.Core.AddEntityPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.PassOpsBlock.RemoveEntity(Improbable.Unity.Core.RemoveEntityPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.PassOpsBlock.CriticalSection(Improbable.Unity.Core.CriticalSectionPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.PassOpsBlock.AddComponent(Improbable.Unity.Core.AddComponentPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.PassOpsBlock.RemoveComponent(Improbable.Unity.Core.RemoveComponentPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.PassOpsBlock.ChangeAuthority(Improbable.Unity.Core.ChangeAuthorityPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.PassOpsBlock.UpdateComponent(Improbable.Unity.Core.UpdateComponentPipelineOp)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.Core.PassOpsBlock.ProcessOps">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.ComponentFactory.PrefabFactoryMetrics">
+            <summary>
+            A Proxy to wrap a IPrefabFactroy such that we report metrics about
+            the number of entities in a worker by prefab
+            metrics are named "prefab.{prefabName}.count"
+            </summary>
+        </member>
+        <member name="M:Improbable.Unity.ComponentFactory.PrefabFactoryMetrics.MakeComponent(UnityEngine.GameObject,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Improbable.Unity.ComponentFactory.PrefabFactoryMetrics.DespawnComponent(UnityEngine.GameObject,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Improbable.Unity.CodeGeneration.OnAuthorityChangeCallback">
+            <summary>
+            The type of callback to listen for authority changes.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.CodeGeneration.OnComponentReadyCallback">
+            <summary>
+            The type of callback to listen for component ready changes.
+            </summary>
+        </member>
+        <member name="T:Improbable.Unity.Core.CommandCallback`1">
+            <summary>
+            A callback of this type must be passed with each command request, in order to return the response to the caller.
+            The callback is passed an ICommandCallbackResponse object when it is invoked.
+            </summary>
+            <param name="response">The response.</param>
+        </member>
+        <member name="T:Improbable.Unity.Core.CommandSuccessCallback`1">
+            <summary>
+            Callback invoked when a command is successfully executed.
+            </summary>
+            <typeparam name="TResponse">
+            </typeparam>
+            <param name="response">
+            </param>
+        </member>
+        <member name="T:Improbable.Unity.Core.CommandFailureCallback">
+            <summary>
+            Callback invoked when a command invocation fails.
+            </summary>
+            <param name="response">
+            </param>
+        </member>
+    </members>
+</doc>
