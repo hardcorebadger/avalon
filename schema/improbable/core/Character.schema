@@ -1,0 +1,6 @@
+package improbable.core;
+
+component Character {
+    id = 1002;
+    int32 player_id = 1;
+}

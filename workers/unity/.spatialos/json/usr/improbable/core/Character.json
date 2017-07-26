@@ -1,0 +1,59 @@
+{
+ "sourceReference": {
+  "line": 1,
+  "column": 1
+ },
+ "completePath": "../../schema/improbable/core/Character.schema",
+ "canonicalName": "improbable/core/Character.schema",
+ "package": "improbable.core",
+ "enumDefinitions": [],
+ "typeDefinitions": [
+  {
+   "sourceReference": {
+    "line": 5,
+    "column": 5
+   },
+   "name": "CharacterData",
+   "qualifiedName": "improbable.core.CharacterData",
+   "enumDefinitions": [],
+   "typeDefinitions": [],
+   "fieldDefinitions": [
+    {
+     "sourceReference": {
+      "line": 5,
+      "column": 5
+     },
+     "name": "player_id",
+     "number": 1,
+     "singularType": {
+      "sourceReference": {
+       "line": 5,
+       "column": 5
+      },
+      "builtInType": "int32"
+     }
+    }
+   ]
+  }
+ ],
+ "componentDefinitions": [
+  {
+   "sourceReference": {
+    "line": 3,
+    "column": 1
+   },
+   "name": "Character",
+   "qualifiedName": "improbable.core.Character",
+   "id": 1002,
+   "dataDefinition": {
+    "sourceReference": {
+     "line": 5,
+     "column": 5
+    },
+    "userType": "improbable.core.CharacterData"
+   },
+   "eventDefinitions": [],
+   "commandDefinitions": []
+  }
+ ]
+}

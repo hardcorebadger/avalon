@@ -22,8 +22,6 @@ namespace Assets.Editor
 			var currentEntityId = 1;
 			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreatePlayerCreatorTemplate());
 
-			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateTreeTemplate(Vector3.zero));
-
 			SaveSnapshot(snapshotEntities);
 		}
 

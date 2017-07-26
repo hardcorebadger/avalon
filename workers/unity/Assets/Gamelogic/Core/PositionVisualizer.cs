@@ -12,7 +12,7 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Position.Reader positionReader;
 
 		void OnEnable() {
-			transform.position = positionReader.Data.coords.ToUnityVector();
+			transform.position = positionReader.Data.coords.ToVector3();
 
 			positionReader.ComponentUpdated.Add(OnPositionUpdated);
 		}
@@ -23,7 +23,7 @@ namespace Assets.Gamelogic.Core {
 
 		void OnPositionUpdated(Position.Update update) {
 			if (!positionReader.HasAuthority && update.coords.HasValue)
-				transform.position = update.coords.Value.ToUnityVector();
+				transform.position = update.coords.Value.ToVector3();
 		}
 	}
 

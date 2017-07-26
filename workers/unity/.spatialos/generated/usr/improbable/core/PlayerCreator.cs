@@ -105,9 +105,9 @@ public partial class PlayerCreator : global::Improbable.Worker.IComponentMetacla
           Value = value;
         }
 
-        public Request()
+        public Request(int playerId)
         {
-          Value = new global::Improbable.Core.CreatePlayerRequest();
+          Value = new global::Improbable.Core.CreatePlayerRequest(playerId);
         }
 
         public Request DeepCopy()

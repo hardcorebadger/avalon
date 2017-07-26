@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_0;UNITY_5_6;UNITY_5;UNITY_64;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_VR;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_0;UNITY_5_6;UNITY_5;UNITY_64;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_LINUX;UNITY_STANDALONE;UNITY_STANDALONE_LINUX_API;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -52,6 +52,8 @@
      <Compile Include="Assets\Improbable\Editor\Generated\Components\improbable\SpatialOsMetadataComponentEditor.cs" />
      <Compile Include="Assets\Improbable\Editor\Generated\Components\improbable\SpatialOsPersistenceComponentEditor.cs" />
      <Compile Include="Assets\Improbable\Editor\Generated\Components\improbable\SpatialOsPositionComponentEditor.cs" />
+     <Compile Include="Assets\Improbable\Editor\Generated\Components\improbable\core\SpatialOsCharacterComponentEditor.cs" />
+     <Compile Include="Assets\Improbable\Editor\Generated\Components\improbable\core\SpatialOsPlayerComponentEditor.cs" />
      <Compile Include="Assets\Improbable\Editor\Generated\Components\improbable\core\SpatialOsPlayerCreatorComponentEditor.cs" />
      <Compile Include="Assets\Improbable\Editor\Generated\Components\improbable\core\SpatialOsRotationComponentEditor.cs" />
      <Compile Include="Assets\Improbable\Sdk\Src\Editor\Init\InitializeSDKLogging.cs" />
@@ -126,42 +128,38 @@
  <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
  <Reference Include="Generated.Code">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Dll/Generated.Code.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Dll/Generated.Code.dll</HintPath>
  </Reference>
  <Reference Include="Improbable.WorkerSdkCsharp">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Dll/Improbable.WorkerSdkCsharp.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Dll/Improbable.WorkerSdkCsharp.dll</HintPath>
  </Reference>
  <Reference Include="Improbable.WorkerSdkCsharp.Framework">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Dll/Improbable.WorkerSdkCsharp.Framework.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Dll/Improbable.WorkerSdkCsharp.Framework.dll</HintPath>
  </Reference>
  <Reference Include="protobuf-net">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Dll/protobuf-net.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Dll/protobuf-net.dll</HintPath>
  </Reference>
  <Reference Include="System.Threading">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Dll/System.Threading.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Dll/System.Threading.dll</HintPath>
  </Reference>
  <Reference Include="Improbable.UnityDll">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Dll/Unity/Improbable.UnityDll.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Dll/Unity/Improbable.UnityDll.dll</HintPath>
  </Reference>
  <Reference Include="Improbable.Unity.EditorAddon.SpatialBuild">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Editor/Addons/Improbable.Unity.EditorAddon.SpatialBuild.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Editor/Addons/Improbable.Unity.EditorAddon.SpatialBuild.dll</HintPath>
  </Reference>
  <Reference Include="Improbable.Unity.EditorAddon.SpatialConnect">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Editor/Addons/Improbable.Unity.EditorAddon.SpatialConnect.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Editor/Addons/Improbable.Unity.EditorAddon.SpatialConnect.dll</HintPath>
  </Reference>
  <Reference Include="Improbable.Unity.EditorAddon.SpatialLocal">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Editor/Addons/Improbable.Unity.EditorAddon.SpatialLocal.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Editor/Addons/Improbable.Unity.EditorAddon.SpatialLocal.dll</HintPath>
  </Reference>
  <Reference Include="Improbable.Unity.EditorAddon.SpatialUpload">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Editor/Addons/Improbable.Unity.EditorAddon.SpatialUpload.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Editor/Addons/Improbable.Unity.EditorAddon.SpatialUpload.dll</HintPath>
  </Reference>
  <Reference Include="Improbable.EditorDll">
- <HintPath>/Users/trefethen/Documents/unity/expand/workers/unity/Assets/Improbable/Sdk/Editor/Dll/Editor/Improbable.EditorDll.dll</HintPath>
+ <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Editor/Dll/Editor/Improbable.EditorDll.dll</HintPath>
  </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp.csproj">
-      <Project>{C3DA89E1-70C6-7D6C-993E-C8F831D35880}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

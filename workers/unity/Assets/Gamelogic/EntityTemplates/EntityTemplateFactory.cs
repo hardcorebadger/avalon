@@ -21,23 +21,33 @@ namespace Assets.Gamelogic.EntityTemplates
 				.Build();
 		}
 
+		public static Entity CreateCharacterTemplate(int playerId, Vector3 pos) {
+			return EntityBuilder.Begin()
+				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent("Character")
+				.SetPersistence(true)
+				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.AddComponent(new Character.Data(playerId), CommonRequirementSets.PhysicsOnly)
+				.Build();
+		}
+
 		public static Entity CreatePlayerCreatorTemplate() {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(Vector3.zero, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent("PlayerCreator")
 				.SetPersistence(true)
-				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.SetReadAcl(CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new PlayerCreator.Data(), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
 		public static Entity CreatePlayerTemplate(string clientWorkerId, Vector3 pos) {
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent(pos, CommonRequirementSets.SpecificClientOnly(clientWorkerId))
 				.AddMetadataComponent("Player")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Rotation.Data(0), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
+				.AddComponent(new Player.Data(0), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
 				.Build();
 		}
 

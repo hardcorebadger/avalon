@@ -1,6 +1,8 @@
 package improbable.core;
 
-type CreatePlayerRequest {}
+type CreatePlayerRequest {
+  int32 player_id = 1;
+}
 type CreatePlayerResponse {}
 
 component PlayerCreator {
