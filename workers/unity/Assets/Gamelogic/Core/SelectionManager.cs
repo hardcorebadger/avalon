@@ -22,6 +22,12 @@ public class SelectionManager : MonoBehaviour {
 	// Update is called once per frame
 	void OnGUI () {
 		if (Input.GetMouseButtonDown (0)) {
+			if (!Input.GetKey (KeyCode.LeftShift)) {
+				foreach (Selectable s in selected) {
+					s.SetHighlighted (false);
+				}
+				selected.Clear ();
+			}
 			startPos = Input.mousePosition;
 			dragSelector.position = startPos;
 			dragSelector.sizeDelta = Vector2.zero;
