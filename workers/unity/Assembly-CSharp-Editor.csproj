@@ -60,11 +60,14 @@
      <Compile Include="Assets\Improbable\Sdk\Src\Editor\Init\VersionCheck.cs" />
      <None Include="Assets\Improbable\Sdk\Dll\Generated.Code.xml" />
      <None Include="Assets\Improbable\Sdk\Editor\Dll\Editor\Improbable.EditorDll.xml" />
+     <None Include="Assets\OutlineEffect\Resources\OutlineShader.shader" />
+     <None Include="Assets\OutlineEffect\Resources\OutlineBufferShader.shader" />
      <None Include="Assets\Improbable\Sdk\Editor\Addons\Improbable.Unity.EditorAddon.SpatialBuild.xml" />
      <None Include="Assets\Improbable\Sdk\Dll\Unity\Improbable.UnityDll.xml" />
      <None Include="Assets\Improbable\Sdk\Editor\Addons\Improbable.Unity.EditorAddon.SpatialLocal.xml" />
      <None Include="Assets\Improbable\Sdk\Dll\Improbable.WorkerSdkCsharp.xml" />
      <None Include="Assets\Improbable\Sdk\Dll\Improbable.WorkerSdkCsharp.Framework.xml" />
+     <None Include="Assets\OutlineEffect\Resources\OutlineBufferCullOffShader.shader" />
      <None Include="Assets\Improbable\Sdk\Editor\Addons\Improbable.Unity.EditorAddon.SpatialConnect.xml" />
      <None Include="Assets\Improbable\Sdk\Editor\Addons\Improbable.Unity.EditorAddon.SpatialUpload.xml" />
  <Reference Include="UnityEditor.Advertisements">
@@ -160,6 +163,10 @@
  <Reference Include="Improbable.EditorDll">
  <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Editor/Dll/Editor/Improbable.EditorDll.dll</HintPath>
  </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{C3DA89E1-70C6-7D6C-993E-C8F831D35880}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
