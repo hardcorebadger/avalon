@@ -3,49 +3,76 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Selectable : MonoBehaviour {
+namespace Assets.Gamelogic.Core {
 
-	public string typeName;
-	public Color tagColor;
-	public GameObject tagPrefab;
+	public class Selectable : MonoBehaviour {
 
-	private cakeslice.Outline outline;
-	private GameObject tagObject;
+		public Color tagColor;
+		public string typeName;
 
-	// Use this for initialization
-	void Start () {
-		outline = GetComponent<cakeslice.Outline>();
-		outline.color = 2;
-	}
-	
-	// Update is called once per frame
-	void OnMouseEnter () {
-		SetHighlighted (true);
-		tagObject = Instantiate (tagPrefab,FindObjectOfType<Canvas>().transform);
-		tagObject.GetComponent<Image> ().color = tagColor;
-		tagObject.GetComponent<HoverTag> ().SetText (typeName);
-		tagObject.GetComponent<RectTransform> ().position = Camera.main.WorldToScreenPoint (transform.position);
-	}
+		private cakeslice.Outline outline;
+		private GameObject tagObject;
+		private bool engaged;
 
-	void OnMouseExit () {
-		if (!SelectionManager.IsSelected (this)) {
-			SetHighlighted (false);
-		}
-		Destroy (tagObject);
-	}
-
-	void OnMouseDown() {
-		if (Input.GetKey(KeyCode.LeftShift))
-			SelectionManager.AddSelected (this);
-		else
-			SelectionManager.SetSelected (this);
-	}
-
-	public void SetHighlighted(bool h) {
-		if (h)
-			outline.color = 0;
-		else
+		// Use this for initialization
+		void Start () {
+			outline = GetComponent<cakeslice.Outline>();
 			outline.color = 2;
+		}
+
+		void OnMouseEnter () {
+			SetHighlighted (true);
+			tagObject = Instantiate (SelectionManager.instance.tagPrefab,SelectionManager.instance.canvas.transform);
+			tagObject.GetComponent<Image> ().color = tagColor;
+			tagObject.GetComponent<HoverTag> ().SetText (typeName);
+			tagObject.GetComponent<RectTransform> ().position = Camera.main.WorldToScreenPoint (transform.position);
+		}
+
+		void OnMouseExit () {
+			if (!SelectionManager.instance.IsSelected (this)) {
+				SetHighlighted (false);
+			}
+			Destroy (tagObject);
+		}
+
+		public bool IsSelectable() {
+			return !engaged;
+		}
+
+		public void SetEngaged(bool e) {
+			engaged = e;
+			SetOutlineColor (OutlineColor.Red);
+		}
+
+		public bool IsEngaged() {
+			return engaged;
+		}
+
+		public void SetHighlighted(bool h) {
+			if (engaged)
+				return;
+			
+			if (h)
+				SetOutlineColor (OutlineColor.Blue);
+			else
+				SetOutlineColor (OutlineColor.None);
+		}
+
+		private void SetOutlineColor(OutlineColor c) {
+			if (c == OutlineColor.Blue)
+				outline.color = 0;
+			else if (c == OutlineColor.Red)
+				outline.color = 1;
+			else if (c == OutlineColor.None)
+				outline.color = 2;
+		}
+	}
+
+
+	public enum OutlineColor {
+		None,
+		Blue,
+		Red,
 	}
 
 }
