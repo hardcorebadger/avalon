@@ -36,6 +36,11 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void Update() {
+
+			if (Input.GetKeyDown (KeyCode.Escape)) {
+				ClearEngaged ();
+			}
+
 			if (dragging)
 				UpdateDrag ();
 			
@@ -246,6 +251,13 @@ namespace Assets.Gamelogic.Core {
 
 		public bool IsEngaged() {
 			return engaged.Count != 0;
+		}
+
+		public void ClearEngaged() {
+			foreach (CharacterVisualizer cv in engaged) {
+				cv.GetComponent<Selectable>().SetEngaged (false);
+			}
+			engaged.Clear ();
 		}
 
 	}

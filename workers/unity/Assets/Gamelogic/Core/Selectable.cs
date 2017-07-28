@@ -41,7 +41,10 @@ namespace Assets.Gamelogic.Core {
 
 		public void SetEngaged(bool e) {
 			engaged = e;
-			SetOutlineColor (OutlineColor.Red);
+			if (e)
+				SetOutlineColor (OutlineColor.Red);
+			else
+				SetOutlineColor (OutlineColor.None);
 		}
 
 		public bool IsEngaged() {
