@@ -18,6 +18,7 @@ namespace Assets.Gamelogic.Core {
 		void Start () {
 			outline = GetComponent<cakeslice.Outline>();
 			outline.color = 2;
+			outline.enabled = false;
 		}
 
 		void OnMouseEnter () {
@@ -62,12 +63,14 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void SetOutlineColor(OutlineColor c) {
-			if (c == OutlineColor.Blue)
+			if (c == OutlineColor.Blue) {
+				outline.enabled = true;
 				outline.color = 0;
-			else if (c == OutlineColor.Red)
+			} else if (c == OutlineColor.Red) {
+				outline.enabled = true;
 				outline.color = 1;
-			else if (c == OutlineColor.None)
-				outline.color = 2;
+			} else if (c == OutlineColor.None)
+				outline.enabled = false;
 		}
 	}
 
