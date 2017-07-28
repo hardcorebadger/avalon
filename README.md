@@ -1,23 +1,21 @@
-# Blank Project
+# Avalon
 ---
 
-*Copyright Improbable Worlds Ltd, 2017*
+*Copyright Polytechnica 2017*
 
-- *GitHub repository*: [https://github.com/spatialos/BlankProject](https://github.com/spatialos/BlankProject)
+- *GitHub repository*: [https://github.com/hardcorebadger/avalon](https://github.com/hardcorebadger/avalon)
 
 ---
 
 ## Introduction
 
-This is a blank SpatialOS project that you can use to build your own SpatialOS application.
+Avalon is a minimal MMORTS that encourages complex global economies to develop in an inviting and easy to navigate 2D world.
 
-It contains:
+## Todo
 
-* A SpatialOS project descriptor.
-* A Unity worker.
-* Bare-bones Launch Configurations for automatically and manually launching workers.
-* Bare-bones Client and Physics Scenes with a `Bootstrap.cs` file.
-* An example deployment configuration, `default_launch.json`.
-* `.gitignore` files for a SpatialOS project.
-
-If you run into problems, or want to give us feedback, please visit the [SpatialOS forums](https://forums.improbable.io/).
+- Select and Double Click to Use System
+- Interpolated character movement
+- Steering for characters
+- Walk to command
+- Gathering command
+- Etc.
