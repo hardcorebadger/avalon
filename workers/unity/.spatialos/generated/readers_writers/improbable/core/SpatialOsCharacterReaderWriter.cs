@@ -111,10 +111,34 @@ public partial class Character : global::Improbable.Entity.Component.IComponentF
 
   public interface ICommandReceiver
   {
+      global::Improbable.Entity.Component.CommandResponderWrapper<
+        global::Improbable.Core.Character.Commands.Goto,
+        global::Improbable.Core.GotoRequest,
+        global::Improbable.Core.Nothing>
+          OnGoto { get; set; }
+
   }
 
   public partial class Commands
   {
+    public partial class Goto
+    {
+      public static global::Improbable.Entity.Component.ICommandDescriptor<
+        global::Improbable.Core.Character.Commands.Goto,
+        global::Improbable.Core.GotoRequest,
+        global::Improbable.Core.Nothing>
+          Descriptor = new global::Improbable.Entity.Component.CommandDescriptor<
+            global::Improbable.Core.Character.Commands.Goto,
+            global::Improbable.Core.GotoRequest,
+            global::Improbable.Core.Nothing>
+      {
+        TargetComponentId = 1002,
+        CreateRequest = request => new global::Improbable.Core.Character.Commands.Goto.Request(request),
+        CreateResponse = response => new global::Improbable.Core.Character.Commands.Goto.Response(response),
+        ExtractRequest = rawRequest => rawRequest.Get().Value,
+        ExtractResponse = rawResponse => rawResponse.Get().Value
+      };  
+    }
 
   }
   // Implementation details below here.
@@ -193,6 +217,21 @@ public partial class Character : global::Improbable.Entity.Component.IComponentF
         {
           callbacks.OnComponentUpdated(op.EntityId, this, op.Update.Get());
         }
+      }
+    });
+    dispatcher.OnCommandRequest<Commands.Goto>((op) =>
+    {
+      Impl impl;
+      if (implMap.TryGetValue(op.EntityId, out impl))
+      {
+        impl.CommandReceiverInternal.InvokeGoto(new global::Improbable.Entity.Component.ResponseHandle<
+          Commands.Goto,
+          global::Improbable.Core.GotoRequest,
+          global::Improbable.Core.Nothing>(
+            connection,
+            op,
+            Commands.Goto.Descriptor,
+            op.Request.Get().Value));
       }
     });
   }
@@ -448,6 +487,40 @@ public partial class Character : global::Improbable.Entity.Component.IComponentF
 
     internal class CommandReceiverImpl : ICommandReceiver
     {
+      public global::Improbable.Entity.Component.CommandResponderWrapper<
+                global::Improbable.Core.Character.Commands.Goto,
+                global::Improbable.Core.GotoRequest,
+                global::Improbable.Core.Nothing>
+          GotoResponderWrapper =
+            new global::Improbable.Entity.Component.CommandResponderWrapper<
+                          global::Improbable.Core.Character.Commands.Goto,
+                          global::Improbable.Core.GotoRequest,
+                          global::Improbable.Core.Nothing>();
+
+                  public global::Improbable.Entity.Component.CommandResponderWrapper<
+                                global::Improbable.Core.Character.Commands.Goto,
+                                global::Improbable.Core.GotoRequest,
+                                global::Improbable.Core.Nothing>
+          OnGoto
+      {
+		get
+		{
+		  return GotoResponderWrapper;
+		}
+		set
+		{
+		  GotoResponderWrapper = value;
+		}
+	  }
+
+      public void InvokeGoto(
+        global::Improbable.Entity.Component.ResponseHandle<
+			global::Improbable.Core.Character.Commands.Goto,
+			global::Improbable.Core.GotoRequest,
+			global::Improbable.Core.Nothing> responseHandle)
+	  {
+	    GotoResponderWrapper.InvokeSendResponse(responseHandle);
+      }
     }
   }
 }

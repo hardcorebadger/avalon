@@ -31,6 +31,8 @@ namespace Improbable.Core
                 return false;
             }
 
+            DispatcherCallbackKeys.Add(
+                communicator.RegisterCommandRequest<global::Improbable.Core.Character.Commands.Goto>(OnGotoCommandRequestDispatcherCallback));
 
             return true;
         }
@@ -196,6 +198,161 @@ namespace Improbable.Core
                     onPlayerIdUpdateCallbacks.Remove(value);
                 }
             }
+        }
+
+        
+        private GotoCommandRequestCallbackWrapper gotoCommandRequestCallbackWrapper;
+
+        /// <summary>
+        ///     Invoked when a 'Goto' request is received.
+        /// </summary>
+        public GotoCommandRequestCallbackWrapper OnGotoCommandRequest
+        {
+            get
+            {
+                if (gotoCommandRequestCallbackWrapper == null)
+                {
+                    gotoCommandRequestCallbackWrapper = new GotoCommandRequestCallbackWrapper();
+                }
+                return gotoCommandRequestCallbackWrapper;
+            }
+            set { gotoCommandRequestCallbackWrapper = value; }
+        }
+        /// <summary>
+        ///     The type of callback to pass to listen for incoming 'Goto' command requests and respond asynchronously.
+        /// </summary>
+        public delegate void OnGotoCommandRequestAsyncCallback(GotoCommandResponseHandle responseHandle);
+        /// <summary>
+        ///     The type of callback to pass to listen for incoming 'Goto' command requests and respond synchronously.
+        /// </summary>
+        public delegate global::Improbable.Core.Nothing OnGotoCommandRequestSyncCallback(global::Improbable.Core.GotoRequest request, ICommandCallerInfo commandCallerInfo);
+        /// <summary>
+        ///     Wraps a synchronous or asynchronous callback to be invoked when a command response is received for the Goto command.
+        /// </summary>
+        public class GotoCommandRequestCallbackWrapper
+        {
+            private OnGotoCommandRequestSyncCallback syncCallback;
+            private OnGotoCommandRequestAsyncCallback asyncCallback;
+            /// <summary>
+            ///     Registers a synchronous callback to be invoked immediately upon receiving a command request.
+            /// </summary>
+            public void RegisterResponse(OnGotoCommandRequestSyncCallback callback)
+            {
+                if (IsCallbackRegistered())
+                {
+                    ThrowCallbackAlreadyRegisteredException();
+                }
+                syncCallback = callback;
+            }
+            /// <summary>
+            ///     Registers an asynchronous callback to be invoked with a response handle upon receiving a command request.
+            /// </summary>
+            public void RegisterAsyncResponse(OnGotoCommandRequestAsyncCallback callback)
+            {
+                if (IsCallbackRegistered())
+                {
+                    ThrowCallbackAlreadyRegisteredException();
+                }
+                asyncCallback = callback;
+            }
+            /// <summary>
+            ///     Deregisters a previously registered command response.
+            /// </summary>
+            public void DeregisterResponse()
+            {
+                if (!IsCallbackRegistered())
+                {
+                    throw new InvalidOperationException("Attempted to deregister a command response when none is registered for command Goto");
+                }
+                syncCallback = null;
+                asyncCallback = null;
+            }
+            /// <summary>
+            ///     Returns whether or not a callback is currently registered.
+            /// </summary>
+            public bool IsCallbackRegistered()
+            {
+                return syncCallback != null || asyncCallback != null;
+            }
+            private void ThrowCallbackAlreadyRegisteredException()
+            {
+                throw new InvalidOperationException("Attempted to register a command response when one has already been registered for command Goto.");
+            }
+            /// <summary>
+            ///     Invokes the registered callback. This is an implementation detail; it should not be called from user code.
+            /// </summary>
+            public void InvokeCallback(GotoCommandResponseHandle responseHandle)
+            {
+                if (syncCallback != null)
+                {
+                    responseHandle.Respond(syncCallback(responseHandle.Request, responseHandle.CallerInfo));
+                }
+                if (asyncCallback != null)
+                {
+                    asyncCallback(responseHandle);
+                }
+            }
+        }
+
+        /// <summary>
+        ///     A response handle for the 'Goto' command.
+        /// </summary>
+        public class GotoCommandResponseHandle
+        {
+            private readonly
+                global::Improbable.Worker.CommandRequestOp<global::Improbable.Core.Character.Commands.Goto>
+                commandRequestOp;
+            private readonly CommandCallerInfo commandCallerInfo;
+            private readonly ISpatialCommunicator communicator;
+
+            /// <summary>
+            ///     Creates a new response handle. This is an implementation detail; it should not be called from user code.
+            /// </summary>
+            public GotoCommandResponseHandle(
+                global::Improbable.Worker.CommandRequestOp<global::Improbable.Core.Character.Commands.Goto>
+                    commandRequestOp, ISpatialCommunicator communicator)
+            {
+                this.commandRequestOp = commandRequestOp;
+                this.commandCallerInfo = new CommandCallerInfo(commandRequestOp.CallerWorkerId, commandRequestOp.CallerAttributeSet);
+                this.communicator = communicator;
+            }
+
+            /// <summary>
+            ///     Returns the request object.
+            /// </summary>
+            public global::Improbable.Core.GotoRequest Request { get { return commandRequestOp.Request.Get().Value; } }
+
+            /// <summary>
+            /// Metadata for this command request.
+            /// </summary>
+            public ICommandCallerInfo CallerInfo
+            {
+                get { return commandCallerInfo; }
+            }
+
+            /// <summary>
+            ///     Sends the command response.
+            /// </summary>
+            public void Respond(global::Improbable.Core.Nothing response)
+            {
+                var commandResponse = new global::Improbable.Core.Character.Commands.Goto.Response(response);
+                communicator.SendCommandResponse(commandRequestOp.RequestId, commandResponse);
+            }
+        }
+
+        protected void OnGotoCommandRequestDispatcherCallback(
+            global::Improbable.Worker.CommandRequestOp<global::Improbable.Core.Character.Commands.Goto> op)
+        {
+            if (op.EntityId != entityId || gotoCommandRequestCallbackWrapper == null || !gotoCommandRequestCallbackWrapper.IsCallbackRegistered())
+            {
+                return;
+            }
+            var responseHandle = new GotoCommandResponseHandle(op, communicator);
+            gotoCommandRequestCallbackWrapper.InvokeCallback(responseHandle);
+
+#if UNITY_EDITOR
+            LogCommandRequest(DateTime.Now, "Goto", op.Request.Get().Value);
+#endif
         }
 
     }

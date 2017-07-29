@@ -63,7 +63,7 @@ namespace Assets.Gamelogic.Core {
 			if (Input.GetMouseButton (0) && !hasTriggered) {
 				if (Time.time - downTime > downDelay) {
 					TriggerWipe ();
-					Drag ();
+					StartDrag ();
 				}
 			} else if (!hasTriggered) {
 				if (Time.time - upTime > upDelay) {
@@ -86,7 +86,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void DoubleClick() {
-			PerformAction (GetHit());
+			CommandCenter.PerformAction (selected, GetHit(), Camera.main.ScreenToWorldPoint (Input.mousePosition+new Vector3(0,0,Camera.main.transform.position.z*-1)));
+			ClearSelected ();
 		}
 
 		void SingleClick() {
@@ -104,11 +105,6 @@ namespace Assets.Gamelogic.Core {
 				// deselect
 				ClearSelected();
 			}
-		}
-
-		void Drag() {
-			// begin drag select
-			StartDrag();
 		}
 
 		private void StartDrag() {
@@ -172,11 +168,6 @@ namespace Assets.Gamelogic.Core {
 					AddSelected (s);
 			}
 			currentDragSelection.Clear ();
-		}
-
-		private void PerformAction(RaycastHit2D h) {
-			Debug.Log ("action: " + selected.Count);
-			ClearSelected ();
 		}
 
 		public void SetSelected(Selectable s) {

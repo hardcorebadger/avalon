@@ -46,9 +46,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Gamelogic\Character\CharacterController.cs" />
      <Compile Include="Assets\Gamelogic\Character\CharacterVisualizer.cs" />
      <Compile Include="Assets\Gamelogic\Core\Bootstrap.cs" />
      <Compile Include="Assets\Gamelogic\Core\BuildSettings.cs" />
+     <Compile Include="Assets\Gamelogic\Core\CommandCenter.cs" />
      <Compile Include="Assets\Gamelogic\Core\HoverTag.cs" />
      <Compile Include="Assets\Gamelogic\Core\PlayerController.cs" />
      <Compile Include="Assets\Gamelogic\Core\PlayerCreatorController.cs" />

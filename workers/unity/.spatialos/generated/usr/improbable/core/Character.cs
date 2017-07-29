@@ -15,6 +15,16 @@ public static class Character_Extensions
   {
     return (Character.Update) update;
   }
+
+  public static Character.Commands.Goto.Request Get(this global::Improbable.Worker.ICommandRequest<Character.Commands.Goto> request)
+  {
+    return (Character.Commands.Goto.Request) request;
+  }
+
+  public static Character.Commands.Goto.Response Get(this global::Improbable.Worker.ICommandResponse<Character.Commands.Goto> response)
+  {
+    return (Character.Commands.Goto.Response) response;
+  }
 }
 
 public partial class Character : global::Improbable.Worker.IComponentMetaclass
@@ -100,6 +110,64 @@ public partial class Character : global::Improbable.Worker.IComponentMetaclass
 
   public partial class Commands
   {
+    /// <summary>
+    /// Command goto.
+    /// </summary>
+    public partial class Goto : global::Improbable.Worker.ICommandMetaclass
+    {
+      public uint ComponentId { get { return 1002; } }
+      public uint CommandId { get { return 1; } }
+
+      public class Request : global::Improbable.Worker.ICommandRequest<Goto>
+      {
+        public global::Improbable.Core.GotoRequest Value;
+
+        public Request(global::Improbable.Core.GotoRequest value)
+        {
+          Value = value;
+        }
+
+        public Request(global::Improbable.Vector3d targetPosition)
+        {
+          Value = new global::Improbable.Core.GotoRequest(targetPosition);
+        }
+
+        public Request DeepCopy()
+        {
+          return new Request(Value.DeepCopy());
+        }
+
+        public global::Improbable.Worker.Internal.GenericCommandObject ToGenericObject()
+        {
+          return new global::Improbable.Worker.Internal.GenericCommandObject(1, this);
+        }
+      }
+
+      public class Response : global::Improbable.Worker.ICommandResponse<Goto>
+      {
+        public global::Improbable.Core.Nothing Value;
+
+        public Response(global::Improbable.Core.Nothing value)
+        {
+          Value = value;
+        }
+
+        public Response()
+        {
+          Value = new global::Improbable.Core.Nothing();
+        }
+
+        public Response DeepCopy()
+        {
+          return new Response(Value.DeepCopy());
+        }
+
+        public global::Improbable.Worker.Internal.GenericCommandObject ToGenericObject()
+        {
+          return new global::Improbable.Worker.Internal.GenericCommandObject(1, this);
+        }
+      }
+    }
   }
 
   // Implementation details below here.
@@ -219,11 +287,21 @@ public partial class Character : global::Improbable.Worker.IComponentMetaclass
         else if (objType == (byte) global::Improbable.Worker.Internal.ComponentProtocol.ClientObjectType.Request)
         {
           var data = new global::Improbable.Worker.Internal.GenericCommandObject();
+          var commandObject = global::Improbable.Worker.Internal.Pbio.GetObject(root, 1002);
+          if (global::Improbable.Worker.Internal.Pbio.GetObjectCount(commandObject, 1) != 0) {
+            data.CommandId = 1;
+            data.CommandObject = new Commands.Goto.Request(global::Improbable.Core.GotoRequest_Internal.Read(global::Improbable.Worker.Internal.Pbio.GetObject(commandObject, 1)));
+          }
           (*obj)->Reference = global::Improbable.Worker.Internal.ClientObjects.Instance.CreateReference(data);
         }
         else if (objType == (byte) global::Improbable.Worker.Internal.ComponentProtocol.ClientObjectType.Response)
         {
           var data = new global::Improbable.Worker.Internal.GenericCommandObject();
+          var commandObject = global::Improbable.Worker.Internal.Pbio.GetObject(root, 1002);
+          if (global::Improbable.Worker.Internal.Pbio.GetObjectCount(commandObject, 2) != 0) {
+            data.CommandId = 1;
+            data.CommandObject = new Commands.Goto.Response(global::Improbable.Core.Nothing_Internal.Read(global::Improbable.Worker.Internal.Pbio.GetObject(commandObject, 2)));
+          }
           (*obj)->Reference = global::Improbable.Worker.Internal.ClientObjects.Instance.CreateReference(data);
         }
       }
@@ -268,11 +346,29 @@ public partial class Character : global::Improbable.Worker.IComponentMetaclass
         }
         else if (objType == (byte) global::Improbable.Worker.Internal.ComponentProtocol.ClientObjectType.Request)
         {
-          global::Improbable.Worker.Internal.Pbio.AddObject(root, 1002);
+          var data = (global::Improbable.Worker.Internal.GenericCommandObject)
+              global::Improbable.Worker.Internal.ClientObjects.Instance.Dereference(obj->Reference);
+          var commandObject = global::Improbable.Worker.Internal.Pbio.AddObject(root, 1002);
+          if (data.CommandId == 1)
+          {
+            var requestObject = (Commands.Goto.Request) data.CommandObject;
+            {
+              global::Improbable.Core.GotoRequest_Internal.Write(_pool, requestObject.Value, global::Improbable.Worker.Internal.Pbio.AddObject(commandObject, 1));
+            }
+          }
         }
         else if (objType == (byte) global::Improbable.Worker.Internal.ComponentProtocol.ClientObjectType.Response)
         {
-          global::Improbable.Worker.Internal.Pbio.AddObject(root, 1002);
+          var data = (global::Improbable.Worker.Internal.GenericCommandObject)
+              global::Improbable.Worker.Internal.ClientObjects.Instance.Dereference(obj->Reference);
+          var commandObject = global::Improbable.Worker.Internal.Pbio.AddObject(root, 1002);
+          if (data.CommandId == 1)
+          {
+            var responseObject = (Commands.Goto.Response) data.CommandObject;
+            {
+              global::Improbable.Core.Nothing_Internal.Write(_pool, responseObject.Value, global::Improbable.Worker.Internal.Pbio.AddObject(commandObject, 2));
+            }
+          }
         }
         *length = global::Improbable.Worker.Internal.Pbio.GetWriteBufferLength(root);
         *buffer = global::Improbable.Worker.Internal.ClientObjects.BufferAlloc((int) *length);

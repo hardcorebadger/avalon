@@ -13,11 +13,15 @@ namespace Assets.Gamelogic.Core {
 
 		void OnEnable() {
 			transform.position = positionWriter.Data.coords.ToUnityVector();
+			StartCoroutine ("UpdatePosition");
 		}
 
-		void Update() {
-			if (transform.position != positionWriter.Data.coords.ToUnityVector ())
-				positionWriter.Send (new Position.Update ().SetCoords(transform.position.ToCoordinates()));
+		IEnumerator UpdatePosition() {
+			while (true) {
+				yield return new WaitForSeconds (1 / 9);
+				if (transform.position != positionWriter.Data.coords.ToUnityVector ())
+					positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
+			}
 		}
 
 	}

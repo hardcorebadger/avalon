@@ -630,6 +630,11 @@
             Please use Character.Writer.Send() instead (see the documentation for semantic differences).
             </summary>
         </member>
+        <member name="T:Improbable.Core.Character.Commands.Goto">
+            <summary>
+            Command goto.
+            </summary>
+        </member>
         <member name="T:Improbable.Core.Character.Data">
             <summary>
             Concrete data type for the Character component.
@@ -933,6 +938,11 @@
         <member name="F:Improbable.Core.CreatePlayerRequest.playerId">
             <summary>
             Field player_id = 1.
+            </summary>
+        </member>
+        <member name="F:Improbable.Core.GotoRequest.targetPosition">
+            <summary>
+            Field target_position = 1.
             </summary>
         </member>
         <member name="F:Improbable.Core.PlayerData.playerId">

@@ -12,7 +12,6 @@ namespace Assets.Gamelogic.Core {
 
 		private cakeslice.Outline outline;
 		private GameObject tagObject;
-		private bool engaged;
 
 		// Use this for initialization
 		void Start () {
@@ -37,25 +36,10 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public bool IsSelectable() {
-			return !engaged;
+			return true;
 		}
-
-		public void SetEngaged(bool e) {
-			engaged = e;
-			if (e)
-				SetOutlineColor (OutlineColor.Red);
-			else
-				SetOutlineColor (OutlineColor.None);
-		}
-
-		public bool IsEngaged() {
-			return engaged;
-		}
-
-		public void SetHighlighted(bool h) {
-			if (engaged)
-				return;
 			
+		public void SetHighlighted(bool h) {
 			if (h)
 				SetOutlineColor (OutlineColor.Blue);
 			else
