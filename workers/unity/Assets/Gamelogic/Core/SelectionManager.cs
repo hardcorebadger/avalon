@@ -24,22 +24,16 @@ namespace Assets.Gamelogic.Core {
 		private bool dragging = false;
 
 
-		private List<CharacterVisualizer> engaged;
 		private List<Selectable> selected;
 		private List<Selectable> currentDragSelection;
 
 		void OnEnable() {
 			instance = this;
-			engaged = new List<CharacterVisualizer> ();
 			selected = new List<Selectable> ();
 			currentDragSelection = new List<Selectable> ();
 		}
 
 		void Update() {
-
-			if (Input.GetKeyDown (KeyCode.Escape)) {
-				ClearEngaged ();
-			}
 
 			if (dragging)
 				UpdateDrag ();
@@ -92,20 +86,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void DoubleClick() {
-			RaycastHit2D hit = GetHit();
-			if (hit.collider != null) {
-				Selectable s = hit.transform.GetComponent<Selectable> ();
-				if (s != null) {
-					if (!IsSelected (s)) {
-						SetSelected (s);
-					}
-					DefaultAction ();
-				}
-			} else {
-				Debug.Log ("goto position");
-				// goto
-				GoTo (hit.point);
-			}
+			PerformAction (GetHit());
 		}
 
 		void SingleClick() {
@@ -168,8 +149,8 @@ namespace Assets.Gamelogic.Core {
 			}
 			currentDragSelection.Clear ();
 
-			Vector3 pt1 = Camera.main.ScreenToWorldPoint (dragSelector.position + new Vector3 (0, 0, 30));
-			Vector3 pt2 = Camera.main.ScreenToWorldPoint (dragSelector.position + new Vector3 (width, -1 * height, 30));
+			Vector3 pt1 = Camera.main.ScreenToWorldPoint (dragSelector.position + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
+			Vector3 pt2 = Camera.main.ScreenToWorldPoint (dragSelector.position + new Vector3 (width, -1 * height, Camera.main.transform.position.z*-1));
 
 			Collider2D[] colliders = Physics2D.OverlapAreaAll (pt1, pt2);
 			foreach (Collider2D c in colliders) {
@@ -193,24 +174,9 @@ namespace Assets.Gamelogic.Core {
 			currentDragSelection.Clear ();
 		}
 
-		private void DefaultAction() {
-			if (IsEngaged()) {
-				Debug.Log ("Action");
-			} else {
-				// engage attempt
-				Debug.Log ("Engage");
-				foreach (Selectable s in selected) {
-					CharacterVisualizer cv = s.GetComponent<CharacterVisualizer> ();
-					if (cv != null && cv.CanEngage ()) {
-						AddEngaged (cv);
-					}
-				}
-			}
+		private void PerformAction(RaycastHit2D h) {
+			Debug.Log ("action: " + selected.Count);
 			ClearSelected ();
-		}
-
-		private void GoTo(Vector2 point) {
-			Debug.Log ("GoTo");
 		}
 
 		public void SetSelected(Selectable s) {
@@ -242,22 +208,6 @@ namespace Assets.Gamelogic.Core {
 
 		public bool IsSelected(Selectable s) {
 			return selected.Contains (s);
-		}
-
-		public void AddEngaged(CharacterVisualizer cv) {
-			cv.GetComponent<Selectable>().SetEngaged (true);
-			engaged.Add (cv);
-		}
-
-		public bool IsEngaged() {
-			return engaged.Count != 0;
-		}
-
-		public void ClearEngaged() {
-			foreach (CharacterVisualizer cv in engaged) {
-				cv.GetComponent<Selectable>().SetEngaged (false);
-			}
-			engaged.Clear ();
 		}
 
 	}
