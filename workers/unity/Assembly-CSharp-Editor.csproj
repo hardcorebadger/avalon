@@ -164,6 +164,10 @@
  <HintPath>/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Improbable/Sdk/Editor/Dll/Editor/Improbable.EditorDll.dll</HintPath>
  </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp.csproj">
+      <Project>{C3DA89E1-70C6-7D6C-993E-C8F831D35880}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

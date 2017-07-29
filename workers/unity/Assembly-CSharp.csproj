@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Gamelogic\Character\CharacterController.cs" />
      <Compile Include="Assets\Gamelogic\Character\CharacterVisualizer.cs" />
+     <Compile Include="Assets\Gamelogic\Character\SteeringDemo.cs" />
      <Compile Include="Assets\Gamelogic\Core\Bootstrap.cs" />
      <Compile Include="Assets\Gamelogic\Core\BuildSettings.cs" />
      <Compile Include="Assets\Gamelogic\Core\CommandCenter.cs" />
