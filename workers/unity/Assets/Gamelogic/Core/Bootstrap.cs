@@ -17,6 +17,7 @@ namespace Assets.Gamelogic.Core
         private void Start()
         {
             SpatialOS.ApplyConfiguration(Configuration);
+			Item.InitializeItems ();
 
             Time.fixedDeltaTime = 1.0f / SimulationSettings.FixedFramerate;
 

@@ -29,6 +29,8 @@ namespace Assets.Gamelogic.Core {
 		private List<Action> currentActions;
 		private List<Action> completedActions;
 
+		private InventoryController inventory;
+
 		private void OnEnable() {
 			characterWriter.CommandReceiver.OnGoto.RegisterResponse(OnGoto);
 			transform.position = positionWriter.Data.coords.ToUnityVector();
@@ -39,6 +41,10 @@ namespace Assets.Gamelogic.Core {
 			completedActions = new List<Action> ();
 
 			rigidBody = GetComponent<Rigidbody2D> ();
+			inventory = GetComponent<InventoryController> ()
+		}
+
+		private void Start() {
 		}
 
 		private void OnDisable() {

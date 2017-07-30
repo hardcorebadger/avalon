@@ -17,6 +17,10 @@ namespace Assets.Gamelogic.Core {
 
 
 		void OnEnable() {
+			if (characterReader.HasAuthority) {
+				this.enabled = false;
+				return;
+			}
 			transform.position = positionReader.Data.coords.ToVector3();
 			transform.eulerAngles = new Vector3 (0, 0, rotationReader.Data.rotation);
 
