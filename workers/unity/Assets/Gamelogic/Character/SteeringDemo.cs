@@ -7,6 +7,7 @@ using System;
 public class SteeringDemo : MonoBehaviour {
 
 	public GameObject target;
+	public float speed = 5f;
 	public float range = 5f;
 	public float maxRotation = 60f;
 	public float interpolation = 1f;
@@ -16,17 +17,29 @@ public class SteeringDemo : MonoBehaviour {
 	void Start () {
 		rigidbody = GetComponent<Rigidbody2D> ();
 	}
+
+	void Update() {
+		Vector3 dir = (target.transform.position - transform.position);
+		float dist = dir.magnitude;
+		Steer (ref dir);
+
+		if (dist > 5)
+			rigidbody.velocity = transform.TransformDirection(new Vector2 (0, speed));
+		else if (dist > 3)
+			rigidbody.velocity = transform.TransformDirection(new Vector2 (0, speed/2));
+		else
+			rigidbody.velocity = transform.TransformDirection(new Vector2 (0, 0));
+		
+		transform.Rotate(new Vector3(0,0,GetScaledRotation(GetRotationTo (dir))));
+	}
 	
 	// Update is called once per frame
-	void Update () {
-		Vector3 dir = (target.transform.position - transform.position).normalized;
+	void Steer (ref Vector3 dir) {
+		dir.Normalize ();
 		Debug.DrawRay (transform.position, dir*range, Color.red);
 		if (!CanWalk (dir, range))
 			Avoid (ref dir, range);
 		Debug.DrawRay (transform.position, dir*range, Color.blue);
-		rigidbody.velocity = transform.TransformDirection(new Vector2 (0, 1f));
-//		Debug.Log (GetRotationTo (dir));
-		transform.Rotate(new Vector3(0,0,GetScaledRotation(GetRotationTo (dir))));
 	}
 
 	protected bool CanWalk(Vector3 dir, float castDist) {
