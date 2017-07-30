@@ -13,6 +13,14 @@ Avalon is a minimal MMORTS that encourages complex global economies to develop i
 
 ## Todo
 
-- Keep selected after command send
-- Figure out inventory
-- Chop some trees down
+- Inventory Data Structure
+- Log/Gather Command (single entity target only)
+- Log/Gather Action + input to inventory
+- Preview Windows
+- Inventory Viewing
+- Radial Selection for command targeting + ui
+- Log/Gather with radial targeting
+- Find Next Action capability for radial command targeting
+- Stockpile creation action (drop) and command
+- Storage pick ui
+- Storage (add/remove) parameterization in commands
