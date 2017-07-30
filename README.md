@@ -13,9 +13,6 @@ Avalon is a minimal MMORTS that encourages complex global economies to develop i
 
 ## Todo
 
-- Select and Double Click to Use System
-- Interpolated character movement
-- Steering for characters
-- Walk to command
-- Gathering command
-- Etc.
+- Keep selected after command send
+- Figure out inventory
+- Chop some trees down
