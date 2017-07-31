@@ -4,7 +4,7 @@ build.json
 zip_toolbelt.log
 Improbable.meta
 Assets/Improbable
-Assets/Plugins/Improbable
+Assets/Plugins
 Assets/Gamelogic/Generated/
 Assets/Gamelogic/Generated.meta
 Assembly-CSharp-Editor.csproj
