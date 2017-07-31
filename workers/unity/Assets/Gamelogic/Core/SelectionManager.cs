@@ -119,6 +119,18 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
+		private void StartRadiusSelect () {
+
+		}
+
+		private void UpdateRadiusSelect () {
+
+		}
+
+		private void StopRadiusSelect () {
+
+		}
+
 		private void StartBoxSelect() {
 			if (!Input.GetKey (KeyCode.LeftShift)) {
 				ClearSelected ();
@@ -171,7 +183,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void StopBoxSelect() {
-			dragging = false;
+			boxSelecting = false;
 			dragSelector.sizeDelta = Vector2.zero;
 			dragSelector.gameObject.SetActive (false);
 

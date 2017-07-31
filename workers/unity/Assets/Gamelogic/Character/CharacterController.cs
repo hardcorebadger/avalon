@@ -26,22 +26,15 @@ namespace Assets.Gamelogic.Core {
 		public float interpolation = 1f;
 		public float width = 1f;
 
-		private List<Action> queuedActions;
-		private List<Action> currentActions;
-		private List<Action> completedActions;
-
 		private InventoryController inventory;
 
 		private void OnEnable() {
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
+
 			transform.position = positionWriter.Data.coords.ToUnityVector();
 			StartCoroutine ("UpdateTransform");
-
-			queuedActions = new List<Action> ();
-			currentActions = new List<Action> ();
-			completedActions = new List<Action> ();
 
 			rigidBody = GetComponent<Rigidbody2D> ();
 			inventory = GetComponent<InventoryController> ();
@@ -60,23 +53,12 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void Update() {
-			UpdateBrain ();
-		}
 
-		private void UpdateBrain() {
-			foreach (Action a in queuedActions) {currentActions.Add (a);}
-			queuedActions.Clear ();
-
-			foreach (Action a in currentActions) {a.Update ();}
-
-			foreach (Action a in completedActions) {currentActions.Remove (a);}
-			completedActions.Clear ();
 		}
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
-			currentActions.Clear ();
-			if (request.command == "goto")
-				StartAction(new ActionSeek(this, null, new Vector3((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
+//			if (request.command == "goto")
+//				StartAction(new ActionSeek(this, null, new Vector3((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
 			return new Nothing ();
 		}
 
@@ -91,14 +73,6 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnRadiusTarget(RadiusTargetRequest request, ICommandCallerInfo callerinfo) {
 			return new Nothing ();
-		}
-
-		public void StartAction(Action a) {
-			queuedActions.Add (a);
-		}
-
-		public void StopAction(Action a) {
-			completedActions.Add (a);
 		}
 
 	}
