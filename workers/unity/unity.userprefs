@@ -1,15 +1,24 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Core/SelectionManager.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Character/CharacterController.cs">
     <Files>
-      <File FileName="Assets/Gamelogic/Core/SelectionManager.cs" Line="55" Column="20" />
-      <File FileName="Assets/Gamelogic/Core/Selectable.cs" Line="27" Column="12" />
-      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Core/RenderLayerer.cs" Line="1" Column="1" />
-      <File FileName="Assets/Editor/SnapshotMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Core/HoverTag.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Core/PlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Core/PlayerCreatorController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Improbable/Sdk/Src/Unity/Core/ConnectionLifecycle.cs" Line="50" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionSeek.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/SteeringDemo.cs" Line="1" Column="1" />
+      <File FileName="../../../Realms-Collab/Assets/Entity/Scripts/ActionLocomotion.cs" Line="1" Column="1" />
+      <File FileName="../../../Realms-Collab/Assets/Entity/Scripts/ActionSeek.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/Action.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/CharacterController.cs" Line="45" Column="4" />
+      <File FileName="../../../Realms-Collab/Assets/Entity/Scripts/Entity.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionLocomotion.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/PlayerBuildProcess.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/CommandCenter.cs" Line="4" Column="1" />
+      <File FileName="Assets/Gamelogic/Item/Item.cs" Line="31" Column="41" />
+      <File FileName="Assets/Gamelogic/Item/InventoryController.cs" Line="87" Column="16" />
+      <File FileName="Assets/Gamelogic/Character/CharacterVisualizer.cs" Line="24" Column="21" />
+      <File FileName="Assets/Gamelogic/Item/InventoryVisualizer.cs" Line="45" Column="5" />
+      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="27" Column="39" />
+      <File FileName="Assets/Gamelogic/Core/Bootstrap.cs" Line="25" Column="51" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

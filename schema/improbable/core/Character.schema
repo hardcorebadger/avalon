@@ -1,6 +1,15 @@
 package improbable.core;
 
+import "improbable/vector3.schema";
+
+type GotoRequest {
+  Vector3d target_position = 1;
+}
+type Nothing {}
+
 component Character {
     id = 1002;
     int32 player_id = 1;
+
+    command Nothing goto(GotoRequest);
 }

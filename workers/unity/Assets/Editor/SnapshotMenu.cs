@@ -22,9 +22,9 @@ namespace Assets.Editor
 			var currentEntityId = 1;
 			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreatePlayerCreatorTemplate());
 
-			for (float y = -100; y <= 100; y++) {
-				for (float x = -100; x <= 100; x++) {
-					if (Random.Range(0,10) == 0)
+			for (float y = -500; y <= 500; y+=5) {
+				for (float x = -500; x <= 500; x+=5) {
+					if (Random.Range(0,100) == 0)
 						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateTreeTemplate(new Vector3(x,0,y)));
 				}
 			}

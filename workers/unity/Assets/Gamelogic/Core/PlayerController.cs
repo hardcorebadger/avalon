@@ -9,11 +9,15 @@ public class PlayerController : MonoBehaviour {
 
 	public float speed = 0.1f;
 
-	[Require] private Player.Writer playerWriter;
+	[HideInInspector]
+	[Require] public Player.Writer playerWriter;
+
+	public static PlayerController instance;
 
 	// Use this for initialization
 	void Start () {
 		Camera.main.transform.SetParent (transform);
+		instance = this;
 	}
 	
 	// Update is called once per frame
