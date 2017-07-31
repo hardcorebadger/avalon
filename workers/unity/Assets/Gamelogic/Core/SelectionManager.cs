@@ -24,7 +24,7 @@ namespace Assets.Gamelogic.Core {
 		private bool dragging = false;
 
 
-		private List<Selectable> selected;
+		public List<Selectable> selected;
 		private List<Selectable> currentDragSelection;
 
 		void OnEnable() {

@@ -41,10 +41,7 @@ namespace Assets.Gamelogic.Core {
 			completedActions = new List<Action> ();
 
 			rigidBody = GetComponent<Rigidbody2D> ();
-			inventory = GetComponent<InventoryController> ()
-		}
-
-		private void Start() {
+			inventory = GetComponent<InventoryController> ();
 		}
 
 		private void OnDisable() {

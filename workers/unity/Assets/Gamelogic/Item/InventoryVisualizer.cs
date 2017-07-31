@@ -13,8 +13,8 @@ namespace Assets.Gamelogic.Core {
 	public class InventoryVisualizer : MonoBehaviour {
 
 		[Require] private Inventory.Reader inventoryReader;
-		private Dictionary<int,int> items;
-		private int maxWeight = 0;
+		public Dictionary<int,int> items;
+		public int maxWeight = 0;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -43,6 +43,15 @@ namespace Assets.Gamelogic.Core {
 				inventoryReader.Data.inventory.TryGetValue (key, out val);
 				items.Add (key, val);
 			}
+		}
+
+		public void AppendInventory(ref int max, ref Dictionary<int,int> result) {
+			foreach (int id in items.Keys) {
+				int amount = 0;
+				result.TryGetValue (id, out amount);
+				result [id] = amount + items [id];
+			}
+			max  += maxWeight;
 		}
 	}
 
