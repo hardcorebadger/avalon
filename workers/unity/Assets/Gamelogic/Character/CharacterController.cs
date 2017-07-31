@@ -7,6 +7,7 @@ using Improbable.Entity.Component;
 using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
+using Improbable.Worker.Query;
 
 namespace Assets.Gamelogic.Core {
 
@@ -32,7 +33,9 @@ namespace Assets.Gamelogic.Core {
 		private InventoryController inventory;
 
 		private void OnEnable() {
-			characterWriter.CommandReceiver.OnGoto.RegisterResponse(OnGoto);
+			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
+			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
+			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
 			transform.position = positionWriter.Data.coords.ToUnityVector();
 			StartCoroutine ("UpdateTransform");
 
@@ -45,7 +48,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void OnDisable() {
-			characterWriter.CommandReceiver.OnGoto.DeregisterResponse();
+			characterWriter.CommandReceiver.OnPositionTarget.DeregisterResponse();
 		}
 
 		IEnumerator UpdateTransform() {
@@ -70,9 +73,23 @@ namespace Assets.Gamelogic.Core {
 			completedActions.Clear ();
 		}
 
-		private Nothing OnGoto(GotoRequest request, ICommandCallerInfo callerinfo) {
+		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
 			currentActions.Clear ();
-			StartAction(new ActionSeek(this, null, new Vector3((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
+			if (request.command == "goto")
+				StartAction(new ActionSeek(this, null, new Vector3((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
+			return new Nothing ();
+		}
+
+		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
+//			if (request.command == "gather") {
+			// THIS IS WHERE YOU
+			// 1. query to get position
+			// 2. start action seek to the position, chain action gather
+//			}
+			return new Nothing ();
+		}
+
+		private Nothing OnRadiusTarget(RadiusTargetRequest request, ICommandCallerInfo callerinfo) {
 			return new Nothing ();
 		}
 

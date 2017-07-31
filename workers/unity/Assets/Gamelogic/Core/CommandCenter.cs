@@ -23,7 +23,7 @@ namespace Assets.Gamelogic.Core {
 
 		private static void PositionTargetedAction(List<EntityId> ids, Vector3 position) {
 			foreach (EntityId id in ids) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.Goto.Descriptor, new GotoRequest (new Vector3d (position.x, 0, position.y)), id);
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.PositionTarget.Descriptor, new PositionTargetRequest (new Vector3d (position.x, 0, position.y), "goto"), id);
 			}
 		}
 

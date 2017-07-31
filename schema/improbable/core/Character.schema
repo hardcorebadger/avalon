@@ -2,8 +2,18 @@ package improbable.core;
 
 import "improbable/vector3.schema";
 
-type GotoRequest {
+type PositionTargetRequest {
   Vector3d target_position = 1;
+  string command = 2;
+}
+type EntityTargetRequest {
+  EntityId target = 1;
+  string command = 2;
+}
+type RadiusTargetRequest {
+  Vector3d target_position = 1;
+  float size = 2;
+  string command = 3;
 }
 type Nothing {}
 
@@ -11,5 +21,7 @@ component Character {
     id = 1002;
     int32 player_id = 1;
 
-    command Nothing goto(GotoRequest);
+    command Nothing position_target(PositionTargetRequest);
+    command Nothing entity_target(EntityTargetRequest);
+    command Nothing radius_target(RadiusTargetRequest);
 }
