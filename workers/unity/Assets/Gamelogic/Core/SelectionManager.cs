@@ -21,8 +21,8 @@ namespace Assets.Gamelogic.Core {
 		private bool hasTriggered = true;
 		private Vector3 startPos;
 		private Vector3 downPos;
-		private bool dragging = false;
-
+		private bool boxSelecting = false;
+		private bool radiusSelecting = false;
 
 		public List<Selectable> selected;
 		private List<Selectable> currentDragSelection;
@@ -35,8 +35,10 @@ namespace Assets.Gamelogic.Core {
 
 		void Update() {
 
-			if (dragging)
-				UpdateDrag ();
+			if (boxSelecting)
+				UpdateBoxSelect ();
+			if (radiusSelecting)
+				UpdateRadiusSelect ();
 			
 			if (Input.GetMouseButtonDown (0)) {
 				downPos = Input.mousePosition;
@@ -48,8 +50,10 @@ namespace Assets.Gamelogic.Core {
 			}
 
 			if (Input.GetMouseButtonUp (0)) {
-				if (dragging)
-					StopDrag ();
+				if (boxSelecting)
+					StopBoxSelect ();
+				if (radiusSelecting)
+					StopRadiusSelect ();
 				
 				if (Time.time - downTime < downDelay) {
 					if (potentialDouble) {
@@ -63,7 +67,7 @@ namespace Assets.Gamelogic.Core {
 			if (Input.GetMouseButton (0) && !hasTriggered) {
 				if (Time.time - downTime > downDelay) {
 					TriggerWipe ();
-					StartDrag ();
+					Drag ();
 				}
 			} else if (!hasTriggered) {
 				if (Time.time - upTime > upDelay) {
@@ -107,7 +111,15 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		private void StartDrag() {
+		private void Drag() {
+			if (Input.GetKey (KeyCode.LeftAlt)) {
+				StartRadiusSelect ();
+			} else {
+				StartBoxSelect ();
+			}
+		}
+
+		private void StartBoxSelect() {
 			if (!Input.GetKey (KeyCode.LeftShift)) {
 				ClearSelected ();
 			}
@@ -115,10 +127,10 @@ namespace Assets.Gamelogic.Core {
 			dragSelector.position = startPos;
 			dragSelector.sizeDelta = Vector2.zero;
 			dragSelector.gameObject.SetActive (true);
-			dragging = true;
+			boxSelecting = true;
 		}
 
-		private void UpdateDrag() {
+		private void UpdateBoxSelect() {
 			//draw rect between start and cur pos
 			Vector3 cur = Input.mousePosition;
 			Vector3 pos = dragSelector.position;
@@ -158,7 +170,7 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		private void StopDrag() {
+		private void StopBoxSelect() {
 			dragging = false;
 			dragSelector.sizeDelta = Vector2.zero;
 			dragSelector.gameObject.SetActive (false);
