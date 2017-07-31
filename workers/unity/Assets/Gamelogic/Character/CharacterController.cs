@@ -27,6 +27,7 @@ namespace Assets.Gamelogic.Core {
 		public float width = 1f;
 
 		private InventoryController inventory;
+		private Action currentAction;
 
 		private void OnEnable() {
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
@@ -38,6 +39,8 @@ namespace Assets.Gamelogic.Core {
 
 			rigidBody = GetComponent<Rigidbody2D> ();
 			inventory = GetComponent<InventoryController> ();
+
+			currentAction = new ActionBlank (this);
 		}
 
 		private void OnDisable() {
@@ -53,12 +56,14 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void Update() {
-
+			// if the controlling action completes, stop doing it
+			if (currentAction.Update () == ActionCode.Success || currentAction.Update () == ActionCode.Failure)
+				currentAction = new ActionBlank (this);
 		}
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
-//			if (request.command == "goto")
-//				StartAction(new ActionSeek(this, null, new Vector3((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
+			if (request.command == "goto")
+				SetAction(new ActionSeek(this, new Vector3((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
 			return new Nothing ();
 		}
 
@@ -73,6 +78,10 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnRadiusTarget(RadiusTargetRequest request, ICommandCallerInfo callerinfo) {
 			return new Nothing ();
+		}
+
+		public void SetAction(Action a) {
+			currentAction = a;
 		}
 
 	}
