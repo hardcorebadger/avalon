@@ -83,21 +83,20 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnRadiusTarget(RadiusTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "gather") {
-				int count = 0;
-				var query = Query.And(Query.HasComponent(Position.ComponentId),Query.InSphere (request.targetPosition.x, request.targetPosition.y, request.targetPosition.z, request.size)).ReturnComponents(Position.ComponentId);
+				var query = Query.And (Query.HasComponent (Gatherable.ComponentId), Query.InSphere (request.targetPosition.x, request.targetPosition.y, request.targetPosition.z, request.size)).ReturnOnlyEntityIds ();
 				SpatialOS.Commands.SendQuery(characterWriter, query)
 					.OnSuccess(result => {
-						Debug.Log("Found " + result.EntityCount + " nearby entities with a inventory component");
 						if (result.EntityCount < 1) {
 							return;
 						}
 						Improbable.Collections.Map<EntityId, Entity> resultMap = result.Entities;
-						foreach (Entity e in resultMap.Values) {
-							Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position>();
-							Vector3 pos = p.Value.Get().Value.coords.ToVector3();
-							count++;
+						EntityId[] ids = new EntityId[resultMap.Count];
+						int index = 0;
+						foreach (EntityId i in resultMap.Keys) {
+							ids[index] = i;
+							index++;
 						}
-						Debug.Log(count);
+						SetAction(new ActionGatherRadial(this, ids));
 					})
 					.OnFailure(errorDetails => Debug.Log("Query failed with error: " + errorDetails));
 			}
