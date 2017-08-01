@@ -53,6 +53,13 @@ namespace Assets.Gamelogic.Core {
 			}
 			max  += maxWeight;
 		}
+
+		public void Log() {
+			foreach (int key in items.Keys) {
+				int val = items[key];
+				Debug.Log (Item.GetName (key) + " " + val + " " + (Item.GetWeight (key) * val) + "lbs");
+			}
+		}
 	}
 
 }

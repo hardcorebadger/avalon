@@ -48,19 +48,21 @@ namespace Assets.Gamelogic.Core {
 		public void Log() {
 			foreach (int key in items.Keys) {
 				int val = items[key];
-				Debug.Log (Item.GetName (key) + " " + val + " " + (Item.GetWeight (key) * val) + "lbs");
+				Debug.Log(Item.GetName (key) + " " + val + " " + (Item.GetWeight (key) * val) + "lbs");
 			}
 		}
 
 		public bool Insert(int id, int amount) {
 			int weight = Item.GetWeight (id) * amount;
-			if (weight + GetWeight () > maxWeight)
+			if (weight + GetWeight () > maxWeight) 
 				return false;
+			
 
 			int val = 0;
 			items.TryGetValue (id, out val);
 			val += amount;
 			items [id] = val;
+			Log ();
 
 			SendInventoryUpdate ();
 			return true;

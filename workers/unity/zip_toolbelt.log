@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ==========> Opened at 2017-07-31 18:34:33.623866915 -0700 PDT
 debug Executing [spatial file zip --output=/Users/quinnfinney/Code/avalon/build/assembly/worker/UnityClient@Mac --basePath=/Users/quinnfinney/Code/avalon/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
 debug Current directory = /Users/quinnfinney/Code/avalon/workers/unity
@@ -68,3 +69,75 @@ debug Found project root at /Users/quinnfinney/Code/avalon
 info Finding /Users/quinnfinney/Code/avalon/workers/unity/build/worker/UnityWorker@Mac/** category=heading
 info Wrote /Users/quinnfinney/Code/avalon/build/assembly/worker/UnityWorker@Mac.zip
 info 'spatial file zip ./**' succeeded duration=0.9s category=success
+=======
+==========> Opened at 2017-07-31 18:00:42.866902748 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-31 18:00:46.029404121 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-31 18:04:05.611419971 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-31 18:04:08.854577833 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac.zip
+info 'spatial file zip ./**' succeeded category=success duration=0.1s
+==========> Opened at 2017-07-31 18:14:02.815108475 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-31 18:14:06.170361803 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-31 18:14:32.813878784 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-31 18:14:36.042068941 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-31 18:16:38.106232682 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityClient@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityClient@Mac.zip
+info 'spatial file zip ./**' succeeded duration=0.1s category=success
+==========> Opened at 2017-07-31 18:16:41.324511948 -0700 PDT
+debug Executing [spatial file zip --output=/Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac --basePath=/Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac --relativePath=. ./** --compression=False --log_file=zip_toolbelt.log]
+debug Current directory = /Users/trefethen/Documents/unity/avalon/workers/unity
+debug Found project root at /Users/trefethen/Documents/unity/avalon
+info Finding /Users/trefethen/Documents/unity/avalon/workers/unity/build/worker/UnityWorker@Mac/** category=heading
+info Wrote /Users/trefethen/Documents/unity/avalon/build/assembly/worker/UnityWorker@Mac.zip
+info 'spatial file zip ./**' succeeded category=success duration=0.1s
+>>>>>>> 8f751367dce91f8f207761617d187805a8a81b42
