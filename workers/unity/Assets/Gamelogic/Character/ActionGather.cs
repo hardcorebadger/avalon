@@ -23,13 +23,11 @@ namespace Assets.Gamelogic.Core {
 		public bool loaded = false;
 		public bool failed = false;
 		public bool complete = false;
-		public CharacterController o;
 
 		public ActionSeek seek;
 
 		public ActionGather(CharacterController o, EntityId t) : base(o)	{
 			target = t;
-			this.o = o;
 			var entityQuery = Query.HasEntityId(target).ReturnComponents(Position.ComponentId, Inventory.ComponentId);
 
 			SpatialOS.WorkerCommands.SendQuery(entityQuery)
@@ -41,14 +39,15 @@ namespace Assets.Gamelogic.Core {
 			if (loaded && !complete) {
 
 				if (seek == null) {
-					seek = new ActionSeek (o, position);
+					seek = new ActionSeek (owner, position);
 				}
 				ActionCode seekProgress = seek.Update ();
 				if (seekProgress == ActionCode.Success) {
 					complete = true;
 					int removalCount = inventory.inventory [1];
-					o.inventory.Insert (1, removalCount);
+					owner.inventory.Insert (1, removalCount);
 					SpatialOS.WorkerCommands.DeleteEntity (target);
+					return ActionCode.Success;
 				}
 			}
 
