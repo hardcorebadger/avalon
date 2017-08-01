@@ -16,6 +16,10 @@ namespace Assets.Gamelogic.Core {
 			ids = i;
 		}
 
+		public override void Log() {
+			subGather.Log ();
+		}
+
 		public override ActionCode Update () {
 			if (ids.Length == 0)
 				return ActionCode.Success;

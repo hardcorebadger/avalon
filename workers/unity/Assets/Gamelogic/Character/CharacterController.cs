@@ -29,6 +29,8 @@ namespace Assets.Gamelogic.Core {
 		public float maxRotation = 60f;
 		public float interpolation = 1f;
 		public float width = 1f;
+		public float approachRadius = 4f;
+		public float arrivalRadius = 2f;
 
 		public InventoryController inventory;
 		private Action currentAction;
