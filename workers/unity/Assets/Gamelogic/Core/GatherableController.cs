@@ -13,9 +13,7 @@ namespace Assets.Gamelogic.Core {
 		void Start () {
 		
 			InventoryController c = GetComponent<InventoryController> ();
-			if (c.Count (1) == 0) {
-				c.Insert (1, 5);
-			}
+			c.Insert (1, 5);
 		
 		}	
 		
