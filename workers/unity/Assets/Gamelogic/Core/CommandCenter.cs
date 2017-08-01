@@ -35,6 +35,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private static void EntityTargetedAction(List<EntityId> ids, GameObject target) {
+			SelectionManager.instance.ClearSelected ();
+
 			foreach (EntityId id in ids) {
 				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), "gather"), id);
 			}

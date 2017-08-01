@@ -30,7 +30,7 @@ namespace Assets.Gamelogic.Core {
 		public float interpolation = 1f;
 		public float width = 1f;
 
-		private InventoryController inventory;
+		public InventoryController inventory;
 		private Action currentAction;
 
 		private void OnEnable() {
@@ -74,32 +74,11 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
-//			if (request.command == "gather") {
-			// THIS IS WHERE YOU
-			// 1. query to get position
-			// 2. start action seek to the position, chain action gather
-//			}
-			Debug.LogWarning("1");
-			var entityQuery = Query.HasEntityId(request.target).ReturnComponents(Position.ComponentId, Inventory.ComponentId);
 
-			SpatialOS.WorkerCommands.SendQuery(entityQuery)
-				.OnSuccess(OnSuccessfulEntityQuery)
-				.OnFailure(OnFailedEntityQuery);
+			if (request.command == "gather") {
+				SetAction (new ActionGather (this, request.target));
+			}
 			return new Nothing ();
-		}
-
-		private static void OnSuccessfulEntityQuery(EntityQueryResult queryResult) {
-			Map<EntityId, Entity> resultMap = queryResult.Entities;
-			Entity e = resultMap.First.Value.Value;
-			Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position>();
-			Improbable.Collections.Option<IComponentData<Inventory>> i = e.Get<Inventory>();
-			InventoryData inv = i.Value.Get().Value;
-			Vector3 pos = p.Value.Get().Value.coords.ToVector3();
-
-		}
-
-		private static void OnFailedEntityQuery(ICommandErrorDetails _) {
-
 		}
 
 		private Nothing OnRadiusTarget(RadiusTargetRequest request, ICommandCallerInfo callerinfo) {
