@@ -15,7 +15,7 @@ namespace Assets.Gamelogic.Core {
 		public static void PerformRadialAction(List<Selectable> selected, Vector3 position, float radius) {
 			List<EntityId> ids = ParseControllableEntities (selected);
 			foreach (EntityId id in ids) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.RadiusTarget.Descriptor, new RadiusTargetRequest (new Vector3d (position.x, 0, position.y, "gather"), radius, "gather"), id);
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.RadiusTarget.Descriptor, new RadiusTargetRequest (new Vector3d (position.x, 0, position.y), radius, "gather"), id);
 			}
 		}
 
