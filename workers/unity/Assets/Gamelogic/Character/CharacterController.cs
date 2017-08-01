@@ -8,6 +8,10 @@ using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
 using Improbable.Worker.Query;
+using Improbable.Worker;
+using Improbable.Entity;
+using Improbable.Unity.Core.EntityQueries;
+using Improbable.Collections;
 
 namespace Assets.Gamelogic.Core {
 
@@ -73,7 +77,27 @@ namespace Assets.Gamelogic.Core {
 			// 1. query to get position
 			// 2. start action seek to the position, chain action gather
 //			}
+			Debug.LogWarning("1");
+			var entityQuery = Query.HasEntityId(request.target).ReturnComponents(Position.ComponentId, Inventory.ComponentId);
+
+			SpatialOS.WorkerCommands.SendQuery(entityQuery)
+				.OnSuccess(OnSuccessfulEntityQuery)
+				.OnFailure(OnFailedEntityQuery);
 			return new Nothing ();
+		}
+
+		private static void OnSuccessfulEntityQuery(EntityQueryResult queryResult) {
+			Map<EntityId, Entity> resultMap = queryResult.Entities;
+			Entity e = resultMap.First.Value.Value;
+			Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position>();
+			Improbable.Collections.Option<IComponentData<Inventory>> i = e.Get<Inventory>();
+			InventoryData inv = i.Value.Get().Value;
+			Vector3 pos = p.Value.Get().Value.coords.ToVector3();
+
+		}
+
+		private static void OnFailedEntityQuery(ICommandErrorDetails _) {
+
 		}
 
 		private Nothing OnRadiusTarget(RadiusTargetRequest request, ICommandCallerInfo callerinfo) {

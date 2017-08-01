@@ -18,6 +18,8 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent("Pine")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.AddComponent(new Gatherable.Data(1, "Pine Tree"), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 

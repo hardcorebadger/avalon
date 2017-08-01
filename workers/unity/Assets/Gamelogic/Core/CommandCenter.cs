@@ -28,7 +28,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private static void EntityTargetedAction(List<EntityId> ids, GameObject target) {
-			Debug.Log ("no entity targeted actions yet");
+			foreach (EntityId id in ids) {
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), "chop"), id);
+			}
 		}
 
 		private static List<EntityId> ParseControllableEntities(List<Selectable> selected) {
