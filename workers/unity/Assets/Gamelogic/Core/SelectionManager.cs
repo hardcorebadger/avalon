@@ -7,6 +7,7 @@ namespace Assets.Gamelogic.Core {
 	public class SelectionManager : MonoBehaviour {
 
 		public RectTransform dragSelector;
+		public RectTransform circleSelector;
 		public GameObject tagPrefab;
 		public GameObject canvas;
 		public double downDelay = 0.2;
@@ -120,15 +121,27 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void StartRadiusSelect () {
-
+			startPos = downPos;
+			circleSelector.position = startPos;
+			circleSelector.sizeDelta = Vector2.zero;
+			circleSelector.gameObject.SetActive (true);
+			radiusSelecting = true;
 		}
 
 		private void UpdateRadiusSelect () {
-
+			float dist = Vector3.Distance (Input.mousePosition, startPos);
+			circleSelector.sizeDelta = new Vector2(dist*2,dist*2);
 		}
 
 		private void StopRadiusSelect () {
+			radiusSelecting = false;
+			circleSelector.sizeDelta = Vector2.zero;
+			circleSelector.gameObject.SetActive (false);
 
+			Vector3 pt1 = Camera.main.ScreenToWorldPoint (startPos + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
+			Vector3 pt2 = Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
+
+			CommandCenter.PerformRadialAction (selected, pt1, Vector3.Distance (pt1, pt2));
 		}
 
 		private void StartBoxSelect() {
