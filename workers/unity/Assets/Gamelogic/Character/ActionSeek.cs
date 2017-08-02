@@ -17,10 +17,16 @@ namespace Assets.Gamelogic.Core {
 			Steer (ref dir);
 			float dist = Vector3.Distance(target, owner.transform.position);
 
-			if (dist <= owner.arrivalRadius) {
-				owner.rigidBody.velocity = Vector2.zero;
-				return ActionCode.Success;
+			Collider2D[] colliders = Physics2D.OverlapCircleAll (target, owner.arrivalRadius);
+			foreach (Collider2D c in colliders) {
+				if (c.gameObject == owner.gameObject) {
+					return ActionCode.Success;
+				}
 			}
+
+//			if (dist <= owner.arrivalRadius) {
+//				return ActionCode.Success;
+//			}
 				
 			owner.transform.Rotate(new Vector3(0,0,GetRotationTo (dir)));
 			owner.rigidBody.velocity = owner.transform.TransformDirection (new Vector2 (0, owner.speed));

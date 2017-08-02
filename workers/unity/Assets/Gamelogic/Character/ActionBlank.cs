@@ -9,6 +9,7 @@ namespace Assets.Gamelogic.Core {
 		public ActionBlank(CharacterController o) : base(o)	{}
 
 		public override ActionCode Update () {
+			owner.rigidBody.velocity = Vector2.zero;
 			return ActionCode.Perpetual;
 		}
 	}
