@@ -6,8 +6,15 @@ namespace Assets.Gamelogic.Core {
 
 	public class UIManager : MonoBehaviour {
 
+		public static UIManager instance;
+
 		public GameObject previewPrefab;
+		public GameObject commandPickerPrefab;
 		private GameObject preview;
+
+		void OnEnable () {
+			instance = this;
+		}
 
 		void Update () {
 			if (Input.GetKeyDown(KeyCode.Space)) {
@@ -19,6 +26,10 @@ namespace Assets.Gamelogic.Core {
 			if (Input.GetKeyUp(KeyCode.Space)) {
 				Destroy (preview);
 			}
+		}
+
+		public static void OpenCommandPicker(List<string> options) {
+			Instantiate (instance.commandPickerPrefab, instance.transform).GetComponent<UICommandPicker> ().Load (options);
 		}
 
 		private Dictionary<int,int> AggregateInventories(out int maxWeight) {

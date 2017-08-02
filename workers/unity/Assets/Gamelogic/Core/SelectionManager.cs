@@ -91,7 +91,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void DoubleClick() {
-			CommandCenter.PerformAction (selected, GetHit(), Camera.main.ScreenToWorldPoint (Input.mousePosition+new Vector3(0,0,Camera.main.transform.position.z*-1)));
+			CommandCenter.InterpretClickCommand (selected, GetHit(), Camera.main.ScreenToWorldPoint (Input.mousePosition+new Vector3(0,0,Camera.main.transform.position.z*-1)));
 			ClearSelected ();
 		}
 
@@ -141,7 +141,7 @@ namespace Assets.Gamelogic.Core {
 			Vector3 pt1 = Camera.main.ScreenToWorldPoint (startPos + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
 			Vector3 pt2 = Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
 
-			CommandCenter.PerformRadialAction (selected, pt1, Vector3.Distance (pt1, pt2));
+			CommandCenter.InterpretRadialCommand (selected, pt1, Vector3.Distance (pt1, pt2));
 		}
 
 		private void StartBoxSelect() {

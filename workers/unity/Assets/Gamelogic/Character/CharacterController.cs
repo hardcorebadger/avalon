@@ -76,7 +76,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
-
 			if (request.command == "gather") {
 				SetAction (new ActionGather (this, request.target));
 			}
