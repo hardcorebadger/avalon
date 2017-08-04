@@ -12,14 +12,14 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Position.Writer positionWriter;
 
 		void OnEnable() {
-			transform.position = positionWriter.Data.coords.ToUnityVector();
+			transform.position = positionWriter.Data.coords.ToVector3();
 			StartCoroutine ("UpdatePosition");
 		}
 
 		IEnumerator UpdatePosition() {
 			while (true) {
 				yield return new WaitForSeconds (1 / 9);
-				if (transform.position != positionWriter.Data.coords.ToUnityVector ())
+				if (transform.position != positionWriter.Data.coords.ToVector3 ())
 					positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
 			}
 		}
@@ -36,6 +36,11 @@ namespace Assets.Gamelogic.Core {
 		public static Vector3 ToVector3(this Coordinates coord)
 		{
 			return new Vector3((float)coord.x, (float)coord.z, (float)coord.y);
+		}
+
+		public static Vector3 Flip(this Vector3 vector3)
+		{
+			return new Vector3(vector3.x, vector3.z, vector3.y);
 		}
 	}
 

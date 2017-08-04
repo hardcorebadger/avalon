@@ -1,7 +1,23 @@
 package improbable.core;
 
+type ItemStack {
+    int32 id = 1;
+    int32 amount = 2;
+}
+
+type ItemStackList {
+    map<int32,int32> inventory = 1;
+}
+
+type GiveResponse {
+    bool success = 1;
+}
+
 component Inventory {
     id = 1004;
     map<int32,int32> inventory = 1;
     int32 max_weight = 2;
+
+    command GiveResponse give(ItemStack);
+    command GiveResponse give_multiple(ItemStackList);
 }

@@ -18,9 +18,36 @@ namespace Assets.Gamelogic.Core {
 
 		// Use this for initialization
 		void OnEnable () {
+
+			inventoryWriter.CommandReceiver.OnGive.RegisterResponse(OnGive);
+			inventoryWriter.CommandReceiver.OnGiveMultiple.RegisterResponse(OnGiveMultiple);
+
 			items = new Dictionary<int,int> ();
 			UnwrapComponentInventory ();
 			maxWeight = inventoryWriter.Data.maxWeight;
+		}
+
+		void OnDisable() {
+			inventoryWriter.CommandReceiver.OnGive.DeregisterResponse();
+			inventoryWriter.CommandReceiver.OnGiveMultiple.DeregisterResponse();
+		}
+
+		private GiveResponse OnGive(ItemStack itemStack, ICommandCallerInfo callerinfo) {
+			return new GiveResponse (Insert(itemStack.id,itemStack.amount));
+		}
+
+		private GiveResponse OnGiveMultiple(ItemStackList itemStackList, ICommandCallerInfo callerinfo) {
+			int weight = 0;
+			foreach (int id in itemStackList.inventory.Keys) {
+				weight += Item.GetWeight (id) * itemStackList.inventory [id];
+			}
+			if (weight + GetWeight () > maxWeight)
+				return new GiveResponse (false);
+			
+			foreach (int id in itemStackList.inventory.Keys) {
+				Insert (id, itemStackList.inventory [id]);
+			}
+			return new GiveResponse (true);
 		}
 
 		private void UnwrapComponentInventory() {
@@ -101,6 +128,14 @@ namespace Assets.Gamelogic.Core {
 				weight += Item.GetWeight (id) * items[id];
 			}
 			return weight;
+		}
+
+		public ItemStackList GetItemStackList() {
+			ItemStackList l = new ItemStackList (new Improbable.Collections.Map<int, int>());
+			foreach (int id in items.Keys) {
+				l.inventory.Add (id, items [id]);
+			}
+			return l;
 		}
 	}
 

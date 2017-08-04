@@ -22,8 +22,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void OnPositionUpdated(Position.Update update) {
-			if (!positionReader.HasAuthority && update.coords.HasValue)
-				transform.position = update.coords.Value.ToVector3();
+			if (!positionReader.HasAuthority && update.coords.HasValue) {
+				transform.position = update.coords.Value.ToVector3 ();
+			}
 		}
 	}
 

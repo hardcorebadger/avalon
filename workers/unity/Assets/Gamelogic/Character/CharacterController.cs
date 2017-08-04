@@ -17,9 +17,9 @@ namespace Assets.Gamelogic.Core {
 
 	public class CharacterController : MonoBehaviour {
 
-		[Require] private Character.Writer characterWriter;
-		[Require] private Position.Writer positionWriter;
-		[Require] private Rotation.Writer rotationWriter;
+		[Require] public Character.Writer characterWriter;
+		[Require] public Position.Writer positionWriter;
+		[Require] public Rotation.Writer rotationWriter;
 
 		[HideInInspector]
 		public Rigidbody2D rigidBody;
@@ -40,7 +40,7 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
 
-			transform.position = positionWriter.Data.coords.ToUnityVector();
+			transform.position = positionWriter.Data.coords.ToVector3();
 			StartCoroutine ("UpdateTransform");
 
 			rigidBody = GetComponent<Rigidbody2D> ();
@@ -57,7 +57,7 @@ namespace Assets.Gamelogic.Core {
 
 		IEnumerator UpdateTransform() {
 			while (true) {
-				yield return new WaitForSeconds (1 / 9);
+				yield return new WaitForSeconds (0.1f);
 				positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
 				rotationWriter.Send (new Rotation.Update ().SetRotation(transform.eulerAngles.z));
 			}
@@ -71,7 +71,9 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "goto")
-				SetAction(new ActionSeek(this, new Vector3((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
+				SetAction (new ActionSeek (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
+			else if (request.command == "stash")
+				SetAction (new ActionStash (this));
 			return new Nothing ();
 		}
 

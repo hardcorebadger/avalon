@@ -48,7 +48,7 @@ namespace Assets.Gamelogic.Core
 		private void CreateCharacterEntity(EntityId entityId, int playerId, Vector3 pos, int cur) {
 			var playerEntityTemplate = EntityTemplateFactory.CreateCharacterTemplate(playerId, pos);
 			SpatialOS.Commands.CreateEntity(playerCreatorWriter, entityId, playerEntityTemplate)
-				.OnSuccess(response => ReserveCharacterId(playerId,(pos + new Vector3 (Random.Range (-3, 3), 0, Random.Range (-3, 3))),cur+1))
+				.OnSuccess(response => ReserveCharacterId(playerId,(pos + new Vector3 (Random.Range (-3, 3), Random.Range (-3, 3), 0)),cur+1))
 				.OnFailure(failure => OnFailedEntityCreation(failure, entityId));
 		}
 

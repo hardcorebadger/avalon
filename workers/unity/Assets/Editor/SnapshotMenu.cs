@@ -25,7 +25,7 @@ namespace Assets.Editor
 			for (float y = -500; y <= 500; y++) {
 				for (float x = -500; x <= 500; x++) {
 					if (Random.Range(0,100) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateTreeTemplate(new Vector3(x,0,y)));
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateTreeTemplate(new Vector3(x,y,0)));
 				}
 			}
 

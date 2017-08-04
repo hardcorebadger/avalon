@@ -12,9 +12,19 @@ namespace Assets.Gamelogic.EntityTemplates
     public static class EntityTemplateFactory
     {
 
+		public static Entity CreateSackTemplate(Vector3 pos) {
+			return EntityBuilder.Begin()
+				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent("Sack")
+				.SetPersistence(true)
+				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
+				.Build();
+		}
+
 		public static Entity CreateTreeTemplate(Vector3 pos) {
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent("Pine")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
@@ -25,7 +35,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreateCharacterTemplate(int playerId, Vector3 pos) {
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent("Character")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
@@ -47,7 +57,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreatePlayerTemplate(string clientWorkerId, Vector3 pos) {
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos, CommonRequirementSets.SpecificClientOnly(clientWorkerId))
+				.AddPositionComponent(pos.Flip(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
 				.AddMetadataComponent("Player")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)

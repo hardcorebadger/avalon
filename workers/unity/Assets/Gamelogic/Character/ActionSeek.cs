@@ -20,6 +20,7 @@ namespace Assets.Gamelogic.Core {
 			Collider2D[] colliders = Physics2D.OverlapCircleAll (target, owner.arrivalRadius);
 			foreach (Collider2D c in colliders) {
 				if (c.gameObject == owner.gameObject) {
+					owner.rigidBody.velocity = Vector2.zero;
 					return ActionCode.Success;
 				}
 			}
