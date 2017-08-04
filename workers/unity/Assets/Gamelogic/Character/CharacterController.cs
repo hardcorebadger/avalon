@@ -99,7 +99,7 @@ namespace Assets.Gamelogic.Core {
 							ids[index] = i;
 							index++;
 						}
-						SetAction(new ActionGatherRadial(this, ids));
+						SetAction(new ActionDistributedGather(this, request.groupInfo.groupId, request.groupInfo.groupSize, ids));
 					})
 					.OnFailure(errorDetails => Debug.Log("Query failed with error: " + errorDetails));
 			}

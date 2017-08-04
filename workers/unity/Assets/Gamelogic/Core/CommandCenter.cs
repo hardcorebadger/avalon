@@ -81,20 +81,26 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private static void ExecuteRadialTargetedCommand(string command) {
+			int index = 0;
 			foreach (EntityId id in agents) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.RadiusTarget.Descriptor, new RadiusTargetRequest (new Vector3d (position.x, 0, position.y), radius, command), id);
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.RadiusTarget.Descriptor, new RadiusTargetRequest (new Vector3d (position.x, 0, position.y), radius, command, new GroupInfo(index,agents.Count)), id);
+				index++;
 			}
 		}
 
 		private static void ExecuteEntityTargetedCommand(string command) {
+			int index = 0;
 			foreach (EntityId id in agents) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), command), id);
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), command, new GroupInfo(index,agents.Count)), id);
+				index++;
 			}
 		}
 
 		private static void ExecutePositionTargetedCommand(string command) {
+			int index = 0;
 			foreach (EntityId id in agents) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.PositionTarget.Descriptor, new PositionTargetRequest (new Vector3d (position.x, 0, position.y), command), id);
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.PositionTarget.Descriptor, new PositionTargetRequest (new Vector3d (position.x, 0, position.y), command, new GroupInfo(index,agents.Count)), id);
+				index++;
 			}
 		}
 

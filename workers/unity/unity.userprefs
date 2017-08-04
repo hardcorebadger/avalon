@@ -2,12 +2,23 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Core/CommandCenter.cs">
     <Files>
-      <File FileName="Assets/Gamelogic/Character/ActionStash.cs" Line="46" Column="30" />
-      <File FileName="Assets/Gamelogic/Core/PlayerCreatorController.cs" Line="44" Column="47" />
-      <File FileName="Assets/Gamelogic/Character/CharacterController.cs" Line="76" Column="40" />
-      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="21" Column="82" />
-      <File FileName="Assets/Gamelogic/Item/InventoryController.cs" Line="131" Column="4" />
-      <File FileName="Assets/Gamelogic/Core/CommandCenter.cs" Line="53" Column="40" />
+      <File FileName="Assets/Gamelogic/Character/CharacterController.cs" Line="97" Column="21" />
+      <File FileName="Assets/Gamelogic/Character/ActionDistributedGather.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionDistributed.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/CommandCenter.cs" Line="87" Column="13" />
+      <File FileName="Assets/Gamelogic/Character/ActionStash.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/PlayerCreatorController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Item/InventoryController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/Action.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/PositionController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/PositionVisualizer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/CharacterVisualizer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Editor/SnapshotMenu.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/Bootstrap.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionBlank.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionGatherRadial.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionGather.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

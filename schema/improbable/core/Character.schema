@@ -5,17 +5,25 @@ import "improbable/vector3.schema";
 type PositionTargetRequest {
   Vector3d target_position = 1;
   string command = 2;
+  GroupInfo group_info = 3;
 }
 type EntityTargetRequest {
   EntityId target = 1;
   string command = 2;
+  GroupInfo group_info = 3;
 }
 type RadiusTargetRequest {
   Vector3d target_position = 1;
   float size = 2;
   string command = 3;
+  GroupInfo group_info = 4;
 }
 type Nothing {}
+
+type GroupInfo {
+  int32 group_id = 1;
+  int32 group_size = 2;
+}
 
 component Character {
     id = 1002;
