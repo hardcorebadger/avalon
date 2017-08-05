@@ -13,11 +13,16 @@ namespace Assets.Gamelogic.EntityTemplates
     {
 
 		public static Entity CreateHouseConstructionTemplate(Vector3 pos) {
+
+			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
+			req.Add (1, new ConstructionRequirement (0, 10));
+
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent("House-Construction")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.AddComponent(new Construction.Data(req), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 

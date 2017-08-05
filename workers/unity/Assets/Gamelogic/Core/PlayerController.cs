@@ -8,6 +8,7 @@ using Improbable.Unity.Visualizer;
 public class PlayerController : MonoBehaviour {
 
 	public float speed = 0.1f;
+	public float zoomSpeed = 1f;
 
 	[HideInInspector]
 	[Require] public Player.Writer playerWriter;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.position += new Vector3 (Input.GetAxis ("Horizontal")*speed, Input.GetAxis ("Vertical")*speed, 0);
+		transform.position += new Vector3 (Input.GetAxis ("Horizontal")*speed, Input.GetAxis ("Vertical")*speed, Input.GetAxis("Mouse ScrollWheel")*zoomSpeed);
+
 	}
 }

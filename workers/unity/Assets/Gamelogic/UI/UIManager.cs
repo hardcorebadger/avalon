@@ -19,13 +19,13 @@ namespace Assets.Gamelogic.Core {
 
 		void Update () {
 			if (Input.GetKeyDown(KeyCode.Space)) {
-				preview = Instantiate (previewPrefab, transform);
-				int max;
-				Dictionary<int,int> items = AggregateInventories (out max);
-				preview.GetComponent<UIInventory> ().Load (items, max);
+				InterpretPreview ();
 			}
 			if (Input.GetKeyUp(KeyCode.Space)) {
-				Destroy (preview);
+				if (preview != null) {
+					Destroy (preview);
+					preview = null;
+				}
 			}
 		}
 
@@ -37,18 +37,23 @@ namespace Assets.Gamelogic.Core {
 			Instantiate (instance.toolbarWindowPrefab, instance.transform).GetComponent<UIToolbarWindow> ().Load (title, options, d);
 		}
 
-		private Dictionary<int,int> AggregateInventories(out int maxWeight) {
-			maxWeight = 0;
-			Dictionary<int,int> result = new Dictionary<int, int> ();
+		private void InterpretPreview() {
+			if (SelectionManager.instance.selected.Count == 0)
+				return;
+
+			preview = Instantiate (previewPrefab, transform);
+
 			foreach (Selectable s in SelectionManager.instance.selected) {
-				InventoryVisualizer inv = s.GetComponent<InventoryVisualizer> ();
-				if (inv != null) {
-					inv.AppendInventory (ref maxWeight, ref result);
+				if (s.GetComponent<ConstructionVisualizer> () != null) {
+					// any building gets priority
+					preview.GetComponent<UIPreviewWindow> ().LoadConstruction(s.GetComponent<ConstructionVisualizer> ());
+					return;
 				}
 			}
-			return result;
-		}
 
+			// assume inventory
+			preview.GetComponent<UIPreviewWindow> ().LoadInventoryFromSelection ();
+		}
 	}
 
 }
