@@ -11,13 +11,8 @@
 
 Avalon is a minimal MMORTS that encourages complex global economies to develop in an inviting and easy to navigate 2D world.
 
-## Todo
+## Info
 
-- Log/Gather Command (single entity target only)
-- Log/Gather Action + input to inventory
-- Radial Selection for command targeting + ui
-- Log/Gather with radial targeting
-- Find Next Action capability for radial command targeting
-- Stockpile creation action (drop) and command
-- Storage pick ui
-- Storage (add/remove) parameterization in commands
+- Current Release Version: 0.0
+- Next Release Date: 8/11/17
+- Current Sprint: https://github.com/hardcorebadger/avalon/projects/1
