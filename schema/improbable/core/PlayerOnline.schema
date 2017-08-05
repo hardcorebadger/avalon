@@ -1,0 +1,19 @@
+package improbable.core;
+
+import "improbable/vector3.schema";
+
+type ConstructionRequest {
+  Vector3d position = 1;
+  string building_name = 2;
+}
+
+type ConstructionResponse {
+  bool success = 1;
+}
+
+component PlayerOnline {
+    id = 1006;
+    int32 player_id = 1;
+
+    command ConstructionResponse construct(ConstructionRequest);
+}

@@ -2,5 +2,4 @@ package improbable.core;
 
 component Player {
     id = 1003;
-    int32 player_id = 1;
 }

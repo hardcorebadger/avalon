@@ -1,0 +1,17 @@
+package improbable.core;
+
+import "improbable/core/Inventory.schema";
+
+type ConstructionRequirement {
+    int32 amount = 1;
+    int32 required = 2;
+}
+
+component Construction {
+    id = 1007;
+    
+    map<int32, ConstructionRequirement> requirements = 1;
+
+    command GiveResponse give(ItemStack);
+    command GiveResponse give_multiple(ItemStackList);
+}

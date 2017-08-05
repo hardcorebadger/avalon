@@ -10,6 +10,7 @@ namespace Assets.Gamelogic.Core {
 
 		public GameObject previewPrefab;
 		public GameObject commandPickerPrefab;
+		public GameObject toolbarWindowPrefab;
 		private GameObject preview;
 
 		void OnEnable () {
@@ -30,6 +31,10 @@ namespace Assets.Gamelogic.Core {
 
 		public static void OpenCommandPicker(List<string> options) {
 			Instantiate (instance.commandPickerPrefab, instance.transform).GetComponent<UICommandPicker> ().Load (options);
+		}
+
+		public static void OpenToolbarWindow(string title, List<string> options, UIToolbarWindow.OnSelectedDelegate d) {
+			Instantiate (instance.toolbarWindowPrefab, instance.transform).GetComponent<UIToolbarWindow> ().Load (title, options, d);
 		}
 
 		private Dictionary<int,int> AggregateInventories(out int maxWeight) {

@@ -12,6 +12,15 @@ namespace Assets.Gamelogic.EntityTemplates
     public static class EntityTemplateFactory
     {
 
+		public static Entity CreateHouseConstructionTemplate(Vector3 pos) {
+			return EntityBuilder.Begin()
+				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent("House-Construction")
+				.SetPersistence(true)
+				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.Build();
+		}
+
 		public static Entity CreateSackTemplate(Vector3 pos) {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
@@ -61,7 +70,8 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent("Player")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Player.Data(0), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
+				.AddComponent(new Player.Data(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
+				.AddComponent(new PlayerOnline.Data(1), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
