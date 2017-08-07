@@ -130,10 +130,34 @@ namespace Assets.Gamelogic.Core {
 			return weight;
 		}
 
+		public void Drop(Dictionary<int,int> drops) {
+			foreach (int id in drops.Keys) {
+				Drop(id,drops[id]);
+			}
+		}
+
 		public ItemStackList GetItemStackList() {
+			return ToItemStackList(items);
+		}
+
+		public Dictionary<int,int> GetConstructionOverlap(ConstructionData construction) {
+			Dictionary<int,int> o = new Dictionary<int,int> ();
+			foreach (int i in construction.requirements.Keys) {
+				ConstructionRequirement r = construction.requirements [i];
+				if (Count (i) > 0 && r.required - r.amount > 0) {
+					if (r.required - r.amount < Count (i))
+						o.Add (i, r.required - r.amount);
+					else
+						o.Add (i, Count (i));
+				}
+			}
+			return o;
+		}
+
+		public static ItemStackList ToItemStackList(Dictionary<int,int> d) {
 			ItemStackList l = new ItemStackList (new Improbable.Collections.Map<int, int>());
-			foreach (int id in items.Keys) {
-				l.inventory.Add (id, items [id]);
+			foreach (int id in d.Keys) {
+				l.inventory.Add (id, d [id]);
 			}
 			return l;
 		}

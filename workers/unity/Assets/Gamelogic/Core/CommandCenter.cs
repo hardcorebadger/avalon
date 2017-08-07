@@ -123,6 +123,11 @@ namespace Assets.Gamelogic.Core {
 				if (!options.Contains ("gather"))
 					options.Add ("gather");
 			}
+			ConstructionVisualizer construction = g.GetComponent<ConstructionVisualizer> ();
+			if (construction != null) {
+				if (!options.Contains ("build"))
+					options.Add ("build");
+			}
 		}
 			
 	}

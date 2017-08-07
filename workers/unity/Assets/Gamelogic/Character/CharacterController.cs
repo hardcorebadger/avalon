@@ -34,6 +34,7 @@ namespace Assets.Gamelogic.Core {
 
 		public InventoryController inventory;
 		private Action currentAction;
+		public CharacterState state;
 
 		private void OnEnable() {
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
@@ -41,6 +42,8 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
 
 			transform.position = positionWriter.Data.coords.ToVector3();
+			transform.eulerAngles = new Vector3 (0, 0, rotationWriter.Data.rotation);
+			state = characterWriter.Data.state;
 			StartCoroutine ("UpdateTransform");
 
 			rigidBody = GetComponent<Rigidbody2D> ();
@@ -80,6 +83,8 @@ namespace Assets.Gamelogic.Core {
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "gather") {
 				SetAction (new ActionGather (this, request.target));
+			} else if (request.command == "build") {
+				SetAction (new ActionBuild (this, request.target));
 			}
 			return new Nothing ();
 		}
@@ -108,6 +113,13 @@ namespace Assets.Gamelogic.Core {
 
 		public void SetAction(Action a) {
 			currentAction = a;
+		}
+
+		public void SetState(CharacterState s) {
+			state = s;
+			characterWriter.Send (new Character.Update ()
+				.SetState (s)
+			);
 		}
 
 	}

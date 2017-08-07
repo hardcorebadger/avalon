@@ -25,9 +25,21 @@ type GroupInfo {
   int32 group_size = 2;
 }
 
+enum CharacterState {
+  DEFAULT = 0;
+  FORAGING = 1;
+  CHOPPING = 2;
+  MINING = 3;
+  BUILDING = 4;
+  CRAFTING = 5;
+  SLEEPING = 6;
+  EATING = 7;
+}
+
 component Character {
     id = 1002;
     int32 player_id = 1;
+    CharacterState state = 2;
 
     command Nothing position_target(PositionTargetRequest);
     command Nothing entity_target(EntityTargetRequest);

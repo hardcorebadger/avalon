@@ -34,8 +34,10 @@ namespace Assets.Gamelogic.Core
 		}
 
 		private void OnConstructionUpdated(Construction.Update update) {
-			if (update.requirements.HasValue)
+			if (update.requirements.HasValue) {
+				requirements.Clear ();
 				UnwrapComponentRequirements ();
+			}
 		}
 
 		private void UnwrapComponentRequirements() {

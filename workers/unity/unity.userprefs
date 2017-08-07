@@ -1,13 +1,10 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Building/ConstructionController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Character/ActionBuild.cs">
     <Files>
-      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="19" Column="26" />
-      <File FileName="Assets/Gamelogic/Character/ActionStash.cs" Line="25" Column="5" />
-      <File FileName="Assets/Gamelogic/Core/PlayerOnlineController.cs" Line="4" Column="1" />
-      <File FileName="Assets/Gamelogic/Building/ConstructionController.cs" Line="15" Column="38" />
-      <File FileName="Assets/Gamelogic/Building/ConstructionVisualizer.cs" Line="17" Column="3" />
-      <File FileName="Assets/Gamelogic/Item/InventoryController.cs" Line="51" Column="4" />
+      <File FileName="Assets/Gamelogic/Character/ActionBuild.cs" Line="24" Column="30" />
+      <File FileName="Assets/Gamelogic/Character/ActionGather.cs" Line="24" Column="30" />
+      <File FileName="Assets/Gamelogic/Character/ActionStash.cs" Line="11" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

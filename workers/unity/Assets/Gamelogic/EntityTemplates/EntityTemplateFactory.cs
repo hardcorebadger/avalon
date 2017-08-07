@@ -54,7 +54,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Character.Data(playerId), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
