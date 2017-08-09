@@ -30,7 +30,7 @@ namespace Assets.Gamelogic.Core {
 //			}
 				
 			owner.transform.Rotate(new Vector3(0,0,GetRotationTo (dir)));
-			owner.rigidBody.velocity = owner.transform.TransformDirection (new Vector2 (0, owner.speed));
+			owner.SetVelocity (owner.speed);
 
 			return ActionCode.Working;
 		}

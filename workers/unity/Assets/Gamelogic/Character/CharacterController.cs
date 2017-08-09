@@ -34,6 +34,7 @@ namespace Assets.Gamelogic.Core {
 
 		public InventoryController inventory;
 		private Action currentAction;
+		private float velocity;
 		public CharacterState state;
 
 		private void OnEnable() {
@@ -63,6 +64,7 @@ namespace Assets.Gamelogic.Core {
 				yield return new WaitForSeconds (0.1f);
 				positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
 				rotationWriter.Send (new Rotation.Update ().SetRotation(transform.eulerAngles.z));
+				characterWriter.Send (new Character.Update ().SetVelocity (velocity));
 			}
 		}
 
@@ -120,6 +122,11 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.Send (new Character.Update ()
 				.SetState (s)
 			);
+		}
+
+		public void SetVelocity(float f) {
+			velocity = f;
+			rigidBody.velocity = transform.TransformDirection (new Vector2 (0, velocity));
 		}
 
 	}

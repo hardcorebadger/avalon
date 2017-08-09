@@ -72,11 +72,6 @@ namespace Assets.Gamelogic.Core {
 			return ActionCode.Working;
 		}
 
-		private IEnumerator Build() {
-			yield return new WaitForSeconds (3f);
-
-		}
-
 		private void OnSuccessfulEntityQuery(EntityQueryResult queryResult) {
 			Map<EntityId, Entity> resultMap = queryResult.Entities;
 			Entity e = resultMap.First.Value.Value;

@@ -40,6 +40,7 @@ component Character {
     id = 1002;
     int32 player_id = 1;
     CharacterState state = 2;
+    float velocity = 3;
 
     command Nothing position_target(PositionTargetRequest);
     command Nothing entity_target(EntityTargetRequest);
