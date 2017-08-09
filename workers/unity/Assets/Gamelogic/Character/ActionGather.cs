@@ -26,6 +26,9 @@ namespace Assets.Gamelogic.Core {
 
 		public ActionSeek seek;
 
+		private float time = -1f;
+
+
 		public ActionGather(CharacterController o, EntityId t) : base(o)	{
 			target = t;
 			var entityQuery = Query.HasEntityId(target).ReturnComponents(Position.ComponentId, Inventory.ComponentId);
@@ -45,13 +48,22 @@ namespace Assets.Gamelogic.Core {
 				if (seek == null) {
 					seek = new ActionSeek (owner, position);
 				}
-				ActionCode seekProgress = seek.Update ();
-				if (seekProgress == ActionCode.Success) {
-					complete = true;
-					int removalCount = inventory.inventory [1];
-					owner.inventory.Insert (1, removalCount);
-					SpatialOS.WorkerCommands.DeleteEntity (target);
-					return ActionCode.Success;
+				if (time == -1f) {
+					ActionCode seekProgress = seek.Update ();
+					if (seekProgress == ActionCode.Success) {
+						owner.SetState (CharacterState.CHOPPING);
+						time = 0f;
+					}
+				} else {
+					time += Time.deltaTime;
+					if (time > 20f) {
+						owner.SetState (CharacterState.DEFAULT);
+						complete = true;
+						int removalCount = inventory.inventory [1];
+						owner.inventory.Insert (1, removalCount);
+						SpatialOS.WorkerCommands.DeleteEntity (target);
+						return ActionCode.Success;
+					}
 				}
 			}
 

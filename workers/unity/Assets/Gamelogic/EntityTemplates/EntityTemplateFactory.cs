@@ -12,6 +12,15 @@ namespace Assets.Gamelogic.EntityTemplates
     public static class EntityTemplateFactory
     {
 
+		public static Entity CreateHouseTemplate(Vector3 pos) {
+			return EntityBuilder.Begin()
+				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent("House")
+				.SetPersistence(true)
+				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.Build();
+		}
+
 		public static Entity CreateHouseConstructionTemplate(Vector3 pos) {
 
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();

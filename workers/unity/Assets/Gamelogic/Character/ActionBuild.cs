@@ -59,7 +59,7 @@ namespace Assets.Gamelogic.Core {
 				stage = 3;
 			} else if (stage == 3) {
 				time += Time.deltaTime;
-				if (time > 3f)
+				if (time > 20f)
 					stage = 4;
 			} else if (stage == 4) {
 				owner.SetState (CharacterState.DEFAULT);

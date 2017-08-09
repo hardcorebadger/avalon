@@ -32,7 +32,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private GiveResponse OnGive(ItemStack itemStack, ICommandCallerInfo callerinfo) {
-			return new GiveResponse (Insert(itemStack.id,itemStack.amount));
+			bool f = Insert (itemStack.id, itemStack.amount);
+			CheckConstructionProgress ();
+			return new GiveResponse (f);
 		}
 
 		private GiveResponse OnGiveMultiple(ItemStackList itemStackList, ICommandCallerInfo callerinfo) {
@@ -43,6 +45,7 @@ namespace Assets.Gamelogic.Core {
 			foreach (int id in itemStackList.inventory.Keys) {
 				Insert (id, itemStackList.inventory [id]);
 			}
+			CheckConstructionProgress ();
 			return new GiveResponse (true);
 		}
 
@@ -99,6 +102,21 @@ namespace Assets.Gamelogic.Core {
 			Requirement req;
 			requirements.TryGetValue (i, out req);
 			return req.amount;
+		}
+
+		private void CheckConstructionProgress() {
+			foreach (int key in requirements.Keys) {
+				Requirement val = requirements[key];
+				if (val.amount < val.required)
+					return;
+			}
+			// fully stocked
+			SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateHouseTemplate (transform.position))
+				.OnSuccess (entityId => OnHouseCreated ());
+		}
+
+		private void OnHouseCreated() {
+			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId());
 		}
 
 		public struct Requirement {

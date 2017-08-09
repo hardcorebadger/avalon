@@ -15,12 +15,12 @@ namespace Assets.Gamelogic.Core {
 		public override ActionCode Update () {
 			Vector3 dir = (target - owner.transform.position);
 			Steer (ref dir);
-			float dist = Vector3.Distance(target, owner.transform.position);
 
 			Collider2D[] colliders = Physics2D.OverlapCircleAll (target, owner.arrivalRadius);
 			foreach (Collider2D c in colliders) {
 				if (c.gameObject == owner.gameObject) {
-					owner.rigidBody.velocity = Vector2.zero;
+					owner.SetVelocity (0f);
+					owner.rigidBody.angularVelocity = 0f;
 					return ActionCode.Success;
 				}
 			}

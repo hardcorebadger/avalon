@@ -81,11 +81,13 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case CharacterState.CHOPPING:
 				currentParticle = Instantiate (choppingParticle, transform);
-				currentParticle.transform.localPosition += transform.forward*0.2f;
+				currentParticle.transform.localPosition += transform.forward*0.1f;
+				currentParticle.transform.eulerAngles = new Vector3(-90,0,0);
 				break;
 			case CharacterState.BUILDING:
 				currentParticle = Instantiate (buildingParticle, transform);
-				currentParticle.transform.localPosition += transform.forward*0.2f;
+				currentParticle.transform.localPosition += transform.forward*0.1f;
+				currentParticle.transform.eulerAngles = new Vector3(-90,0,0);
 				break;
 			default:
 				break;
