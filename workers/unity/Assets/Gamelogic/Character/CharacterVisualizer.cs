@@ -16,8 +16,10 @@ namespace Assets.Gamelogic.Core {
 		private int ownerId = 1;
 		private Rigidbody2D rigidBody;
 		public CharacterState state;
-		public bool deee = false;
 		public float ipAllowance = 0.1f;
+		private GameObject currentParticle;
+		public GameObject choppingParticle; 
+		public GameObject buildingParticle;
 
 		void OnEnable() {
 			if (characterReader.HasAuthority) {
@@ -54,17 +56,41 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void OnCharacterUpdated(Character.Update update) {
-			if (!characterReader.HasAuthority && update.state.HasValue)
-				state = update.state.Value;
+			if (!characterReader.HasAuthority && update.state.HasValue) {
+				UpdateState ( update.state.Value);
+			}
 			if (!characterReader.HasAuthority && update.velocity.HasValue) {
-				if (deee)
-					Debug.Log ("ye");
 				rigidBody.velocity = transform.TransformDirection (new Vector2 (0, update.velocity.Value));
 			}
 		}
 
 		public bool CanControl() {
 			return ownerId == Bootstrap.playerId;
+		}
+
+		private void UpdateState(CharacterState s) {
+			state = s;
+			if (currentParticle != null) {
+				Destroy (currentParticle);
+				currentParticle = null;
+			}
+			switch (state) {
+			case CharacterState.DEFAULT:
+				Destroy (currentParticle);
+				currentParticle = null;
+				break;
+			case CharacterState.CHOPPING:
+				currentParticle = Instantiate (choppingParticle, transform);
+				currentParticle.transform.localPosition += transform.forward*0.2f;
+				break;
+			case CharacterState.BUILDING:
+				currentParticle = Instantiate (buildingParticle, transform);
+				currentParticle.transform.localPosition += transform.forward*0.2f;
+				break;
+			default:
+				break;
+			}
+				
 		}
 
 	}
