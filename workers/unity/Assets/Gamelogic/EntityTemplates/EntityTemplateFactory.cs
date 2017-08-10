@@ -45,13 +45,44 @@ namespace Assets.Gamelogic.EntityTemplates
 				.Build();
 		}
 
-		public static Entity CreateTreeTemplate(Vector3 pos) {
+		public static Entity CreatePineTemplate(string name, Vector3 pos) {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent("Pine")
+				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Gatherable.Data(1, "Pine Tree"), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
+				.Build();
+		}
+
+		public static Entity CreateOakTemplate(string name, Vector3 pos) {
+			return EntityBuilder.Begin()
+				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent(name)
+				.SetPersistence(true)
+				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.AddComponent(new Gatherable.Data(1, "Oak Tree"), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
+				.Build();
+		}
+
+		public static Entity CreateBasicEntityTemplate(string name, Vector3 pos) {
+			return EntityBuilder.Begin()
+				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent(name)
+				.SetPersistence(true)
+				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.Build();
+		}
+
+		public static Entity CreateRockTemplate(string name, Vector3 pos) {
+			return EntityBuilder.Begin()
+				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent(name)
+				.SetPersistence(true)
+				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
+				.AddComponent(new Gatherable.Data(2, "Rock"), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
