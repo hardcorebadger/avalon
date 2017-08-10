@@ -14,5 +14,4 @@ Avalon is a minimal MMORTS that encourages complex global economies to develop i
 ## Info
 
 - Current Release Version: 0.0
-- Next Release Date: 8/11/17
 - Current Sprint: https://github.com/hardcorebadger/avalon/projects/1
