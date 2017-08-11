@@ -1,8 +1,17 @@
 package improbable.core;
 
+import "improbable/core/Nothing.schema";
+
+type WorkRequest {
+  EntityId worker = 1;
+}
+
 component Gatherable {
     id = 1005;
     int32 type = 1;
     string name = 2;
+    int32 workers = 3;
+    int32 max_workers = 4;
+    command Nothing request_work(WorkRequest);
 
 }
