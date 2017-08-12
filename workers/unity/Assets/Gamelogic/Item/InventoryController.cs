@@ -217,16 +217,11 @@ namespace Assets.Gamelogic.Core {
 					int amount = Mathf.Min (inv1 [i], inv2 [i]);
 					int cap = weight / Item.GetWeight (i);
 					if (cap > 0 && amount > cap) {
-						Debug.LogWarning ("add cap");
 						o.Add (i, weight / Item.GetWeight (i));
 					} else if (cap > 0) {
-						Debug.LogWarning ("add amount");
 						o.Add (i, amount);
 					} else if (cap == 0) {
-						Debug.LogWarning ("cap = 0");
 					}
-				} else {
-					Debug.LogWarning ("no overlap " + inv2 [i]);
 				}
 			}
 			return o;

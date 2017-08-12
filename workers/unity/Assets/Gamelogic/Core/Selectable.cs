@@ -47,14 +47,16 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void SetOutlineColor(OutlineColor c) {
-			if (c == OutlineColor.Blue) {
-				outline.enabled = true;
-				outline.color = 0;
-			} else if (c == OutlineColor.Red) {
-				outline.enabled = true;
-				outline.color = 1;
-			} else if (c == OutlineColor.None)
-				outline.enabled = false;
+			if (outline != null) {
+				if (c == OutlineColor.Blue) {
+					outline.enabled = true;
+					outline.color = 0;
+				} else if (c == OutlineColor.Red) {
+					outline.enabled = true;
+					outline.color = 1;
+				} else if (c == OutlineColor.None)
+					outline.enabled = false;
+			}
 		}
 	}
 
