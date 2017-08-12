@@ -51,7 +51,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(1, "Pine Tree"), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(1, "Pine Tree", 0, 1), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
@@ -62,7 +62,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(1, "Oak Tree"), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(1, "Oak Tree",0,1), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
@@ -82,7 +82,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(2, "Rock"), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(2, "Rock",0 ,1), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
