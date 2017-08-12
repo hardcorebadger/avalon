@@ -128,6 +128,11 @@ namespace Assets.Gamelogic.Core {
 				if (!options.Contains ("build"))
 					options.Add ("build");
 			}
+			WorkSiteVisualizer worksite = g.GetComponent<WorkSiteVisualizer> ();
+			if (construction != null) {
+				if (!options.Contains ("work"))
+					options.Add ("work");
+			}
 		}
 			
 	}

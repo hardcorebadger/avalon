@@ -1,0 +1,34 @@
+package improbable.core;
+
+type EnlistRequest {}
+type EnlistResponse {
+    WorkType work_type = 1;
+}
+
+type UnEnlistRequest {}
+type UnEnlistResponse {}
+
+enum WorkType {
+  WORK_BUILDING = 0;
+  WORK_LOGGING = 1;
+  WORK_QUARRYING = 2;
+  WORK_MINING = 3;
+  WORK_FORAGING = 4;
+  WORK_FARMING = 5;
+  WORK_WELLWORKING = 6;
+  WORK_FORGING = 7;
+  WORK_SMITHING = 8;
+  WORK_SIEGECRAFTING = 9;
+  WORK_TANNING = 10;
+}
+
+component WorkSite {
+    id = 1008;
+    
+    list<EntityId> workers = 1;
+    WorkType type = 2;
+
+    command EnlistResponse enlist(EnlistRequest);
+    command UnEnlistResponse un_enlist(UnEnlistRequest);
+
+}

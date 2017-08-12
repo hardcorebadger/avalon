@@ -1,0 +1,10 @@
+package improbable.core;
+
+import "improbable/vector3.schema";
+
+type SourcingOption {
+    bool radius = 1;
+    list<EntityId> storage_specs = 2;
+    float storage_radius = 3;
+    Vector3d storage_range_center = 4;
+}

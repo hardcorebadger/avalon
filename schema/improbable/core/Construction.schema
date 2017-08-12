@@ -1,6 +1,7 @@
 package improbable.core;
 
 import "improbable/core/Inventory.schema";
+import "improbable/core/SourcingOption.schema";
 
 type ConstructionRequirement {
     int32 amount = 1;
@@ -11,6 +12,7 @@ component Construction {
     id = 1007;
     
     map<int32, ConstructionRequirement> requirements = 1;
+    SourcingOption work_sourcing = 2;
 
     command GiveResponse give(ItemStack);
     command GiveResponse give_multiple(ItemStackList);

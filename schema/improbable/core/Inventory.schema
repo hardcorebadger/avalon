@@ -13,6 +13,10 @@ type GiveResponse {
     bool success = 1;
 }
 
+type TakeResponse {
+    bool success = 1;
+}
+
 component Inventory {
     id = 1004;
     map<int32,int32> inventory = 1;
@@ -20,4 +24,7 @@ component Inventory {
 
     command GiveResponse give(ItemStack);
     command GiveResponse give_multiple(ItemStackList);
+
+    command TakeResponse take(ItemStack);
+    command TakeResponse take_multiple(ItemStackList);
 }

@@ -83,11 +83,12 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
-			if (request.command == "gather") {
+			if (request.command == "gather") 
 				SetAction (new ActionGather (this, request.target));
-			} else if (request.command == "build") {
+			else if (request.command == "build") 
 				SetAction (new ActionBuild (this, request.target));
-			}
+			else if (request.command == "work")
+				SetAction (new ActionWork (this, request.target));
 			return new Nothing ();
 		}
 
@@ -114,6 +115,11 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void SetAction(Action a) {
+			if (currentAction != null)
+				currentAction.OnKill ();
+			SetVelocity (0f);
+			rigidBody.angularVelocity = 0f;
+			SetState (CharacterState.DEFAULT);
 			currentAction = a;
 		}
 

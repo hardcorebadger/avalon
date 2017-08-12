@@ -19,13 +19,22 @@ namespace Assets.Gamelogic.Core {
 
 		private EntityId target;
 		private Vector3 position;
-		private ConstructionData construction;
 		public int stage = -1;
 		public bool failed = false;
 		public bool succeeded = false;
 		private Dictionary<int,int> overlap;
 		public ActionSeek seek;
 		private float time = 0;
+
+		public ActionBuild(CharacterController o, EntityId t, Dictionary<int,int> ov, Vector3 pos) : base(o)	{
+			target = t;
+			overlap = ov;
+			position = pos;
+			if (overlap.Count == 0)
+				succeeded = true;
+
+			stage = 0;
+		}
 
 		public ActionBuild(CharacterController o, EntityId t) : base(o)	{
 			target = t;
@@ -78,7 +87,7 @@ namespace Assets.Gamelogic.Core {
 			Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position>();
 			Improbable.Collections.Option<IComponentData<Construction>> c = e.Get<Construction>();
 			position = p.Value.Get().Value.coords.ToVector3();
-			construction = c.Value.Get().Value;
+			ConstructionData construction = c.Value.Get().Value;
 
 			overlap = owner.inventory.GetConstructionOverlap (construction);
 			if (overlap.Count == 0)

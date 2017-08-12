@@ -14,6 +14,8 @@ namespace Assets.Gamelogic.Core {
 
 		public abstract ActionCode Update();
 
+		public virtual void OnKill () {}
+
 		public virtual void Log() {}
 
 	}
