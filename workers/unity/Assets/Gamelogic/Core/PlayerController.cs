@@ -24,6 +24,16 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		transform.position += new Vector3 (Input.GetAxis ("Horizontal")*speed, Input.GetAxis ("Vertical")*speed, Input.GetAxis("Mouse ScrollWheel")*zoomSpeed);
-
 	}
+
+	public float pixelToUnits = 40f;
+
+	public float RoundToNearestPixel(float unityUnits)
+	{
+		float valueInPixels = unityUnits * pixelToUnits;
+		valueInPixels = Mathf.Round(valueInPixels);
+		float roundedUnityUnits = valueInPixels * (1 / pixelToUnits);
+		return roundedUnityUnits;
+	}
+
 }

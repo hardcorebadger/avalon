@@ -85,24 +85,26 @@ namespace Assets.Gamelogic.EntityTemplates
 		}
 
 		public static Entity CreatePineTemplate(string name, Vector3 pos) {
+			Improbable.Collections.Map<int,int> i = new Improbable.Collections.Map<int,int> ();
+			i.Add (1, 1);
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(1, "Pine Tree", 0, 1), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(1, "Pine Tree", 50, i), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
 		public static Entity CreateOakTemplate(string name, Vector3 pos) {
+			Improbable.Collections.Map<int,int> i = new Improbable.Collections.Map<int,int> ();
+			i.Add (1, 1);
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(1, "Oak Tree",0,1), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(1, "Oak Tree",50,i), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -116,13 +118,14 @@ namespace Assets.Gamelogic.EntityTemplates
 		}
 
 		public static Entity CreateRockTemplate(string name, Vector3 pos) {
+			Improbable.Collections.Map<int,int> i = new Improbable.Collections.Map<int,int> ();
+			i.Add (3, 1);
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(2, "Rock",0 ,1), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(2, "Rock", 100,i), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
