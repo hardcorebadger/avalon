@@ -12,10 +12,16 @@ namespace Assets.Gamelogic.Core
     public class Bootstrap : MonoBehaviour
     {
         public WorkerConfigurationData Configuration = new WorkerConfigurationData();
+
+		public static PlayerDataComponent playerDataObject;
+
 		public static int playerId = 1;
 
-        private void Start()
-        {
+        private void Start() {
+			Bootstrap.playerDataObject = FindObjectOfType<PlayerDataComponent> ();
+			if (Bootstrap.playerDataObject != null) {
+				playerId = Bootstrap.playerDataObject.data.id;
+			}
             SpatialOS.ApplyConfiguration(Configuration);
 			Item.InitializeItems ();
 
@@ -60,7 +66,7 @@ namespace Assets.Gamelogic.Core
 
 		// Send a CreatePlayer command to the PLayerCreator entity requesting a Player entity be spawned.
 		private static void RequestPlayerCreation(EntityId playerCreatorEntityId) {
-			SpatialOS.WorkerCommands.SendCommand(PlayerCreator.Commands.CreatePlayer.Descriptor, new CreatePlayerRequest(playerId), playerCreatorEntityId)
+			SpatialOS.WorkerCommands.SendCommand(PlayerCreator.Commands.CreatePlayer.Descriptor, new CreatePlayerRequest(playerId, playerDataObject.data.token), playerCreatorEntityId)
 				.OnFailure(response => OnCreatePlayerFailure(response, playerCreatorEntityId));
 		}
 

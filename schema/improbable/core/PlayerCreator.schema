@@ -2,6 +2,7 @@ package improbable.core;
 
 type CreatePlayerRequest {
   int32 player_id = 1;
+  string session = 2;
 }
 type CreatePlayerResponse {}
 

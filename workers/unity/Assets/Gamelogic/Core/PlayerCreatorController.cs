@@ -1,4 +1,7 @@
 ﻿using Assets.Gamelogic.EntityTemplates;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using Improbable;
 using Improbable.Core;
 using Improbable.Entity.Component;
@@ -26,8 +29,14 @@ namespace Assets.Gamelogic.Core
 
 		private CreatePlayerResponse OnCreatePlayer(CreatePlayerRequest request, ICommandCallerInfo callerinfo)
 		{
-			CreateFamily(request.playerId, Vector3.zero);
-			CreatePlayer(callerinfo.CallerWorkerId, Vector3.zero);
+
+			WWWForm form = new WWWForm ();
+			form.AddField ("id", request.playerId);
+			form.AddField ("token", request.session);
+
+			WWW w = new WWW ("http://dev.integerstudios.com/avalon/login.php", form);    
+			StartCoroutine (LoadPlayerData (w, callerinfo));
+
 			return new CreatePlayerResponse();
 		}
 
@@ -75,5 +84,31 @@ namespace Assets.Gamelogic.Core
 		private void OnFailedEntityCreation(ICommandErrorDetails response, EntityId entityId) {
 			Debug.LogError("Failed to Create Entity: " + response.ErrorMessage);
 		}
+
+		private IEnumerator LoadPlayerData(WWW _w, ICommandCallerInfo callerInfo) {
+			yield return _w; 
+
+			if (_w.error == null) {
+				if (_w.text.Contains ("!!BAD!!LOGIN!!")) {
+					Debug.LogError ("Bad Login!");
+				} else {
+					LoginMenu.PlayerData player = JsonUtility.FromJson<LoginMenu.PlayerData> (_w.text);
+
+					if (player.status != 200) {
+						//failed
+						Debug.LogError ("Bad Login!");
+					} else {
+						Vector3 playerPos = new Vector3 (player.x,  player.y, 0);
+						CreateFamily(player.id, Vector3.zero);
+						CreatePlayer(callerInfo.CallerWorkerId, Vector3.zero);
+					}
+				}
+			} else {
+				Debug.LogError(_w.error);
+
+			}
+		}
+
+
 	}
 }
