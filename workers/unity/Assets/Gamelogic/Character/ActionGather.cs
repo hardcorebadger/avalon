@@ -87,7 +87,7 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 5:
 				//we got the gather response
-				if (response != null && response.success) {
+				if (response.success) {
 					var first = response.inventory.First;
 					int id = first.Value.Key;
 					int amount = first.Value.Value;
@@ -135,7 +135,6 @@ namespace Assets.Gamelogic.Core {
 		public void OnGatherFailed() {
 
 			state = 5;
-			this.response = null;
 
 		}
 
