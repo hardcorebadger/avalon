@@ -63,11 +63,6 @@ namespace Assets.Gamelogic.Core {
 				break;
 			}
 
-			//TODO
-			//1. move the overlap calc back to this action
-			//2. pass that to the build and the get subs
-			//3. write the get sub with the data
-
 			if (success)
 				return ActionCode.Success;
 			else if (failed)

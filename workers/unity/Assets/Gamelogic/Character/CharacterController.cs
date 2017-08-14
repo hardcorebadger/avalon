@@ -89,6 +89,8 @@ namespace Assets.Gamelogic.Core {
 				SetAction (new ActionBuild (this, request.target));
 			else if (request.command == "work")
 				SetAction (new ActionWork (this, request.target));
+			else if (request.command == "store")
+				SetAction (new ActionStore (this, request.target));
 			return new Nothing ();
 		}
 

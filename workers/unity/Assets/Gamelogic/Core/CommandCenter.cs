@@ -129,9 +129,14 @@ namespace Assets.Gamelogic.Core {
 					options.Add ("build");
 			}
 			WorkSiteVisualizer worksite = g.GetComponent<WorkSiteVisualizer> ();
-			if (construction != null) {
+			if (worksite != null) {
 				if (!options.Contains ("work"))
 					options.Add ("work");
+			}
+			StorageVisualizer storage = g.GetComponent<StorageVisualizer> ();
+			if (storage != null) {
+				if (!options.Contains ("store"))
+					options.Add ("store");
 			}
 		}
 			

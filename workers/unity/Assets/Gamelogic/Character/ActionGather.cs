@@ -113,6 +113,11 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnSuccessfulEntityQuery(EntityQueryResult queryResult) {
 			Map<EntityId, Entity> resultMap = queryResult.Entities;
+			if (resultMap.Count == 0) {
+				Debug.Log("Gatherable no longer exits");
+				success = true;
+				return;
+			}
 			Entity e = resultMap.First.Value.Value;
 			Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position>();
 			Improbable.Collections.Option<IComponentData<Gatherable>> g = e.Get<Gatherable>();

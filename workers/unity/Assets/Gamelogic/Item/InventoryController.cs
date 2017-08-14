@@ -185,6 +185,28 @@ namespace Assets.Gamelogic.Core {
 			return o;
 		}
 
+		public bool CanStoreSomething(StorageData s, InventoryData sInv) {
+			foreach (int id in items.Keys) {
+				if (s.types.Contains (Item.GetType (id))) {
+					if (CanHold (sInv, id, 1))
+						return true;
+				}
+			}
+			return false;
+		}
+
+		public ItemStackList GetStorableItems(StorageData s, InventoryData sInv) {
+			Improbable.Collections.Map<int, int> l = new Improbable.Collections.Map<int, int> ();
+			foreach (int id in items.Keys) {
+				if (s.types.Contains (Item.GetType (id))) {
+					int a = TestFill (sInv, id, items [id]);
+					if (a > 0)
+						l.Add (id, a);
+				}
+			}
+			return new ItemStackList (l);
+		}
+
 		public static ItemStackList ToItemStackList(Dictionary<int,int> d) {
 			ItemStackList l = new ItemStackList (new Improbable.Collections.Map<int, int>());
 			foreach (int id in d.Keys) {
@@ -225,6 +247,28 @@ namespace Assets.Gamelogic.Core {
 				}
 			}
 			return o;
+		}
+
+		public static int TestFill(InventoryData inv, int id, int amount) {
+			int available = inv.maxWeight - GetWeight (inv);
+			int max = available / Item.GetWeight (id);
+			amount = Mathf.Min (max, amount);
+			int cur = 0;
+			inv.inventory.TryGetValue (id, out cur);
+			inv.inventory[id] = cur + amount;
+			return amount;
+		}
+
+		public static bool CanHold(InventoryData inv, int id, int amount) {
+			return (Item.GetWeight (id) * amount + GetWeight (inv) <= inv.maxWeight);
+		}
+
+		public static int GetWeight(InventoryData inv) {
+			int w = 0;
+			foreach (int i in inv.inventory.Keys) {
+				w += Item.GetWeight (i) * inv.inventory [i];
+			}
+			return w;
 		}
 	}
 
