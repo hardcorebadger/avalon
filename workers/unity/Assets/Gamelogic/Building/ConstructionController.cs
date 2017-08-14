@@ -15,6 +15,7 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Construction.Writer constructionWriter;
 
 		private Dictionary<int,Requirement> requirements;
+		private OwnedController owned;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -24,6 +25,9 @@ namespace Assets.Gamelogic.Core {
 
 			requirements = new Dictionary<int,Requirement> ();
 			UnwrapComponentRequirements ();
+
+			owned = GetComponent<OwnedController> ();
+
 		}
 
 		void OnDisable() {
@@ -111,7 +115,7 @@ namespace Assets.Gamelogic.Core {
 					return;
 			}
 			// fully stocked
-			SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateHouseTemplate (transform.position))
+			SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateHouseTemplate (transform.position, owned.getOwner()))
 				.OnSuccess (entityId => OnHouseCreated ());
 		}
 

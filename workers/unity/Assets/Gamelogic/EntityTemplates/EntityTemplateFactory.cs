@@ -12,7 +12,7 @@ namespace Assets.Gamelogic.EntityTemplates
     public static class EntityTemplateFactory
     {
 
-		public static Entity CreateHouseTemplate(Vector3 pos) {
+		public static Entity CreateHouseTemplate(Vector3 pos, int ownerId) {
 
 			Improbable.Collections.List<ResourceType> types = new Improbable.Collections.List<ResourceType> ();
 			types.Add (ResourceType.RESOURCE_TIMBER);
@@ -30,10 +30,11 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 5000), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Storage.Data(types), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(ownerId, Type.HOME), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
-		public static Entity CreateHouseCheatTemplate(Vector3 pos) {
+		public static Entity CreateHouseCheatTemplate(Vector3 pos, int ownerId) {
 
 			Improbable.Collections.List<ResourceType> types = new Improbable.Collections.List<ResourceType> ();
 			types.Add (ResourceType.RESOURCE_TIMBER);
@@ -54,10 +55,11 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Inventory.Data(inv, 5000), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Storage.Data(types), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(ownerId, Type.HOME), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
-		public static Entity CreateHouseConstructionTemplate(Vector3 pos) {
+		public static Entity CreateHouseConstructionTemplate(Vector3 pos, int ownerId) {
 
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
 			req.Add (1, new ConstructionRequirement (0, 10));
@@ -71,6 +73,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Construction.Data(req,sourcing), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(ownerId, Type.CONSTRUCTION), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -130,14 +133,16 @@ namespace Assets.Gamelogic.EntityTemplates
 		}
 
 		public static Entity CreateCharacterTemplate(int playerId, Vector3 pos) {
+			Improbable.Vector3d color = new Improbable.Vector3d(Bootstrap.players[playerId].red, Bootstrap.players[playerId].green, Bootstrap.players[playerId].blue);
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent("Character")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, color), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(playerId, Type.CHARACTER), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -151,14 +156,14 @@ namespace Assets.Gamelogic.EntityTemplates
 				.Build();
 		}
 
-		public static Entity CreatePlayerTemplate(string clientWorkerId, Vector3 pos) {
+		public static Entity CreatePlayerTemplate(string clientWorkerId, int playerId, Vector3 pos) {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
 				.AddMetadataComponent("Player")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Player.Data(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-				.AddComponent(new PlayerOnline.Data(1), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new PlayerOnline.Data(playerId), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 

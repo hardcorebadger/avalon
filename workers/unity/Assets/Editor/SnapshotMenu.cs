@@ -38,7 +38,7 @@ namespace Assets.Editor
 				}
 			}
 
-			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateHouseCheatTemplate(new Vector3(7,7,0)));
+			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateHouseCheatTemplate(new Vector3(7,7,0), 1));
 
 
 			SaveSnapshot(snapshotEntities);

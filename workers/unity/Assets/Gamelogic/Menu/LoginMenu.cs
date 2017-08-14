@@ -67,7 +67,7 @@ namespace Assets.Gamelogic.Core {
 				form.AddField ("token", encrypted);
 //			form.AddField ("version", manager.version);
 
-			WWW w = new WWW ("http://dev.integerstudios.com/avalon/login.php", form);    
+			WWW w = new WWW ("http://cdn.lilsumn.com/login.php", form);    
 			StartCoroutine (LoginForm (w));
 
 		}
@@ -140,13 +140,17 @@ namespace Assets.Gamelogic.Core {
 			public string email;
 			public string password;
 			public string token;
-			public string color;
+			public int red;
+			public int green;
+			public int blue;
+			public float alpha;
+
 			public int status;
 			public int x;
 			public int y;
 			public string error;
 			public override string ToString () {
-				return string.Format ("[PlayerData: playerId={0}, username={1}, email={2}, password={3}, status={4}, error={5}, color={6}, token={7}]", id, username, email, password, status, error, color, token);
+				return string.Format ("[PlayerData: playerId={0}, username={1}, email={2}, password={3}, status={4}, error={5}, red={6}, token={7}]", id, username, email, password, status, error, red, token);
 			}
 		}
 

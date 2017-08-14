@@ -26,7 +26,7 @@ namespace Assets.Gamelogic.Core
 		}
 
 		private ConstructionResponse OnConstruct(ConstructionRequest request, ICommandCallerInfo callerinfo) {
-			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateHouseConstructionTemplate (new Vector3((float)request.position.x, (float)request.position.y)));
+			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateHouseConstructionTemplate (new Vector3((float)request.position.x, (float)request.position.y), playerOnlineWriter.Data.playerId));
 			return new ConstructionResponse(true);
 		}
 	}
