@@ -49,7 +49,7 @@ namespace Assets.Gamelogic.Core {
 
 			rigidBody = GetComponent<Rigidbody2D> ();
 			inventory = GetComponent<InventoryController> ();
-
+		
 			currentAction = new ActionBlank (this);
 		}
 

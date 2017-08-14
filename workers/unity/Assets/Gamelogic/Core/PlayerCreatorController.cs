@@ -34,7 +34,7 @@ namespace Assets.Gamelogic.Core
 			form.AddField ("id", request.playerId);
 			form.AddField ("token", request.session);
 
-			WWW w = new WWW ("http://dev.integerstudios.com/avalon/login.php", form);    
+			WWW w = new WWW ("http://cdn.lilsumn.com/login.php", form);    
 			StartCoroutine (LoadPlayerData (w, callerinfo));
 
 			return new CreatePlayerResponse();
@@ -61,18 +61,18 @@ namespace Assets.Gamelogic.Core
 				.OnFailure(failure => OnFailedEntityCreation(failure, entityId));
 		}
 
-		private void CreatePlayer(string clientWorkerId, Vector3 pos) {
-			ReservePlayerId (clientWorkerId, pos);
+		private void CreatePlayer(string clientWorkerId, int playerId, Vector3 pos) {
+			ReservePlayerId (clientWorkerId, playerId, pos);
 		}
 
-		private void ReservePlayerId(string clientWorkerId, Vector3 pos) {
+		private void ReservePlayerId(string clientWorkerId, int playerId, Vector3 pos) {
 			SpatialOS.Commands.ReserveEntityId(playerCreatorWriter)
-				.OnSuccess(result => CreatePlayerEntity(clientWorkerId, result.ReservedEntityId, pos))
+				.OnSuccess(result => CreatePlayerEntity(clientWorkerId, playerId, result.ReservedEntityId, pos))
 				.OnFailure(failure => OnFailedReservation(failure));
 		}
 
-		private void CreatePlayerEntity(string clientWorkerId, EntityId entityId, Vector3 pos) {
-			var playerEntityTemplate = EntityTemplateFactory.CreatePlayerTemplate(clientWorkerId, pos);
+		private void CreatePlayerEntity(string clientWorkerId, int playerId, EntityId entityId, Vector3 pos) {
+			var playerEntityTemplate = EntityTemplateFactory.CreatePlayerTemplate(clientWorkerId, playerId, pos);
 			SpatialOS.Commands.CreateEntity(playerCreatorWriter, entityId, playerEntityTemplate)
 				.OnFailure(failure => OnFailedEntityCreation(failure, entityId));
 		}
@@ -100,7 +100,7 @@ namespace Assets.Gamelogic.Core
 					} else {
 						Vector3 playerPos = new Vector3 (player.x,  player.y, 0);
 						CreateFamily(player.id, Vector3.zero);
-						CreatePlayer(callerInfo.CallerWorkerId, playerPos);
+						CreatePlayer(callerInfo.CallerWorkerId, player.id, playerPos);
 					}
 				}
 			} else {

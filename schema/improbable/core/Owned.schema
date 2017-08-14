@@ -1,0 +1,25 @@
+package improbable.core;
+
+type OwnRequest {
+  int32 owner = 1;
+}
+
+type OwnResponse {
+    bool success = 1;
+}
+
+enum Type {
+  CHARACTER = 0;
+  CONSTRUCTION = 1;
+  HOME = 2;
+  STORAGE = 3;
+}
+
+component Owned {
+    id = 1010;
+    int32 owner = 1;
+    Type type = 2;
+
+    command OwnResponse set_owner(OwnRequest);
+
+}
