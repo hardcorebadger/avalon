@@ -1,12 +1,23 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Character/ActionConstruction.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Core/PlayerCreatorController.cs">
     <Files>
-      <File FileName="Assets/Gamelogic/Core/PlayerController.cs" Line="26" Column="154" />
+      <File FileName="Assets/Gamelogic/Core/PlayerCreatorController.cs" Line="39" Column="4" />
+      <File FileName="Assets/Gamelogic/Menu/LoginMenu.cs" Line="79" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/PlayerController.cs" Line="21" Column="38" />
       <File FileName="Assets/Gamelogic/Core/Bootstrap.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Core/PlayerCreatorController.cs" Line="1" Column="1" />
       <File FileName="Assets/Gamelogic/Character/ActionBuild.cs" Line="1" Column="1" />
       <File FileName="Assets/Gamelogic/Character/ActionConstruction.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/CommandCenter.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/CharacterController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionStore.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionBlank.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionGather.cs" Line="120" Column="5" />
+      <File FileName="Assets/Gamelogic/Character/ActionStash.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionSeek.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Item/InventoryController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Item/Item.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
