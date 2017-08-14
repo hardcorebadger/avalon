@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		Camera.main.transform.SetParent (transform);
+		Camera.main.transform.localPosition = new Vector3(0,0,-90);
 		instance = this;
 	}
 	

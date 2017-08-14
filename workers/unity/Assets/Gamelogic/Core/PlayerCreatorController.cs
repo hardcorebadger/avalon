@@ -100,7 +100,7 @@ namespace Assets.Gamelogic.Core
 					} else {
 						Vector3 playerPos = new Vector3 (player.x,  player.y, 0);
 						CreateFamily(player.id, Vector3.zero);
-						CreatePlayer(callerInfo.CallerWorkerId, player.id, Vector3.zero);
+						CreatePlayer(callerInfo.CallerWorkerId, player.id, playerPos);
 					}
 				}
 			} else {
