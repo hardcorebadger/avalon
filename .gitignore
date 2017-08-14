@@ -3,3 +3,4 @@ spatialos_worker_packages.json
 build/
 logs/
 .spatialos
+workers/unity/zip_toolbelt.log
