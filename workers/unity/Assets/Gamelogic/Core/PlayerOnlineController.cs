@@ -7,6 +7,7 @@ using Improbable.Entity.Component;
 using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
+using Assets.Gamelogic.Utils;
 
 namespace Assets.Gamelogic.Core
 {
@@ -14,14 +15,26 @@ namespace Assets.Gamelogic.Core
 	public class PlayerOnlineController : MonoBehaviour {
 
 		[Require] private PlayerOnline.Writer playerOnlineWriter;
+		[Require] private Player.Reader playerReader;
+		[Require] private Position.Reader positionReader;
+
+		[Require]
+		private HeartbeatCounter.Writer HeartbeatCounterWriter;
+
+		private Coroutine heartbeatCoroutine;
 
 		// Use this for initialization
 		void OnEnable () {
+			
+			playerReader.HeartbeatTriggered.Add(OnHeartbeat);
+			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatCheckIntervalSecs, CheckHeartbeat));
 			playerOnlineWriter.CommandReceiver.OnConstruct.RegisterResponse (OnConstruct);
 		}
 
 		// Update is called once per frame
 		void OnDisable () {
+			playerReader.HeartbeatTriggered.Remove(OnHeartbeat);
+			StopCoroutine(heartbeatCoroutine);
 			playerOnlineWriter.CommandReceiver.OnConstruct.DeregisterResponse ();
 		}
 
@@ -29,6 +42,38 @@ namespace Assets.Gamelogic.Core
 			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateHouseConstructionTemplate (new Vector3((float)request.position.x, (float)request.position.y), playerOnlineWriter.Data.playerId));
 			return new ConstructionResponse(true);
 		}
+
+		private void OnHeartbeat(Heartbeat _)
+		{
+			SetHeartbeat(SimulationSettings.TotalHeartbeatsBeforeTimeout);
+		}
+
+
+		private void SetHeartbeat(uint timeoutBeatsRemaining)
+		{
+			HeartbeatCounterWriter.Send(new HeartbeatCounter.Update().SetTimeoutBeatsRemaining(timeoutBeatsRemaining));
+		}
+
+
+		private void CheckHeartbeat()
+		{
+			var heartbeatsRemainingBeforeTimeout = HeartbeatCounterWriter.Data.timeoutBeatsRemaining;
+			if (heartbeatsRemainingBeforeTimeout == 0)
+			{
+				StopCoroutine(heartbeatCoroutine);
+				DeletePlayerEntity();
+				return;
+			}
+			SetHeartbeat(heartbeatsRemainingBeforeTimeout - 1);
+		}
+
+
+		private void DeletePlayerEntity()
+		{
+			SpatialOS.WorkerCommands.SendCommand (PlayerCreator.Commands.DisconnectPlayer.Descriptor, new DisconnectPlayerRequest (playerOnlineWriter.Data.playerId, (long)positionReader.Data.coords.x, (long)positionReader.Data.coords.z), playerReader.Data.creator);
+			SpatialOS.Commands.DeleteEntity(HeartbeatCounterWriter, gameObject.EntityId());
+		}
+
 	}
 
 }

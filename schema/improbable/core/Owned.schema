@@ -8,18 +8,23 @@ type OwnResponse {
     bool success = 1;
 }
 
-enum Type {
-  CHARACTER = 0;
-  CONSTRUCTION = 1;
-  HOME = 2;
-  STORAGE = 3;
+type PlayerColor {
+    float red = 1;
+    float green = 2;
+    float blue = 3; 
+}
+
+enum OwnedType {
+  OWNED_CHARACTER = 0;
+  OWNED_CONSTRUCTION = 1;
+  OWNED_HOME = 2;
+  OWNED_STORAGE = 3;
 }
 
 component Owned {
     id = 1010;
     int32 owner = 1;
-    Type type = 2;
-
+    OwnedType type = 2;
     command OwnResponse set_owner(OwnRequest);
 
 }

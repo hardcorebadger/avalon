@@ -140,11 +140,9 @@ namespace Assets.Gamelogic.Core {
 			public string email;
 			public string password;
 			public string token;
-			public int red;
-			public int green;
-			public int blue;
-			public float alpha;
-
+			public float red;
+			public float green;
+			public float blue;
 			public int status;
 			public int x;
 			public int y;

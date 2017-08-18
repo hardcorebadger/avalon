@@ -1,15 +1,34 @@
 package improbable.core;
 
+import "improbable/core/Owned.schema";
+
+
 type CreatePlayerRequest {
   int32 player_id = 1;
   string session = 2;
 }
 type CreatePlayerResponse {}
 
+type DisconnectPlayerRequest {
+  int32 id = 1; 
+  int64 x = 2;
+  int64 y = 3; 
+}
+type DisconnectPlayerResponse {}
+
+
+type PlayerInfo {
+  int64 last_x = 1;
+  int64 last_y = 2;
+  PlayerColor color = 3;
+}
+
 component PlayerCreator {
   // Component ID, unique within the project
   id = 1001;
-
+  map<int32, PlayerInfo> players = 1;
   // Command the client sends to the PlayerCreator entity to request a Player entity is created
   command CreatePlayerResponse create_player(CreatePlayerRequest);
+  command DisconnectPlayerResponse disconnect_player(DisconnectPlayerRequest);
+
 }

@@ -20,6 +20,8 @@ namespace Assets.Gamelogic.Core
 		private void OnEnable()
 		{
 			playerCreatorWriter.CommandReceiver.OnCreatePlayer.RegisterResponse(OnCreatePlayer);
+			playerCreatorWriter.CommandReceiver.OnDisconnectPlayer.RegisterResponse(OnDisconnectPlayer);
+
 		}
 
 		private void OnDisable()
@@ -38,6 +40,13 @@ namespace Assets.Gamelogic.Core
 			StartCoroutine (LoadPlayerData (w, callerinfo));
 
 			return new CreatePlayerResponse();
+		}
+
+		private DisconnectPlayerResponse OnDisconnectPlayer(DisconnectPlayerRequest request, ICommandCallerInfo callerinfo) {
+
+			Improbable.Collections.Map<int, PlayerInfo> temp = playerCreatorWriter.Data.players;
+			temp [request.id] = new PlayerInfo (request.x, request.y, new PlayerColor (0, 0, 0));
+			return new DisconnectPlayerResponse();
 		}
 
 
@@ -72,7 +81,7 @@ namespace Assets.Gamelogic.Core
 		}
 
 		private void CreatePlayerEntity(string clientWorkerId, int playerId, EntityId entityId, Vector3 pos) {
-			var playerEntityTemplate = EntityTemplateFactory.CreatePlayerTemplate(clientWorkerId, playerId, pos);
+			var playerEntityTemplate = EntityTemplateFactory.CreatePlayerTemplate(playerCreatorWriter.EntityId, clientWorkerId, playerId, pos);
 			SpatialOS.Commands.CreateEntity(playerCreatorWriter, entityId, playerEntityTemplate)
 				.OnFailure(failure => OnFailedEntityCreation(failure, entityId));
 		}
@@ -97,10 +106,20 @@ namespace Assets.Gamelogic.Core
 					if (player.status != 200) {
 						//failed
 						Debug.LogError ("Bad Login!");
+					} else if (!playerCreatorWriter.Data.players.ContainsKey(player.id)) {
+						Vector3 playerPos = new Vector3 (0, 0, 0);
+						Improbable.Collections.Map<int, PlayerInfo> temp = playerCreatorWriter.Data.players;
+						temp [player.id] = new PlayerInfo (0, 0, new PlayerColor(player.red, player.green, player.blue));
+						CreateFamily (player.id, playerPos);
+						CreatePlayer (callerInfo.CallerWorkerId, player.id, playerPos);
+
+						playerCreatorWriter.Send (new PlayerCreator.Update ()
+							.SetPlayers (temp)
+						);
+
 					} else {
-						Vector3 playerPos = new Vector3 (player.x,  player.y, 0);
-						CreateFamily(player.id, Vector3.zero);
-						CreatePlayer(callerInfo.CallerWorkerId, player.id, playerPos);
+						Vector3 playerPos = new Vector3 (playerCreatorWriter.Data.players[player.id].lastX, playerCreatorWriter.Data.players[player.id].lastY, 0);
+						CreatePlayer (callerInfo.CallerWorkerId, player.id, playerPos);
 					}
 				}
 			} else {
@@ -108,7 +127,6 @@ namespace Assets.Gamelogic.Core
 
 			}
 		}
-
 
 	}
 }

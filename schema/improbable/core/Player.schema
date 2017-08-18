@@ -1,5 +1,9 @@
 package improbable.core;
 
+type Heartbeat{}
+
 component Player {
     id = 1003;
+    EntityId creator = 1;
+    event Heartbeat heartbeat;    
 }
