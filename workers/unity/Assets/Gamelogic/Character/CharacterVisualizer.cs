@@ -13,7 +13,6 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Position.Reader positionReader;
 		[Require] private Rotation.Reader rotationReader;
 
-		private int ownerId = 1;
 		private Rigidbody2D rigidBody;
 		private SpriteRenderer sprite;
 		public CharacterState state;
@@ -68,7 +67,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public bool CanControl() {
-			return ownerId == Bootstrap.playerId;
+			return characterReader.Data.playerId == Bootstrap.playerId;
 		}
 
 		private void UpdateState(CharacterState s) {
