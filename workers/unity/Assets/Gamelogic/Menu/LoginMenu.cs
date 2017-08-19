@@ -9,7 +9,8 @@ using System.Security.Cryptography;
 
 namespace Assets.Gamelogic.Core {
 
-	public class LoginMenu : MonoBehaviour {
+	public class LoginMenu : Menu {
+
 
 		public InputField username;
 		public InputField password;
@@ -22,7 +23,8 @@ namespace Assets.Gamelogic.Core {
 		public PlayerDataComponent dataObject;
 
 		// Use this for initialization
-		void Start () {
+		public override void Start() {
+			base.Start ();
 			dataObject = FindObjectOfType<PlayerDataComponent> ();
 
 			if (PlayerPrefs.HasKey ("username")) {
@@ -39,7 +41,8 @@ namespace Assets.Gamelogic.Core {
 
 		
 		// Update is called once per frame
-		void Update () {
+		public override void Update () {
+			base.Update ();
 			if (loaded && (username.text != savedUsername || password.text != passwordFiller)) {
 				loaded = false;
 				savedToken = "";
@@ -116,6 +119,10 @@ namespace Assets.Gamelogic.Core {
 				DeleteUser ();
 				//php error
 			}
+		}
+
+		protected override void OnEnter() {
+			OnLogin ();
 		}
 
 		private string ToSHA(string password) {
