@@ -14,11 +14,11 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId) {
 			if (name == "Character") {
-				CreateCharacterTemplate (pos, ownerId);
+				return CreateCharacterTemplate (pos, ownerId);
 			} else if (name.StartsWith("construction")) {
-				CreateConstructionTemplate (name, pos, ownerId);
+				return CreateConstructionTemplate (name, pos, ownerId);
 			} else if (name.StartsWith("building")) {
-				CreateBuildingTemplate (name, pos, ownerId);
+				return CreateBuildingTemplate (name, pos, ownerId);
 			}
 			return null;
 		}
@@ -81,7 +81,6 @@ namespace Assets.Gamelogic.EntityTemplates
 		}
 
 		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId) {
-
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
 
 			if (name == "construction-house")
@@ -150,7 +149,7 @@ namespace Assets.Gamelogic.EntityTemplates
 		public static Entity CreateCharacterTemplate(Vector3 pos, int playerId) {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent("Character")
+				.AddMetadataComponent("character")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)

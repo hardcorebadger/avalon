@@ -8,6 +8,11 @@ using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
 using Assets.Gamelogic.Utils;
+using Improbable.Core;
+using Improbable.Worker;
+using Improbable.Unity.Core.Acls;
+using Improbable.Unity.Entity;
+using Improbable;
 
 namespace Assets.Gamelogic.Core
 {
@@ -39,7 +44,12 @@ namespace Assets.Gamelogic.Core
 		}
 
 		private ConstructionResponse OnConstruct(ConstructionRequest request, ICommandCallerInfo callerinfo) {
-			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("construction-"+request.buildingName, new Vector3((float)request.position.x, (float)request.position.y), playerOnlineWriter.Data.playerId));
+
+			string entityName = "construction-" + request.buildingName;
+			Vector3 pos = new Vector3 ((float)request.position.x, (float)request.position.y);
+			int ownerId = playerOnlineWriter.Data.playerId;
+
+			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, pos, ownerId));
 			return new ConstructionResponse(true);
 		}
 
