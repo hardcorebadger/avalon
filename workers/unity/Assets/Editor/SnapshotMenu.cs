@@ -25,41 +25,20 @@ namespace Assets.Editor
 			for (float y = -500; y <= 500; y++) {
 				for (float x = -500; x <= 500; x++) {
 					if (Random.Range(0,400) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreatePineTemplate(GetRandomSize("pine"), new Vector3(x,y,0)));
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("pine", new Vector3(x,y,0)));
 					else if (Random.Range(0,400) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateOakTemplate(GetRandomSize("oak"), new Vector3(x,y,0)));
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("oak", new Vector3(x,y,0)));
 					else if (Random.Range(0,400) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateRockTemplate(GetRandomSize("rock"), new Vector3(x,y,0)));
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("rock", new Vector3(x,y,0)));
 					else if (Random.Range(0,400) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateBasicEntityTemplate(GetRandomSize("grass"), new Vector3(x,y,0)));
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("grass", new Vector3(x,y,0)));
 					else if (Random.Range(0,800) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateBasicEntityTemplate(GetRandomSize(GetRandomColor("tulip")), new Vector3(x,y,0)));
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("tulip", new Vector3(x,y,0)));
 					
 				}
 			}
 
-			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateHouseCheatTemplate(new Vector3(7,7,0), 1));
-
-
 			SaveSnapshot(snapshotEntities);
-		}
-
-		private static string GetRandomSize(string baseName) {
-			int i = Random.Range (0, 3);
-			if (i == 0)
-				return baseName + "-sm";
-			else if (i == 1)
-				return baseName + "-md";
-			else 
-				return baseName + "-lg";
-		}
-
-		private static string GetRandomColor(string baseName) {
-			int i = Random.Range (0, 2);
-			if (i == 0)
-				return baseName + "-pink";
-			else 
-				return baseName + "-purple";
 		}
 
 		private static void SaveSnapshot(IDictionary<EntityId, Entity> snapshotEntities)

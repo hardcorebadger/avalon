@@ -22,9 +22,10 @@ namespace Assets.Gamelogic.Core {
 
 			if (!working) {
 				working = true;
-				SpatialOS.Commands.CreateEntity (owner.characterWriter, EntityTemplates.EntityTemplateFactory.CreateSackTemplate (owner.transform.position+owner.transform.forward))
-					.OnSuccess (entityId => OnSackCreated (entityId.CreatedEntityId))
-					.OnFailure (errorDetails => OnRequestFailed());
+				// this is old now
+//				SpatialOS.Commands.CreateEntity (owner.characterWriter, EntityTemplates.EntityTemplateFactory.CreateSackTemplate (owner.transform.position+owner.transform.forward))
+//					.OnSuccess (entityId => OnSackCreated (entityId.CreatedEntityId))
+//					.OnFailure (errorDetails => OnRequestFailed());
 			}
 
 			if (failed)

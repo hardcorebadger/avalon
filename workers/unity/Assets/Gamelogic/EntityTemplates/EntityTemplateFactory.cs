@@ -12,7 +12,53 @@ namespace Assets.Gamelogic.EntityTemplates
     public static class EntityTemplateFactory
     {
 
-		public static Entity CreateHouseTemplate(Vector3 pos, int ownerId) {
+		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId) {
+			if (name == "Character") {
+				CreateCharacterTemplate (pos, ownerId);
+			} else if (name.StartsWith("construction")) {
+				CreateConstructionTemplate (name, pos, ownerId);
+			} else if (name.StartsWith("building")) {
+				CreateBuildingTemplate (name, pos, ownerId);
+			}
+			return null;
+		}
+
+		public static Entity CreateEntityTemplate(string name, Vector3 pos) {
+			if (name == "pine") {
+				return CreatePineTemplate (GetRandomSize (name), pos);
+			} else if (name == "oak") {
+				return CreateOakTemplate (GetRandomSize (name), pos);
+			} else if (name == "rock") {
+				return CreateRockTemplate (GetRandomSize (name), pos);
+			} else if (name == "tulip") {
+				return CreatePineTemplate (GetRandomSize (GetRandomColor(name)), pos);
+			} else if (name == "grass") {
+				return CreateBasicEntityTemplate (GetRandomSize (name), pos);
+			}
+			return null;
+		}
+
+		private static string GetRandomSize(string baseName) {
+			int i = Random.Range (0, 3);
+			if (i == 0)
+				return baseName + "-sm";
+			else if (i == 1)
+				return baseName + "-md";
+			else 
+				return baseName + "-lg";
+		}
+
+		private static string GetRandomColor(string baseName) {
+			int i = Random.Range (0, 2);
+			if (i == 0)
+				return baseName + "-pink";
+			else 
+				return baseName + "-purple";
+		}
+
+
+
+		public static Entity CreateBuildingTemplate(string name, Vector3 pos, int ownerId) {
 
 			Improbable.Collections.List<ResourceType> types = new Improbable.Collections.List<ResourceType> ();
 			types.Add (ResourceType.RESOURCE_TIMBER);
@@ -25,65 +71,34 @@ namespace Assets.Gamelogic.EntityTemplates
 
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent("House")
+				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 5000), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Storage.Data(types), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Owned.Data(ownerId, Type.HOME), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
-		public static Entity CreateHouseCheatTemplate(Vector3 pos, int ownerId) {
-
-			Improbable.Collections.List<ResourceType> types = new Improbable.Collections.List<ResourceType> ();
-			types.Add (ResourceType.RESOURCE_TIMBER);
-			types.Add (ResourceType.RESOURCE_STONE);
-			types.Add (ResourceType.RESOURCE_ORE);
-			types.Add (ResourceType.RESOURCE_FOOD);
-			types.Add (ResourceType.RESOURCE_TREASUE);
-			types.Add (ResourceType.RESOURCE_WEAPONRY);
-			types.Add (ResourceType.RESOURCE_MISC);
-
-			Improbable.Collections.Map<int,int> inv = new Improbable.Collections.Map<int,int>();
-			inv.Add (1, 11);
-
-			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent("House")
-				.SetPersistence(true)
-				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Inventory.Data(inv, 5000), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Storage.Data(types), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Owned.Data(ownerId, Type.HOME), CommonRequirementSets.PhysicsOnly)
-				.Build();
-		}
-
-		public static Entity CreateHouseConstructionTemplate(Vector3 pos, int ownerId) {
+		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId) {
 
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
-			req.Add (1, new ConstructionRequirement (0, 10));
+
+			if (name == "construction-house")
+				req.Add (1, new ConstructionRequirement (0, 10));
+			else if (name == "construction-town-center")
+				req.Add (1, new ConstructionRequirement (0, 5));
 
 			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 30f, new Vector3d (pos.x, pos.z, pos.y));
 
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent("House-Construction")
+				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Construction.Data(req,sourcing), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Owned.Data(ownerId, Type.CONSTRUCTION), CommonRequirementSets.PhysicsOnly)
-				.Build();
-		}
-
-		public static Entity CreateSackTemplate(Vector3 pos) {
-			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent("Sack")
-				.SetPersistence(true)
-				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CONSTRUCTION), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -132,24 +147,24 @@ namespace Assets.Gamelogic.EntityTemplates
 				.Build();
 		}
 
-		public static Entity CreateCharacterTemplate(int playerId, Vector3 pos) {
-			Improbable.Vector3d color = new Improbable.Vector3d(Bootstrap.players[playerId].red, Bootstrap.players[playerId].green, Bootstrap.players[playerId].blue);
+		public static Entity CreateCharacterTemplate(Vector3 pos, int ownerId) {
+			Improbable.Vector3d color = new Improbable.Vector3d(Bootstrap.players[ownerId].red, Bootstrap.players[ownerId].green, Bootstrap.players[ownerId].blue);
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent("Character")
+				.AddMetadataComponent("character")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, color), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Character.Data(ownerId, CharacterState.DEFAULT, 0, color), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Owned.Data(playerId, Type.CHARACTER), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CHARACTER), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
 		public static Entity CreatePlayerCreatorTemplate() {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(Vector3.zero, CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent("PlayerCreator")
+				.AddMetadataComponent("player-creator")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new PlayerCreator.Data(), CommonRequirementSets.PhysicsOnly)
@@ -159,7 +174,7 @@ namespace Assets.Gamelogic.EntityTemplates
 		public static Entity CreatePlayerTemplate(string clientWorkerId, int playerId, Vector3 pos) {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-				.AddMetadataComponent("Player")
+				.AddMetadataComponent("player")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Player.Data(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
@@ -168,4 +183,5 @@ namespace Assets.Gamelogic.EntityTemplates
 		}
 
     }
+
 }

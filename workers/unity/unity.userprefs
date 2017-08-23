@@ -1,23 +1,22 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Core/PlayerCreatorController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Core/PlayerOnlineController.cs">
     <Files>
-      <File FileName="Assets/Gamelogic/Core/PlayerCreatorController.cs" Line="39" Column="4" />
-      <File FileName="Assets/Gamelogic/Menu/LoginMenu.cs" Line="79" Column="1" />
       <File FileName="Assets/Gamelogic/Core/PlayerController.cs" Line="21" Column="38" />
-      <File FileName="Assets/Gamelogic/Core/Bootstrap.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Character/ActionBuild.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Character/ActionConstruction.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Core/CommandCenter.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Character/CharacterController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Character/ActionStore.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Character/ActionBlank.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Character/ActionGather.cs" Line="120" Column="5" />
-      <File FileName="Assets/Gamelogic/Character/ActionStash.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Character/ActionSeek.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Item/InventoryController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Item/Item.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/PositionController.cs" Line="25" Column="4" />
+      <File FileName="Assets/Gamelogic/Core/PositionVisualizer.cs" Line="26" Column="32" />
+      <File FileName="Assets/Gamelogic/Core/OwnedController.cs" Line="44" Column="17" />
+      <File FileName="Assets/Gamelogic/Core/OwnedVisualizer.cs" Line="22" Column="3" />
+      <File FileName="Assets/Gamelogic/Core/PlayerOnlineController.cs" Line="29" Column="153" />
+      <File FileName="Assets/Gamelogic/Character/CharacterVisualizer.cs" Line="70" Column="3" />
+      <File FileName="Assets/Gamelogic/Item/InventoryVisualizer.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Item/InventoryController.cs" Line="15" Column="53" />
+      <File FileName="Assets/Gamelogic/Building/ConstructionController.cs" Line="118" Column="139" />
+      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="23" Column="16" />
+      <File FileName="Assets/Editor/SnapshotMenu.cs" Line="39" Column="5" />
+      <File FileName="Assets/Gamelogic/Core/PlayerCreatorController.cs" Line="58" Column="90" />
+      <File FileName="Assets/Gamelogic/Character/ActionStash.cs" Line="25" Column="23" />
+      <File FileName="Assets/Gamelogic/Building/BuildingManager.cs" Line="42" Column="226" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -17,7 +17,6 @@ public class OwnedVisualizer : MonoBehaviour {
 
 	[Require] private Owned.Reader ownedReader;
 
-
 	// Use this for initialization
 	void Start () {
 		

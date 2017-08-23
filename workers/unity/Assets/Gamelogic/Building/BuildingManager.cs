@@ -39,7 +39,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public static void Construct(Vector3 pos) {
-			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost), PlayerController.instance.gameObject.EntityId());
+			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),constructionOptions[currentConstructionGhost].name), PlayerController.instance.gameObject.EntityId());
 		}
 
 		private static List<string> OptionsList() {
