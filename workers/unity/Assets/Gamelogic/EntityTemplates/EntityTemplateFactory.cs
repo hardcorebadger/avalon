@@ -147,18 +147,16 @@ namespace Assets.Gamelogic.EntityTemplates
 				.Build();
 		}
 
-		public static Entity CreateCharacterTemplate(Vector3 pos, int ownerId) {
-			Improbable.Vector3d color = new Improbable.Vector3d(Bootstrap.players[ownerId].red, Bootstrap.players[ownerId].green, Bootstrap.players[ownerId].blue);
-
+		public static Entity CreateCharacterTemplate(Vector3 pos, int playerId) {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent("character")
+				.AddMetadataComponent("Character")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Character.Data(ownerId, CharacterState.DEFAULT, 0, color), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CHARACTER), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(playerId, OwnedType.OWNED_CHARACTER), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 

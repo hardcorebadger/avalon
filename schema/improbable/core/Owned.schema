@@ -28,5 +28,4 @@ component Owned {
     OwnedType type = 2;
 
     command OwnResponse set_owner(OwnRequest);
-
 }
