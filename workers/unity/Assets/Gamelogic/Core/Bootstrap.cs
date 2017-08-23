@@ -18,7 +18,7 @@ namespace Assets.Gamelogic.Core
 
 		public static PlayerDataComponent playerDataObject;
 
-		public static Improbable.Collections.Map<int, LoginMenu.PlayerData> players = new Improbable.Collections.Map<int, LoginMenu.PlayerData> ();
+		public static Improbable.Collections.Map<int, PlayerInfo> players = new Improbable.Collections.Map<int, PlayerInfo> ();
 
 		public static int playerId = 1;
 
@@ -36,18 +36,20 @@ namespace Assets.Gamelogic.Core
             switch (SpatialOS.Configuration.WorkerPlatform)
             {
 			case WorkerPlatform.UnityWorker:
-				LoadPlayers ();
 
 				Application.targetFrameRate = SimulationSettings.TargetServerFramerate;
 				SpatialOS.OnDisconnected += reason => Application.Quit ();
+				SpatialOS.Connect(gameObject);
+
                     break;
                 case WorkerPlatform.UnityClient:
+					LoadPlayers ();
+
                     Application.targetFrameRate = SimulationSettings.TargetClientFramerate;
-				SpatialOS.OnConnected += OnClientConnection;
+					SpatialOS.OnConnected += OnClientConnection;
                     break;
             }
 
-            SpatialOS.Connect(gameObject);
         }
 
         private static void OnClientConnection() {
@@ -91,15 +93,22 @@ namespace Assets.Gamelogic.Core
 
 		private IEnumerator LoadPlayerData(WWW _w) {
 			yield return _w; 
-
 			if (_w.error == null) {
 				if (_w.text.Contains ("!!BAD!!LOGIN!!")) {
 					Debug.LogWarning ("Bad Login!");
 				} else {
 					Players playerData = JsonUtility.FromJson<Players> (_w.text);
 					for (int x = 0; x < playerData.list.Count; x++) {
-						players[playerData.list [x].id] = playerData.list [x];
+						if (players.ContainsKey (playerData.list [x].id)) {
+							PlayerInfo i = players [playerData.list [x].id];
+							i.color = new PlayerColor (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue);
+							players [playerData.list [x].id] = i;
+						} else {
+							PlayerInfo i = new PlayerInfo (0, 0, new PlayerColor (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue));
+							players [playerData.list [x].id] = i;
+						}
 					}
+					SpatialOS.Connect(gameObject);
 
 				}
 			} else {

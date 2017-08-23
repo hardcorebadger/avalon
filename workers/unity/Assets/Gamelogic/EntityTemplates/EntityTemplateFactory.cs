@@ -149,6 +149,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreateCharacterTemplate(Vector3 pos, int ownerId) {
 			Improbable.Vector3d color = new Improbable.Vector3d(Bootstrap.players[ownerId].red, Bootstrap.players[ownerId].green, Bootstrap.players[ownerId].blue);
+
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent("character")
@@ -167,18 +168,19 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent("player-creator")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new PlayerCreator.Data(), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new PlayerCreator.Data(new Improbable.Collections.Map<int, PlayerInfo>()), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
-		public static Entity CreatePlayerTemplate(string clientWorkerId, int playerId, Vector3 pos) {
+		public static Entity CreatePlayerTemplate(EntityId creator, string clientWorkerId, int playerId, Vector3 pos) {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
 				.AddMetadataComponent("player")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Player.Data(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
+				.AddComponent(new Player.Data(creator), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
 				.AddComponent(new PlayerOnline.Data(playerId), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new HeartbeatCounter.Data(SimulationSettings.TotalHeartbeatsBeforeTimeout),CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 

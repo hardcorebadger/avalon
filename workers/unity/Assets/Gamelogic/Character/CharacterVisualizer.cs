@@ -13,7 +13,6 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Position.Reader positionReader;
 		[Require] private Rotation.Reader rotationReader;
 
-		private int ownerId = 1;
 		private Rigidbody2D rigidBody;
 		private SpriteRenderer sprite;
 		public CharacterState state;
@@ -29,8 +28,8 @@ namespace Assets.Gamelogic.Core {
 			}
 			rigidBody = GetComponent<Rigidbody2D> ();
 			sprite = GetComponent<SpriteRenderer> ();
-
-			sprite.color = new Color((float)characterReader.Data.color.x / 255, (float)characterReader.Data.color.y / 255, (float)characterReader.Data.color.z / 255, 1f); 
+			PlayerColor c = Bootstrap.players [characterReader.Data.playerId].color;
+			sprite.color = new Color(c.red, c.green, c.blue, 1f); 
 			transform.position = positionReader.Data.coords.ToVector3();
 			state = characterReader.Data.state;
 			transform.eulerAngles = new Vector3 (0, 0, rotationReader.Data.rotation);
@@ -68,7 +67,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public bool CanControl() {
-			return ownerId == Bootstrap.playerId;
+			return characterReader.Data.playerId == Bootstrap.playerId;
 		}
 
 		private void UpdateState(CharacterState s) {

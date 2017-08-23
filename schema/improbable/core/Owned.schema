@@ -16,6 +16,12 @@ enum OwnedType {
   OWNED_VEHICLE = 4;
 }
 
+type PlayerColor {
+    float red = 1;
+    float green = 2;
+    float blue = 3; 
+}
+
 component Owned {
     id = 1010;
     int32 owner = 1;

@@ -9,10 +9,13 @@ using System.Security.Cryptography;
 
 namespace Assets.Gamelogic.Core {
 
-	public class LoginMenu : MonoBehaviour {
+	public class LoginMenu : Menu {
+
 
 		public InputField username;
 		public InputField password;
+		public Button loginButton;
+		public Text errorText;
 		private bool loaded = false;
 		string savedUsername, savedToken;
 		private string passwordFiller = "*************";
@@ -20,7 +23,8 @@ namespace Assets.Gamelogic.Core {
 		public PlayerDataComponent dataObject;
 
 		// Use this for initialization
-		void Start () {
+		public override void Start() {
+			base.Start ();
 			dataObject = FindObjectOfType<PlayerDataComponent> ();
 
 			if (PlayerPrefs.HasKey ("username")) {
@@ -30,12 +34,15 @@ namespace Assets.Gamelogic.Core {
 				password.text = passwordFiller;
 				loaded = true;
 			}
+			errorText.text = "";
+
 		}
 
 
 		
 		// Update is called once per frame
-		void Update () {
+		public override void Update () {
+			base.Update ();
 			if (loaded && (username.text != savedUsername || password.text != passwordFiller)) {
 				loaded = false;
 				savedToken = "";
@@ -46,16 +53,18 @@ namespace Assets.Gamelogic.Core {
 
 		public void OnLogin() {
 			Debug.Log (username.text + " " + password.text);
+			loginButton.interactable = false;
+			errorText.text = "";
 
 			string encrypted = savedToken;
 			if (!loaded)
 				encrypted = ToSHA (password.text);
 			if (username.text.Length <= 0) {
-//				errorText.text = "You must enter a username!";
+				errorText.text = "You must enter a username!";
 				return;
 			}
 			if (password.text.Length <= 0) {
-//				errorText.text = "You must enter a password!";
+				errorText.text = "You must enter a password!";
 				return;
 			}
 
@@ -65,7 +74,6 @@ namespace Assets.Gamelogic.Core {
 				form.AddField ("password", encrypted);
 			else 
 				form.AddField ("token", encrypted);
-//			form.AddField ("version", manager.version);
 
 			WWW w = new WWW ("http://cdn.lilsumn.com/login.php", form);    
 			StartCoroutine (LoginForm (w));
@@ -80,12 +88,18 @@ namespace Assets.Gamelogic.Core {
 				if (_w.text.Contains ("!!BAD!!LOGIN!!")) {
 					Debug.Log ("Bad Login!");
 					DeleteUser ();
+					errorText.text = "Invalid Login!";
+
+					loginButton.interactable = true;
+
 				} else {
 					PlayerData player = JsonUtility.FromJson<PlayerData> (_w.text);
 					Debug.Log (player.ToString ());
 					if (player.status != 200) {
 						//failed
 						//					errorText.text = player.error;
+						loginButton.interactable = true;
+						errorText.text = "Invalid Login!";
 
 						Debug.Log ("Bad Login!");
 						DeleteUser ();
@@ -95,9 +109,8 @@ namespace Assets.Gamelogic.Core {
 						dataObject.data = player;
 						SaveUser (player);
 						loggedInPlayer = player;
-									SceneManager.LoadScene ("UnityClient");
+						SceneManager.LoadScene ("UnityClient");
 
-						//					SceneManager.LoadScene ("main");
 					}
 				}
 			} else {
@@ -106,6 +119,10 @@ namespace Assets.Gamelogic.Core {
 				DeleteUser ();
 				//php error
 			}
+		}
+
+		protected override void OnEnter() {
+			OnLogin ();
 		}
 
 		private string ToSHA(string password) {
@@ -140,14 +157,10 @@ namespace Assets.Gamelogic.Core {
 			public string email;
 			public string password;
 			public string token;
-			public int red;
-			public int green;
-			public int blue;
-			public float alpha;
-
+			public float red;
+			public float green;
+			public float blue;
 			public int status;
-			public int x;
-			public int y;
 			public string error;
 			public override string ToString () {
 				return string.Format ("[PlayerData: playerId={0}, username={1}, email={2}, password={3}, status={4}, error={5}, red={6}, token={7}]", id, username, email, password, status, error, red, token);

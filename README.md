@@ -1,7 +1,7 @@
 # Avalon
 ---
 
-*Copyright Polytechnica 2017*
+*Copyright Lil Sumn Games 2017*
 
 - *GitHub repository*: [https://github.com/hardcorebadger/avalon](https://github.com/hardcorebadger/avalon)
 

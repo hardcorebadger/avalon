@@ -1,0 +1,7 @@
+package improbable.core;
+
+
+component HeartbeatCounter {
+    id = 1011;
+    uint32 timeout_beats_remaining = 1;
+}

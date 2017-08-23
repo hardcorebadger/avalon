@@ -1,40 +1,61 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using Improbable;
 using Improbable.Core;
+using Improbable.Unity;
 using Improbable.Unity.Visualizer;
+using UnityEngine;
+using Assets.Gamelogic.Utils;
 
-public class PlayerController : MonoBehaviour {
+namespace Assets.Gamelogic.Core {
 
-	public float speed = 0.1f;
-	public float zoomSpeed = 1f;
+	[WorkerType(WorkerPlatform.UnityClient)]
+	public class PlayerController : MonoBehaviour {
 
-	[HideInInspector]
-	[Require] public Player.Writer playerWriter;
+		public float speed = 0.1f;
+		public float zoomSpeed = 1f;
 
-	public static PlayerController instance;
+		[HideInInspector]
+		[Require] public Player.Writer playerWriter;
 
-	// Use this for initialization
-	void Start () {
-		Camera.main.transform.SetParent (transform);
-		Camera.main.transform.localPosition = new Vector3(0,0,-90);
-		instance = this;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		transform.position += new Vector3 (Input.GetAxis ("Horizontal")*speed, Input.GetAxis ("Vertical")*speed, Input.GetAxis("Mouse ScrollWheel")*zoomSpeed);
-	}
+		public static PlayerController instance;
+		private Coroutine heartbeatCoroutine;
 
-	public float pixelToUnits = 40f;
+		private void OnEnable() {
+			
+			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatSendingIntervalSecs, SendHeartbeat));
+		}
 
-	public float RoundToNearestPixel(float unityUnits)
-	{
-		float valueInPixels = unityUnits * pixelToUnits;
-		valueInPixels = Mathf.Round(valueInPixels);
-		float roundedUnityUnits = valueInPixels * (1 / pixelToUnits);
-		return roundedUnityUnits;
+		private void OnDisable() {
+			StopCoroutine(heartbeatCoroutine);
+		}
+
+		// Use this for initialization
+		void Start () {
+			Camera.main.transform.SetParent (transform);
+			Camera.main.transform.localPosition = new Vector3(0,0,-90);
+			instance = this;
+		}
+		
+		// Update is called once per frame
+		void Update () {
+			transform.position += new Vector3 (Input.GetAxis ("Horizontal")*speed, Input.GetAxis ("Vertical")*speed, Input.GetAxis("Mouse ScrollWheel")*zoomSpeed);
+		}
+
+		public float pixelToUnits = 40f;
+
+		public float RoundToNearestPixel(float unityUnits)
+		{
+			float valueInPixels = unityUnits * pixelToUnits;
+			valueInPixels = Mathf.Round(valueInPixels);
+			float roundedUnityUnits = valueInPixels * (1 / pixelToUnits);
+			return roundedUnityUnits;
+		}
+
+		private void SendHeartbeat()
+		{
+			playerWriter.Send(new Player.Update().AddHeartbeat(new Heartbeat()));
+		}
+
 	}
 
 }
