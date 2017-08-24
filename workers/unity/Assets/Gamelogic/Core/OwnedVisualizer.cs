@@ -27,4 +27,8 @@ public class OwnedVisualizer : MonoBehaviour {
 		
 	}
 
+	public int GetOwnerId() {
+		return ownedReader.Data.owner;
+	}
+
 }

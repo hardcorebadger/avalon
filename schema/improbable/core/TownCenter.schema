@@ -1,0 +1,7 @@
+package improbable.core;
+
+component TownCenter {
+    id = 1012;
+
+    int32 radius = 1;
+}

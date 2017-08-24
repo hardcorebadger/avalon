@@ -8,11 +8,9 @@ using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
 using Assets.Gamelogic.Utils;
-using Improbable.Core;
 using Improbable.Worker;
 using Improbable.Unity.Core.Acls;
 using Improbable.Unity.Entity;
-using Improbable;
 
 namespace Assets.Gamelogic.Core
 {

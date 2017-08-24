@@ -35,10 +35,20 @@ namespace Assets.Gamelogic.Core {
 
 		public static void StartBuilding(string option) {
 			currentConstructionGhost = option;
-			Instantiate (constructionOptions [option]);
+			GameObject g = Instantiate (constructionOptions [option]);
+			if (option == "Town Center") {
+				g.GetComponent<ConstructionGhost> ().townOnly = false;
+				g.GetComponent<ConstructionGhost> ().isTownCenter = true;
+			}
+			CreateTownRadialOverlays ();
 		}
 
-		public static void Construct(Vector3 pos) {
+		public static void StopBuilding() {
+			DestroyTownRadialOverlays ();
+		}
+
+		public static void Construct(Vector3 pos, GameObject townRadius) {
+			//TODO
 			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),constructionOptions[currentConstructionGhost].name), PlayerController.instance.gameObject.EntityId());
 		}
 
@@ -48,6 +58,26 @@ namespace Assets.Gamelogic.Core {
 				l.Add (s);
 			}
 			return l;
+		}
+
+		private static void CreateTownRadialOverlays() {
+			//find all town centers on your worker
+			TownCenterVisualizer[] townCenters = FindObjectsOfType<TownCenterVisualizer>();
+			foreach (TownCenterVisualizer t in townCenters) {
+				//tell each to create a radius object 
+				t.CreateRadiusMarker();
+			}
+
+		}
+
+		private static void DestroyTownRadialOverlays() {
+			//find all town center radius objects
+			TownRadiusMarker[] radiuses = FindObjectsOfType<TownRadiusMarker>();
+			foreach (TownRadiusMarker r in radiuses) {
+				// destroy them
+				Destroy(r.gameObject);
+			}
+
 		}
 
 	}

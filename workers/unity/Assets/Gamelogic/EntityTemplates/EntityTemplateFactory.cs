@@ -59,6 +59,26 @@ namespace Assets.Gamelogic.EntityTemplates
 
 
 		public static Entity CreateBuildingTemplate(string name, Vector3 pos, int ownerId) {
+			if (name == "building-house")
+				return CreateStorageBuildingTemplate (name, pos, ownerId);
+			else if (name == "building-town-center")
+				return CreateTownCenterBuildingTemplate (name, pos, ownerId);
+
+			return null;
+		}
+
+		public static Entity CreateTownCenterBuildingTemplate(string name, Vector3 pos, int ownerId) {
+			return EntityBuilder.Begin ()
+				.AddPositionComponent (pos.Flip (), CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent (name)
+				.SetPersistence (true)
+				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
+				.AddComponent(new TownCenter.Data(25), CommonRequirementSets.PhysicsOnly)
+				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+				.Build ();
+		}
+
+		public static Entity CreateStorageBuildingTemplate(string name, Vector3 pos, int ownerId) {
 
 			Improbable.Collections.List<ResourceType> types = new Improbable.Collections.List<ResourceType> ();
 			types.Add (ResourceType.RESOURCE_TIMBER);
@@ -69,15 +89,16 @@ namespace Assets.Gamelogic.EntityTemplates
 			types.Add (ResourceType.RESOURCE_WEAPONRY);
 			types.Add (ResourceType.RESOURCE_MISC);
 
-			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent(name)
-				.SetPersistence(true)
-				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 5000), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Storage.Data(types), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+			return EntityBuilder.Begin ()
+				.AddPositionComponent (pos.Flip (), CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent (name)
+				.SetPersistence (true)
+				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
+				.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 5000), CommonRequirementSets.PhysicsOnly)
+				.AddComponent (new Storage.Data (types), CommonRequirementSets.PhysicsOnly)
+				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.Build();
+
 		}
 
 		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId) {

@@ -14,6 +14,8 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private Construction.Writer constructionWriter;
 
+		public string buildingToSpawn;
+
 		private Dictionary<int,Requirement> requirements;
 		private OwnedController owned;
 
@@ -115,7 +117,7 @@ namespace Assets.Gamelogic.Core {
 					return;
 			}
 			// fully stocked
-			SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("construction-house", transform.position, owned.getOwner()))
+			SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-"+buildingToSpawn, transform.position, owned.getOwner()))
 				.OnSuccess (entityId => OnHouseCreated ());
 		}
 
