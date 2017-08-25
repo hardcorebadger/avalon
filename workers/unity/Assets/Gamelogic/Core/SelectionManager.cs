@@ -40,42 +40,88 @@ namespace Assets.Gamelogic.Core {
 				UpdateBoxSelect ();
 			if (radiusSelecting)
 				UpdateRadiusSelect ();
-			
+
+
+
+			// If left button down
 			if (Input.GetMouseButtonDown (0)) {
 				downPos = Input.mousePosition;
-				hasTriggered = false;
 				downTime = Time.time;
-				if (Time.time - upTime < upDelay) {
-					potentialDouble = true;
+				SingleClick();
+			}
+
+			if (Input.GetMouseButton (0)) {
+				// If left button down for certain time /// Drag
+				if (!hasTriggered && Time.time > downTime + downDelay) {
+					StartBoxSelect ();
+					hasTriggered = true;
 				}
 			}
 
 			if (Input.GetMouseButtonUp (0)) {
+				hasTriggered = false;
 				if (boxSelecting)
 					StopBoxSelect ();
-				if (radiusSelecting)
-					StopRadiusSelect ();
-				
-				if (Time.time - downTime < downDelay) {
-					if (potentialDouble) {
-						TriggerWipe ();
-						DoubleClick ();
-					} else 
-						upTime = Time.time;
+			}
+
+			// If left button down
+			if (Input.GetMouseButtonDown (1)) {
+				downPos = Input.mousePosition;
+				downTime = Time.time;
+				RightClick();
+			}
+
+			if (Input.GetMouseButton (1)) {
+				// If left button down for certain time /// Drag
+				if (!hasTriggered && Time.time > downTime + downDelay) {
+					StartRadiusSelect ();
+					hasTriggered = true;
 				}
 			}
 
-			if (Input.GetMouseButton (0) && !hasTriggered) {
-				if (Time.time - downTime > downDelay) {
-					TriggerWipe ();
-					Drag ();
-				}
-			} else if (!hasTriggered) {
-				if (Time.time - upTime > upDelay) {
-					TriggerWipe ();
-					SingleClick ();
-				}
+			if (Input.GetMouseButtonUp (1)) {
+				hasTriggered = false;
+				if (radiusSelecting)
+					StopRadiusSelect ();
 			}
+
+
+//			
+//			if (Input.GetMouseButtonDown (0)) {
+//				downPos = Input.mousePosition;
+//				hasTriggered = false;
+//				downTime = Time.time;
+//				if (Time.time - upTime < upDelay) {
+//					potentialDouble = true;
+//				}
+//			}
+//
+//			if (Input.GetMouseButtonUp (0)) {
+//				if (boxSelecting)
+//					StopBoxSelect ();
+//				if (radiusSelecting)
+//					StopRadiusSelect ();
+//				
+//				if (Time.time - downTime < downDelay) {
+//					if (potentialDouble) {
+//						TriggerWipe ();
+//						DoubleClick ();
+//					} else 
+//						upTime = Time.time;
+//				}
+//			}
+//
+//			if (Input.GetMouseButton (0) && !hasTriggered) {
+//				if (Time.time - downTime > downDelay) {
+//					TriggerWipe ();
+//					Drag ();
+//				}
+//			} else if (!hasTriggered) {
+//				if (Time.time - upTime > upDelay) {
+//					TriggerWipe ();
+//					SingleClick ();
+//				}
+//			}
 		}
 
 		private void TriggerWipe() {
@@ -90,12 +136,20 @@ namespace Assets.Gamelogic.Core {
 			return Physics2D.GetRayIntersection(ray,Mathf.Infinity);
 		}
 
-		void DoubleClick() {
-			CommandCenter.InterpretClickCommand (selected, GetHit(), Camera.main.ScreenToWorldPoint (Input.mousePosition+new Vector3(0,0,Camera.main.transform.position.z*-1)));
-			ClearSelected ();
+		void RightClick() {
+			if (selected.Count == 0) {
+				// info pop ups
+			} else {
+				CommandCenter.InterpretClickCommand (selected, GetHit (), Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z * -1)));
+			}
 		}
 
 		void SingleClick() {
+			// If Not Shift, clear selection
+			if (!Input.GetKey (KeyCode.LeftShift)) {
+				ClearSelected ();
+			}
+			// If pos hits a character, select them
 			RaycastHit2D hit = GetHit();
 			if (hit.collider != null) {
 				Selectable s = hit.transform.GetComponent<Selectable> ();
@@ -109,14 +163,6 @@ namespace Assets.Gamelogic.Core {
 			} else {
 				// deselect
 				ClearSelected();
-			}
-		}
-
-		private void Drag() {
-			if (Input.GetKey (KeyCode.LeftAlt)) {
-				StartRadiusSelect ();
-			} else {
-				StartBoxSelect ();
 			}
 		}
 

@@ -40,6 +40,9 @@ namespace Assets.Gamelogic.Core {
 			positionReader.ComponentUpdated.Add(OnPositionUpdated);
 			rotationReader.ComponentUpdated.Add(OnRotationUpdated);
 			characterReader.ComponentUpdated.Add(OnCharacterUpdated);
+
+			if (GetComponent<OwnedVisualizer> ().GetOwnerId () != Bootstrap.playerId)
+				GetComponent<Selectable> ().enabled = false;
 		}
 
 		void OnDisable() {

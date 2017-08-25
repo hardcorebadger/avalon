@@ -34,7 +34,11 @@ namespace Assets.Gamelogic.Core {
 			foreach (Collider2D c in colliders) {
 				ParseOptions (ref options, c.gameObject);
 			}
-			UIManager.OpenCommandPicker(options);
+			if (options.Count == 1) {
+				OnCommandSelected (options.ToArray () [0]);
+			} else {
+				UIManager.OpenCommandPicker (options);
+			}
 		}
 
 		// called from selection manager
@@ -56,8 +60,11 @@ namespace Assets.Gamelogic.Core {
 				ExecutePositionTargetedCommand ("goto");
 				return;
 			}
-
-			UIManager.OpenCommandPicker(options);
+			if (options.Count == 1) {
+				OnCommandSelected (options.ToArray () [0]);
+			} else {
+				UIManager.OpenCommandPicker (options);
+			}
 		}
 
 		// called from ui picker
@@ -122,11 +129,6 @@ namespace Assets.Gamelogic.Core {
 				//TODO actually add the options here
 				if (!options.Contains ("gather"))
 					options.Add ("gather");
-			}
-			ConstructionVisualizer construction = g.GetComponent<ConstructionVisualizer> ();
-			if (construction != null) {
-				if (!options.Contains ("build"))
-					options.Add ("build");
 			}
 			WorkSiteVisualizer worksite = g.GetComponent<WorkSiteVisualizer> ();
 			if (worksite != null) {
