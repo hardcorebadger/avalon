@@ -21,6 +21,7 @@ namespace Assets.Gamelogic.Core {
 		public GameObject choppingParticle; 
 		public GameObject buildingParticle;
 		private Quaternion facing;
+		private Animator anim;
 
 		void OnEnable() {
 			if (characterReader.HasAuthority) {
@@ -29,11 +30,12 @@ namespace Assets.Gamelogic.Core {
 			}
 			rigidBody = GetComponent<Rigidbody2D> ();
 			sprite = GetComponent<SpriteRenderer> ();
+			anim = GetComponent<Animator> ();
 			PlayerColor c = Bootstrap.players [characterReader.Data.playerId].color;
 			sprite.color = new Color(c.red, c.green, c.blue, 1f); 
 			transform.position = positionReader.Data.coords.ToVector3();
 			state = characterReader.Data.state;
-			transform.eulerAngles = new Vector3 (0, 0, rotationReader.Data.rotation);
+			facing.eulerAngles = new Vector3 (0, 0, rotationReader.Data.rotation);
 
 			positionReader.ComponentUpdated.Add(OnPositionUpdated);
 			rotationReader.ComponentUpdated.Add(OnRotationUpdated);
@@ -63,6 +65,10 @@ namespace Assets.Gamelogic.Core {
 				UpdateState ( update.state.Value);
 			}
 			if (!characterReader.HasAuthority && update.velocity.HasValue) {
+				if (update.velocity.Value > 0)
+					anim.SetBool ("walking", true);
+				else
+					anim.SetBool ("walking", false);
 				rigidBody.velocity = facing * new Vector2 (0, update.velocity.Value);
 			}
 		}

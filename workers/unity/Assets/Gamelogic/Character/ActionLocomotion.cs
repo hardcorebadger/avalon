@@ -10,7 +10,7 @@ namespace Assets.Gamelogic.Core {
 		public ActionLocomotion(CharacterController o) : base(o)	{}
 
 		private Vector3 CastPos() {
-			return owner.transform.position;
+			return owner.transform.position + new Vector3(0,-0.6f,0);
 		}
 
 		protected void Steer (ref Vector3 dir) {

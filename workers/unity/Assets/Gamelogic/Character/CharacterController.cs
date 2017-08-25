@@ -39,7 +39,6 @@ namespace Assets.Gamelogic.Core {
 		public CharacterState state;
 
 		private void OnEnable() {
-			Debug.LogWarning ("binding");
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
@@ -77,7 +76,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
-			Debug.LogWarning ("yo");
 			if (request.command == "goto")
 				SetAction (new ActionSeek (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
 			else if (request.command == "stash")
