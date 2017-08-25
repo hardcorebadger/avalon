@@ -13,7 +13,7 @@ namespace Assets.Gamelogic.EntityTemplates
     {
 
 		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId) {
-			if (name == "Character") {
+			if (name == "character") {
 				return CreateCharacterTemplate (pos, ownerId);
 			} else if (name.StartsWith("construction")) {
 				return CreateConstructionTemplate (name, pos, ownerId);

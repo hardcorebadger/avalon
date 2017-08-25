@@ -31,6 +31,7 @@ namespace Assets.Gamelogic.Core {
 		public float width = 1f;
 		public float approachRadius = 4f;
 		public float arrivalRadius = 2f;
+		public Quaternion facing = Quaternion.identity;
 
 		public InventoryController inventory;
 		private Action currentAction;
@@ -38,6 +39,7 @@ namespace Assets.Gamelogic.Core {
 		public CharacterState state;
 
 		private void OnEnable() {
+			Debug.LogWarning ("binding");
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
@@ -63,7 +65,7 @@ namespace Assets.Gamelogic.Core {
 			while (true) {
 				yield return new WaitForSeconds (0.1f);
 				positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
-				rotationWriter.Send (new Rotation.Update ().SetRotation(transform.eulerAngles.z));
+				rotationWriter.Send (new Rotation.Update ().SetRotation(facing.eulerAngles.z));
 				characterWriter.Send (new Character.Update ().SetVelocity (velocity));
 			}
 		}
@@ -75,6 +77,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
+			Debug.LogWarning ("yo");
 			if (request.command == "goto")
 				SetAction (new ActionSeek (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
 			else if (request.command == "stash")
@@ -134,7 +137,11 @@ namespace Assets.Gamelogic.Core {
 
 		public void SetVelocity(float f) {
 			velocity = f;
-			rigidBody.velocity = transform.TransformDirection (new Vector2 (0, velocity));
+			rigidBody.velocity = facing * new Vector2 (0, velocity);
+		}
+
+		public Vector3 GetFacingDirection() {
+			return facing*transform.up;
 		}
 
 	}

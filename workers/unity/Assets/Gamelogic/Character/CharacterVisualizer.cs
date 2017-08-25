@@ -20,6 +20,7 @@ namespace Assets.Gamelogic.Core {
 		private GameObject currentParticle;
 		public GameObject choppingParticle; 
 		public GameObject buildingParticle;
+		private Quaternion facing;
 
 		void OnEnable() {
 			if (characterReader.HasAuthority) {
@@ -54,7 +55,7 @@ namespace Assets.Gamelogic.Core {
 
 		void OnRotationUpdated(Rotation.Update update) {
 			if (!rotationReader.HasAuthority && update.rotation.HasValue)
-				transform.eulerAngles = new Vector3 (0, 0, rotationReader.Data.rotation);
+				facing.eulerAngles = new Vector3 (0, 0, rotationReader.Data.rotation);
 		}
 
 		void OnCharacterUpdated(Character.Update update) {
@@ -62,7 +63,7 @@ namespace Assets.Gamelogic.Core {
 				UpdateState ( update.state.Value);
 			}
 			if (!characterReader.HasAuthority && update.velocity.HasValue) {
-				rigidBody.velocity = transform.TransformDirection (new Vector2 (0, update.velocity.Value));
+				rigidBody.velocity = facing * new Vector2 (0, update.velocity.Value);
 			}
 		}
 

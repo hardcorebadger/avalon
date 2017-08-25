@@ -9,16 +9,20 @@ namespace Assets.Gamelogic.Core {
 
 		public ActionLocomotion(CharacterController o) : base(o)	{}
 
+		private Vector3 CastPos() {
+			return owner.transform.position;
+		}
+
 		protected void Steer (ref Vector3 dir) {
 			dir.Normalize ();
-			Debug.DrawRay (owner.transform.position, dir*owner.range, Color.red);
+			Debug.DrawRay (CastPos(), dir*owner.range, Color.red);
 			if (!CanWalk (dir, owner.range))
 				Avoid (ref dir, owner.range);
-			Debug.DrawRay (owner.transform.position, dir*owner.range, Color.blue);
+			Debug.DrawRay (CastPos(), dir*owner.range, Color.blue);
 		}
 
 		protected bool CanWalk(Vector3 dir, float castDist) {
-			RaycastHit2D[] hits = Physics2D.CircleCastAll (owner.transform.position, owner.width, dir, owner.range);
+			RaycastHit2D[] hits = Physics2D.CircleCastAll (CastPos(), owner.width, dir, owner.range);
 			bool flag = true;
 			foreach (RaycastHit2D hit in hits) {
 				if (hit.collider.gameObject == owner.gameObject)
@@ -47,7 +51,7 @@ namespace Assets.Gamelogic.Core {
 				if (tests > 360f)
 					break;
 			}
-			if (Vector3.Distance (dirP, owner.transform.up) < Vector3.Distance (dirN, owner.transform.up))
+			if (Vector3.Distance (dirP, owner.GetFacingDirection()) < Vector3.Distance (dirN, owner.GetFacingDirection()))
 				dir = dirP;
 			else
 				dir = dirN;
@@ -63,8 +67,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		protected float GetRotationTo(Vector3 dif) {
-			float deg = (float)(Mathf.Acos (Vector3.Dot (owner.transform.up, dif)) * 180 / 3.14);
-			Vector3 cross = Vector3.Cross (owner.transform.up, dif).normalized;
+			float deg = (float)(Mathf.Acos (Vector3.Dot (owner.GetFacingDirection(), dif)) * 180 / 3.14);
+			Vector3 cross = Vector3.Cross (owner.GetFacingDirection(), dif).normalized;
 
 			if (Single.IsNaN (deg))
 				return 0f;

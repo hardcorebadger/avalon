@@ -29,7 +29,11 @@ namespace Assets.Gamelogic.Core {
 //				return ActionCode.Success;
 //			}
 				
-			owner.transform.Rotate(new Vector3(0,0,GetRotationTo (dir)));
+			Vector3 v = owner.facing.eulerAngles;
+			v += new Vector3 (0, 0, GetRotationTo (dir));
+			owner.facing.eulerAngles = v;
+
+//			owner.transform.Rotate(new Vector3(0,0,GetRotationTo (dir)));
 			owner.SetVelocity (owner.speed);
 
 			return ActionCode.Working;
