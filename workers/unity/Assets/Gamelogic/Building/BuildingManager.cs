@@ -48,8 +48,12 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public static void Construct(Vector3 pos, GameObject townRadius) {
-			//TODO
-			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),constructionOptions[currentConstructionGhost].name), PlayerController.instance.gameObject.EntityId());
+
+			if (townRadius != null)
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.ConstructTown.Descriptor, new ConstructionTownRequest(new Vector3d(pos.x,pos.y,pos.z),constructionOptions[currentConstructionGhost].name, townRadius.GetComponent<TownRadiusMarker>().townCenter.EntityId()), PlayerController.instance.gameObject.EntityId());
+			else
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),constructionOptions[currentConstructionGhost].name), PlayerController.instance.gameObject.EntityId());
+
 		}
 
 		private static List<string> OptionsList() {

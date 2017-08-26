@@ -73,7 +73,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent (name)
 				.SetPersistence (true)
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new TownCenter.Data(25), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new TownCenter.Data(25, new List<EntityId>(), new List<EntityId>()), CommonRequirementSets.PhysicsOnly)
 				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.Build ();
 		}

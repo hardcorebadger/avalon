@@ -1,7 +1,17 @@
 package improbable.core;
 
+type TownAddRequest {
+    EntityId entity = 1;
+}
+type TownAddResponse {}
+
 component TownCenter {
     id = 1012;
 
     int32 radius = 1;
+    list<EntityId> citizens = 2;
+    list<EntityId> buildings = 3;
+
+    command TownAddResponse add_citizen(TownAddRequest);
+    command TownAddResponse add_building(TownAddRequest);
 }

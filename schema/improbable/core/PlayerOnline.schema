@@ -7,6 +7,12 @@ type ConstructionRequest {
   string building_name = 2;
 }
 
+type ConstructionTownRequest {
+  Vector3d position = 1;
+  string building_name = 2;
+  EntityId town_center = 3;
+}
+
 type ConstructionResponse {
   bool success = 1;
 }
@@ -16,4 +22,5 @@ component PlayerOnline {
     int32 player_id = 1;
 
     command ConstructionResponse construct(ConstructionRequest);
+    command ConstructionResponse construct_town(ConstructionTownRequest);
 }
