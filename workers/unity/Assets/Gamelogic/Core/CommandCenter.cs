@@ -187,6 +187,11 @@ namespace Assets.Gamelogic.Core {
 				if (!options.Contains ("store"))
 					options.Add ("store");
 			}
+			TownCenterVisualizer townCenter = g.GetComponent<TownCenterVisualizer> ();
+			if (townCenter != null) {
+				if (!options.Contains ("migrate"))
+					options.Add ("migrate");
+			}
 		}
 			
 	}

@@ -43,6 +43,10 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
 
+			if (characterWriter.Data.town.HasValue) {
+				SpatialOS.Commands.SendCommand (characterWriter, TownCenter.Commands.TentativeAddCitizen.Descriptor, new TownAddRequest (gameObject.EntityId()), characterWriter.Data.town.Value);
+			}
+
 			transform.position = positionWriter.Data.coords.ToVector3();
 			transform.eulerAngles = new Vector3 (0, 0, rotationWriter.Data.rotation);
 			state = characterWriter.Data.state;
@@ -58,6 +62,10 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnPositionTarget.DeregisterResponse();
 			characterWriter.CommandReceiver.OnEntityTarget.DeregisterResponse();
 			characterWriter.CommandReceiver.OnRadiusTarget.DeregisterResponse();
+
+			if (characterWriter.Data.town.HasValue) {
+				SpatialOS.Commands.SendCommand (characterWriter, TownCenter.Commands.TentativeRemoveCitizen.Descriptor, new TownRemoveRequest (gameObject.EntityId ()), characterWriter.Data.town.Value);
+			}
 		}
 
 		IEnumerator UpdateTransform() {
@@ -92,6 +100,8 @@ namespace Assets.Gamelogic.Core {
 				SetAction (new ActionWork (this, request.target));
 			else if (request.command == "store")
 				SetAction (new ActionStore (this, request.target));
+			else if (request.command == "migrate")
+				SetAction (new ActionMigrate (this, request.target));
 			return new Nothing ();
 		}
 
@@ -140,6 +150,12 @@ namespace Assets.Gamelogic.Core {
 
 		public Vector3 GetFacingDirection() {
 			return facing*transform.up;
+		}
+
+		public void SetTown(EntityId i) {
+			characterWriter.Send (new Character.Update ()
+				.SetTown (i)
+			);
 		}
 
 	}
