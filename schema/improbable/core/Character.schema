@@ -43,4 +43,5 @@ component Character {
     command Nothing position_target(PositionTargetRequest);
     command Nothing entity_target(EntityTargetRequest);
     command Nothing radius_target(RadiusTargetRequest);
+    command Nothing leave_town(Nothing);
 }

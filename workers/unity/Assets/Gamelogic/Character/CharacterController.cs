@@ -43,6 +43,8 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
 
+			characterWriter.CommandReceiver.OnLeaveTown.RegisterResponse(OnLeaveTown);
+
 			if (characterWriter.Data.town.HasValue) {
 				SpatialOS.Commands.SendCommand (characterWriter, TownCenter.Commands.TentativeAddCitizen.Descriptor, new TownAddRequest (gameObject.EntityId()), characterWriter.Data.town.Value);
 			}
@@ -62,6 +64,8 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnPositionTarget.DeregisterResponse();
 			characterWriter.CommandReceiver.OnEntityTarget.DeregisterResponse();
 			characterWriter.CommandReceiver.OnRadiusTarget.DeregisterResponse();
+
+			characterWriter.CommandReceiver.OnLeaveTown.DeregisterResponse();
 
 			if (characterWriter.Data.town.HasValue) {
 				SpatialOS.Commands.SendCommand (characterWriter, TownCenter.Commands.TentativeRemoveCitizen.Descriptor, new TownRemoveRequest (gameObject.EntityId ()), characterWriter.Data.town.Value);
@@ -125,6 +129,13 @@ namespace Assets.Gamelogic.Core {
 //					.OnFailure(errorDetails => Debug.Log("Query failed with error: " + errorDetails));
 //			}
 			return new Nothing ();
+		}
+
+		private Nothing OnLeaveTown(Nothing request, ICommandCallerInfo callerinfo) {
+			characterWriter.Send (new Character.Update ()
+				.SetTown (new Option<EntityId> ())
+			);
+			return request;
 		}
 
 		public void SetAction(Action a) {

@@ -37,6 +37,14 @@ namespace Assets.Gamelogic.Core {
 
 			townCenterWriter.CommandReceiver.OnTentativeAddCitizen.DeregisterResponse ();
 			townCenterWriter.CommandReceiver.OnTentativeRemoveCitizen.DeregisterResponse ();
+
+			foreach (EntityId id in townCenterWriter.Data.citizens) {
+				SpatialOS.Commands.SendCommand (townCenterWriter, Character.Commands.LeaveTown.Descriptor, new Nothing (), id);
+			}
+
+			foreach (EntityId id in townCenterWriter.Data.buildings) {
+				SpatialOS.Commands.SendCommand (townCenterWriter, Building.Commands.LeaveTown.Descriptor, new Nothing (), id);
+			}
 		}
 
 		private System.Collections.IEnumerator TownTick() {
