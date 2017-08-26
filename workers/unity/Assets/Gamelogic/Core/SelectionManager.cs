@@ -12,6 +12,7 @@ namespace Assets.Gamelogic.Core {
 		public GameObject canvas;
 		public double downDelay = 0.2;
 		public double upDelay = 0.1;
+		public float dragTriggerDistance = 1f;
 
 		[HideInInspector]
 		public static SelectionManager instance;
@@ -19,7 +20,7 @@ namespace Assets.Gamelogic.Core {
 		private double downTime = 0;
 		private double upTime = 0;
 		private bool potentialDouble = false;
-		private bool hasTriggered = true;
+		private bool hasTriggered = false;
 		private Vector3 startPos;
 		private Vector3 downPos;
 		private bool boxSelecting = false;
@@ -43,22 +44,21 @@ namespace Assets.Gamelogic.Core {
 
 
 
-			// If left button down
 			if (Input.GetMouseButtonDown (0)) {
 				downPos = Input.mousePosition;
-				downTime = Time.time;
-				SingleClick();
 			}
 
 			if (Input.GetMouseButton (0)) {
 				// If left button down for certain time /// Drag
-				if (!hasTriggered && Time.time > downTime + downDelay) {
+				if (!hasTriggered && Vector3.Distance(downPos,Input.mousePosition) > dragTriggerDistance) {
 					StartBoxSelect ();
 					hasTriggered = true;
 				}
 			}
 
 			if (Input.GetMouseButtonUp (0)) {
+				SingleClick();
+
 				hasTriggered = false;
 				if (boxSelecting)
 					StopBoxSelect ();
@@ -67,19 +67,19 @@ namespace Assets.Gamelogic.Core {
 			// If left button down
 			if (Input.GetMouseButtonDown (1)) {
 				downPos = Input.mousePosition;
-				downTime = Time.time;
-				RightClick();
 			}
 
 			if (Input.GetMouseButton (1)) {
 				// If left button down for certain time /// Drag
-				if (!hasTriggered && Time.time > downTime + downDelay) {
+				if (!hasTriggered && Vector3.Distance(downPos,Input.mousePosition) > dragTriggerDistance) {
 					StartRadiusSelect ();
 					hasTriggered = true;
 				}
 			}
 
 			if (Input.GetMouseButtonUp (1)) {
+				RightClick();
+
 				hasTriggered = false;
 				if (radiusSelecting)
 					StopRadiusSelect ();
@@ -137,10 +137,13 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void RightClick() {
+			RaycastHit2D hit = GetHit();
 			if (selected.Count == 0) {
 				// info pop ups
+				if (hit.collider != null)
+					UIManager.OpenPreview (hit.collider.gameObject);
 			} else {
-				CommandCenter.InterpretClickCommand (selected, GetHit (), Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z * -1)));
+				CommandCenter.InterpretClickCommand (selected, hit, Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z * -1)));
 			}
 		}
 

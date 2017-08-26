@@ -5,11 +5,17 @@ using UnityEngine.UI;
 
 namespace Assets.Gamelogic.Core {
 
-	public class UIInventory : MonoBehaviour {
+	public class UIInventory : UIPreviewWidget {
 
 		public GameObject content;
 		public GameObject linePrefab;
 		public Text weightLabel;
+
+		public override void Load(UIPreviewWindow window, GameObject target) {
+			base.Load (window, target);
+			InventoryVisualizer inv = target.GetComponent<InventoryVisualizer> ();
+			Load (inv.items, inv.maxWeight);
+		}
 
 		public void Load(Dictionary<int,int> items, int maxWeight) {
 			// add max weight

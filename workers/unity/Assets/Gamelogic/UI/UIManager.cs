@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Assets.Gamelogic.Core {
 
@@ -13,20 +14,29 @@ namespace Assets.Gamelogic.Core {
 		public GameObject toolbarWindowPrefab;
 		private GameObject preview;
 
+		public UIPreviewWidget[] previewWidgetList;
+		public Dictionary<Type,UIPreviewWidget> previewWidgetsOptions;
+
 		void OnEnable () {
 			instance = this;
+			previewWidgetsOptions = new Dictionary<Type,UIPreviewWidget> ();
+			foreach (UIPreviewWidget w in previewWidgetList) {
+				previewWidgetsOptions.Add (Type.GetType ("Assets.Gamelogic.Core."+w.type), w);
+			}
 		}
 
 		void Update () {
-			if (Input.GetKeyDown(KeyCode.Space)) {
-				InterpretPreview ();
-			}
-			if (Input.GetKeyUp(KeyCode.Space)) {
-				if (preview != null) {
-					Destroy (preview);
-					preview = null;
-				}
-			}
+			//depricated
+
+//			if (Input.GetKeyDown(KeyCode.Space)) {
+//				InterpretPreview ();
+//			}
+//			if (Input.GetKeyUp(KeyCode.Space)) {
+//				if (preview != null) {
+//					Destroy (preview);
+//					preview = null;
+//				}
+//			}
 		}
 
 		public static void OpenCommandPicker(List<string> options) {
@@ -37,6 +47,11 @@ namespace Assets.Gamelogic.Core {
 			Instantiate (instance.toolbarWindowPrefab, instance.transform).GetComponent<UIToolbarWindow> ().Load (title, options, d);
 		}
 
+		public static void OpenPreview(GameObject o) {
+			Instantiate (instance.previewPrefab, instance.transform).GetComponent<UIPreviewWindow> ().Load (o);
+		}
+
+		//depricated
 		private void InterpretPreview() {
 			if (SelectionManager.instance.selected.Count == 0)
 				return;
@@ -46,13 +61,13 @@ namespace Assets.Gamelogic.Core {
 			foreach (Selectable s in SelectionManager.instance.selected) {
 				if (s.GetComponent<ConstructionVisualizer> () != null) {
 					// any building gets priority
-					preview.GetComponent<UIPreviewWindow> ().LoadConstruction(s.GetComponent<ConstructionVisualizer> ());
+					preview.GetComponent<UIPreviewWindowOLD> ().LoadConstruction(s.GetComponent<ConstructionVisualizer> ());
 					return;
 				}
 			}
 
 			// assume inventory
-			preview.GetComponent<UIPreviewWindow> ().LoadInventoryFromSelection ();
+			preview.GetComponent<UIPreviewWindowOLD> ().LoadInventoryFromSelection ();
 		}
 	}
 
