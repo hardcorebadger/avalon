@@ -1,22 +1,20 @@
 package improbable.core;
 
 import "improbable/core/Inventory.schema";
+import "improbable/core/WorkSite.schema";
 
-type GatherRequest {
-  EntityId worker = 1;
-}
+type GatherRequest {}
 
 type GatherResponse {
     bool success = 1;
-    map<int32,int32> inventory = 2;
+    ItemStack items = 2;
 }
 
 component Gatherable {
     id = 1005;
-    int32 type = 1;
-    string name = 2;
-    int32 strength = 3;
-    map<int32,int32> inventory = 4;
+    float strength = 1;
+    ItemStack items = 2;
+    WorkType work_type = 3;
     command GatherResponse request_gather(GatherRequest);
 
 }

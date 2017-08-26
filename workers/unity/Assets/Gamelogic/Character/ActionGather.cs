@@ -53,7 +53,7 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 2:
 				// query is back, can we harvest? if so, move to
-				int itemID = gatherable.inventory.Keys.GetEnumerator ().Current;
+				int itemID = gatherable.items.id;
 
 				if (Item.GetWeight (itemID) <= owner.inventory.GetAvailableWeight ()) {
 					// can harvest
@@ -74,10 +74,10 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 3:
 				// we're there! Lets do this bitch
-				time+= 0.1F;
+				time+= Time.deltaTime;
 				if (time >= gatherable.strength) {
 					//successfully chopped, send gather request
-					SpatialOS.Commands.SendCommand (owner.characterWriter, Gatherable.Commands.RequestGather.Descriptor , new GatherRequest(owner.characterWriter.EntityId), target)
+					SpatialOS.Commands.SendCommand (owner.characterWriter, Gatherable.Commands.RequestGather.Descriptor , new GatherRequest(), target)
 						.OnSuccess(response => OnGatherResponse(response))
 						.OnFailure(response => OnGatherFailed());
 					state = 4;
@@ -88,9 +88,8 @@ namespace Assets.Gamelogic.Core {
 			case 5:
 				//we got the gather response
 				if (response.success) {
-					var first = response.inventory.First;
-					int id = first.Value.Key;
-					int amount = first.Value.Value;
+					int id = response.items.id;
+					int amount = response.items.amount;
 					owner.inventory.Insert (id, amount);
 					success = true;
 				} else {

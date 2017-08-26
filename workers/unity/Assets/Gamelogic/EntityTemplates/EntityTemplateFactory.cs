@@ -123,14 +123,12 @@ namespace Assets.Gamelogic.EntityTemplates
 		}
 
 		public static Entity CreatePineTemplate(string name, Vector3 pos) {
-			Improbable.Collections.Map<int,int> i = new Improbable.Collections.Map<int,int> ();
-			i.Add (1, 1);
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(1, "Pine Tree", 50, i), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(5f, new ItemStack(1,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -142,7 +140,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(1, "Oak Tree",50,i), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(5f, new ItemStack(1,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -163,7 +161,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(2, "Rock", 100,i), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(10f, new ItemStack(2,1), WorkType.WORK_QUARRYING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 

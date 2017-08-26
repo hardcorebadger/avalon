@@ -21,13 +21,19 @@ namespace Assets.Gamelogic.Core {
 		void Start () {
 		
 			gatherableWriter.CommandReceiver.OnRequestGather.RegisterResponse(OnGatherRequest);
-
 		
 		}	
 
 		private GatherResponse OnGatherRequest(GatherRequest request, ICommandCallerInfo callerinfo) {
-			SpatialOS.WorkerCommands.DeleteEntity (gatherableWriter.EntityId);
-			return new GatherResponse (true, gatherableWriter.Data.inventory);
+			if (gatherableWriter.Data.items.amount - 1 == 0)
+				SpatialOS.WorkerCommands.DeleteEntity (gatherableWriter.EntityId);
+			else {
+				gatherableWriter.Send (new Gatherable.Update ()
+					.SetItems (new ItemStack (gatherableWriter.Data.items.id, gatherableWriter.Data.items.amount - 1))
+				);
+			}
+
+			return new GatherResponse (true, new ItemStack(gatherableWriter.Data.items.id,1));
 		}
 		
 		// Update is called once per frame
