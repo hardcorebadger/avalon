@@ -12,6 +12,7 @@ namespace Assets.Gamelogic.Core {
 		public GameObject previewPrefab;
 		public GameObject commandPickerPrefab;
 		public GameObject toolbarWindowPrefab;
+		public float coOpRadius = 50f;
 		private GameObject preview;
 
 		public UIPreviewWidget[] previewWidgetList;

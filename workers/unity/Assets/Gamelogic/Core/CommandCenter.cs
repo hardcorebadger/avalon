@@ -7,6 +7,16 @@ using Improbable.Unity;
 using Improbable.Unity.Configuration;
 using Improbable.Unity.Core;
 using Improbable.Unity.Core.EntityQueries;
+using Improbable;
+using Improbable.Core;
+using Improbable.Entity.Component;
+using Improbable.Unity;
+using Improbable.Unity.Core;
+using Improbable.Unity.Visualizer;
+using Improbable.Worker.Query;
+using Improbable.Worker;
+using Improbable.Entity;
+using Improbable.Unity.Core.EntityQueries;
 
 namespace Assets.Gamelogic.Core {
 
@@ -87,27 +97,59 @@ namespace Assets.Gamelogic.Core {
 			target = null;
 		}
 
+		// depricated
 		private static void ExecuteRadialTargetedCommand(string command) {
-			int index = 0;
 			foreach (EntityId id in agents) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.RadiusTarget.Descriptor, new RadiusTargetRequest (new Vector3d (position.x, 0, position.y), radius, command, new GroupInfo(index,agents.Count)), id);
-				index++;
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.RadiusTarget.Descriptor, new RadiusTargetRequest (new Vector3d (position.x, 0, position.y), radius, command), id);
 			}
 		}
 
 		private static void ExecuteEntityTargetedCommand(string command) {
-			int index = 0;
-			foreach (EntityId id in agents) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), command, new GroupInfo(index,agents.Count)), id);
-				index++;
+			if (command == "gather")
+				ExecuteGatherableTargetedCommand ();
+			else {
+				foreach (EntityId id in agents) {
+					SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), command), id);
+				}
 			}
 		}
 
+		private static void ExecuteGatherableTargetedCommand() {
+			string command = "gather";
+			if (agents.Count < 1)
+				return;
+			
+			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), command), agents[0]);
+			agents.RemoveAt (0);
+
+			if (agents.Count < 1)
+				return;
+
+			Collider2D[] cols = Physics2D.OverlapCircleAll (position, UIManager.instance.coOpRadius);
+			WorkType t = target.GetComponent<GatherableVisualizer> ().gatherableReader.Data.workType;
+			List<GameObject> used = new List<GameObject> ();
+			used.Add (target);
+
+			foreach (Collider2D c in cols) {
+				if (used.Contains (c.gameObject))
+					continue;
+				GatherableVisualizer gatherable = c.gameObject.GetComponent<GatherableVisualizer> ();
+				if (gatherable == null)
+					continue;
+				if (gatherable.gatherableReader.Data.workType == t) {
+					used.Add (c.gameObject);
+					SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (c.gameObject.EntityId(), command), agents [0]);
+					agents.RemoveAt (0);
+					if (agents.Count < 1)
+						return;
+				}
+			}
+
+		}
+
 		private static void ExecutePositionTargetedCommand(string command) {
-			int index = 0;
 			foreach (EntityId id in agents) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.PositionTarget.Descriptor, new PositionTargetRequest (new Vector3d (position.x, 0, position.y), command, new GroupInfo(index,agents.Count)), id);
-				index++;
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.PositionTarget.Descriptor, new PositionTargetRequest (new Vector3d (position.x, 0, position.y), command), id);
 			}
 		}
 

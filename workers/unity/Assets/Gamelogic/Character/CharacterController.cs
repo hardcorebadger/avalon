@@ -96,24 +96,24 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnRadiusTarget(RadiusTargetRequest request, ICommandCallerInfo callerinfo) {
-			if (request.command == "gather") {
-				var query = Query.And (Query.HasComponent (Gatherable.ComponentId), Query.InSphere (request.targetPosition.x, request.targetPosition.y, request.targetPosition.z, request.size)).ReturnOnlyEntityIds ();
-				SpatialOS.Commands.SendQuery(characterWriter, query)
-					.OnSuccess(result => {
-						if (result.EntityCount < 1) {
-							return;
-						}
-						Improbable.Collections.Map<EntityId, Entity> resultMap = result.Entities;
-						EntityId[] ids = new EntityId[resultMap.Count];
-						int index = 0;
-						foreach (EntityId i in resultMap.Keys) {
-							ids[index] = i;
-							index++;
-						}
-						SetAction(new ActionDistributedGather(this, request.groupInfo.groupId, request.groupInfo.groupSize, ids));
-					})
-					.OnFailure(errorDetails => Debug.Log("Query failed with error: " + errorDetails));
-			}
+//			if (request.command == "gather") {
+//				var query = Query.And (Query.HasComponent (Gatherable.ComponentId), Query.InSphere (request.targetPosition.x, request.targetPosition.y, request.targetPosition.z, request.size)).ReturnOnlyEntityIds ();
+//				SpatialOS.Commands.SendQuery(characterWriter, query)
+//					.OnSuccess(result => {
+//						if (result.EntityCount < 1) {
+//							return;
+//						}
+//						Improbable.Collections.Map<EntityId, Entity> resultMap = result.Entities;
+//						EntityId[] ids = new EntityId[resultMap.Count];
+//						int index = 0;
+//						foreach (EntityId i in resultMap.Keys) {
+//							ids[index] = i;
+//							index++;
+//						}
+//						SetAction(new ActionDistributedGather(this, request.groupInfo.groupId, request.groupInfo.groupSize, ids));
+//					})
+//					.OnFailure(errorDetails => Debug.Log("Query failed with error: " + errorDetails));
+//			}
 			return new Nothing ();
 		}
 

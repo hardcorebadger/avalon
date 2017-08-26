@@ -7,7 +7,7 @@ using Improbable.Unity.Visualizer;
 
 public class GatherableVisualizer : MonoBehaviour {
 
-	[Require] private Gatherable.Reader gatherableReader;
+	[Require] public Gatherable.Reader gatherableReader;
 
 	// Use this for initialization
 	void Start () {

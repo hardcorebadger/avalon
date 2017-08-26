@@ -6,18 +6,15 @@ import "improbable/core/Nothing.schema";
 type PositionTargetRequest {
   Vector3d target_position = 1;
   string command = 2;
-  GroupInfo group_info = 3;
 }
 type EntityTargetRequest {
   EntityId target = 1;
   string command = 2;
-  GroupInfo group_info = 3;
 }
 type RadiusTargetRequest {
   Vector3d target_position = 1;
   float size = 2;
   string command = 3;
-  GroupInfo group_info = 4;
 }
 
 type GroupInfo {
