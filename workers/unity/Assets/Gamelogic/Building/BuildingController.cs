@@ -42,6 +42,15 @@ namespace Assets.Gamelogic.Core {
 			return request;
 		}
 
+		public void SetTown(EntityId i) {
+			if (buildingWriter.Data.town.HasValue) {
+				SpatialOS.Commands.SendCommand (buildingWriter, TownCenter.Commands.TentativeRemoveCitizen.Descriptor, new TownRemoveRequest (gameObject.EntityId ()), buildingWriter.Data.town.Value);
+			}
+			buildingWriter.Send (new Building.Update ()
+				.SetTown (i)
+			);
+		}
+
 	}
 
 }

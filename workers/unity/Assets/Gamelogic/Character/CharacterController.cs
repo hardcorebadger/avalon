@@ -164,6 +164,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void SetTown(EntityId i) {
+			if (characterWriter.Data.town.HasValue) {
+				SpatialOS.Commands.SendCommand (characterWriter, TownCenter.Commands.TentativeRemoveCitizen.Descriptor, new TownRemoveRequest (gameObject.EntityId ()), characterWriter.Data.town.Value);
+			}
 			characterWriter.Send (new Character.Update ()
 				.SetTown (i)
 			);
