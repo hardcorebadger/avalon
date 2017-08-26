@@ -117,7 +117,7 @@ namespace Assets.Gamelogic.Core {
 					return;
 			}
 			// fully stocked
-			SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-"+buildingToSpawn, transform.position, owned.getOwner()))
+			SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-"+buildingToSpawn, transform.position, owned.getOwner(), GetComponent<BuildingController>().GetTown()))
 				.OnSuccess (entityId => OnHouseCreated ());
 		}
 

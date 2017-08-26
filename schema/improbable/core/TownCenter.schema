@@ -3,7 +3,11 @@ package improbable.core;
 type TownAddRequest {
     EntityId entity = 1;
 }
+type TownRemoveRequest {
+    EntityId entity = 1;
+}
 type TownAddResponse {}
+type TownRemoveResponse {}
 
 component TownCenter {
     id = 1012;
@@ -14,4 +18,6 @@ component TownCenter {
 
     command TownAddResponse add_citizen(TownAddRequest);
     command TownAddResponse add_building(TownAddRequest);
+    command TownRemoveResponse remove_citizen(TownRemoveRequest);
+    command TownRemoveResponse remove_building(TownRemoveRequest);
 }

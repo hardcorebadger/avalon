@@ -50,7 +50,7 @@ namespace Assets.Gamelogic.Core
 			Vector3 pos = new Vector3 ((float)request.position.x, (float)request.position.y);
 			int ownerId = playerOnlineWriter.Data.playerId;
 
-			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, pos, ownerId));
+			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, pos, ownerId, new Improbable.Collections.Option<EntityId>()));
 			return new ConstructionResponse(true);
 		}
 
@@ -60,14 +60,9 @@ namespace Assets.Gamelogic.Core
 			Vector3 pos = new Vector3 ((float)request.position.x, (float)request.position.y);
 			int ownerId = playerOnlineWriter.Data.playerId;
 
-			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, pos, ownerId))
-				.OnSuccess (entityId => OnCreateTownBuildingSuccess (request.townCenter, entityId.CreatedEntityId));
+			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate (entityName, pos, ownerId, request.townCenter));
 
 			return new ConstructionResponse(true);
-		}
-
-		private void OnCreateTownBuildingSuccess(EntityId townCenterId, EntityId buildingId) {
-			SpatialOS.Commands.SendCommand (playerOnlineWriter, TownCenter.Commands.AddBuilding.Descriptor, new TownAddRequest (buildingId), townCenterId);
 		}
 
 		private void OnHeartbeat(Heartbeat _)

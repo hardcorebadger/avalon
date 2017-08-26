@@ -1,0 +1,8 @@
+package improbable.core;
+
+
+component Building {
+    id = 1013;
+    option<EntityId> town = 1;
+
+}
