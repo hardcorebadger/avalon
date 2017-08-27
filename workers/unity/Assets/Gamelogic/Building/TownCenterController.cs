@@ -6,23 +6,19 @@ using Improbable.Entity.Component;
 using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
-using Improbable;
-using Improbable.Core;
-using Improbable.Entity.Component;
-using Improbable.Unity;
-using Improbable.Unity.Core;
-using Improbable.Unity.Visualizer;
 using Improbable.Worker.Query;
 using Improbable.Worker;
 using Improbable.Entity;
 using Improbable.Unity.Core.EntityQueries;
-using Improbable.Collections;
 
 namespace Assets.Gamelogic.Core {
 
 	public class TownCenterController : MonoBehaviour {
 
 		[Require] private TownCenter.Writer townCenterWriter;
+
+		public float townUpdateTick = 120f;
+		public float repopChance = 0.1f;
 
 		private List<EntityId> tentativeCancellations;
 
@@ -65,7 +61,7 @@ namespace Assets.Gamelogic.Core {
 
 
 				// tick ever minute
-				yield return new WaitForSeconds (60f);
+				yield return new WaitForSeconds (townUpdateTick);
 			}
 		}
 
@@ -194,12 +190,14 @@ namespace Assets.Gamelogic.Core {
 			int chances = livingSpaces - townCenterWriter.Data.citizens.Count;
 			for (int i = 0; i < chances; i++) {
 				// put randomizer in here...
-				SpatialOS.Commands.CreateEntity (townCenterWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate (
-					"character", 
-					transform.position, 
-					GetComponent<OwnedController> ().getOwner (), 
-					gameObject.EntityId ()
-				));
+				if (Random.Range (0, 1000) < repopChance * 1000) {
+					SpatialOS.Commands.CreateEntity (townCenterWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate (
+						"character", 
+						transform.position, 
+						GetComponent<OwnedController> ().getOwner (), 
+						gameObject.EntityId ()
+					));
+				}
 			}
 		}
 

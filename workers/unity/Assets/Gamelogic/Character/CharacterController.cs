@@ -83,7 +83,8 @@ namespace Assets.Gamelogic.Core {
 
 		private void Update() {
 			// if the controlling action completes, stop doing it
-			if (currentAction.Update () == ActionCode.Success || currentAction.Update () == ActionCode.Failure)
+			ActionCode code = currentAction.Update ();
+			if (code == ActionCode.Success || code == ActionCode.Failure)
 				currentAction = new ActionBlank (this);
 		}
 
