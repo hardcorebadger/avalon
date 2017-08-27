@@ -6,6 +6,17 @@ using Improbable.Entity.Component;
 using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
+using Improbable;
+using Improbable.Core;
+using Improbable.Entity.Component;
+using Improbable.Unity;
+using Improbable.Unity.Core;
+using Improbable.Unity.Visualizer;
+using Improbable.Worker.Query;
+using Improbable.Worker;
+using Improbable.Entity;
+using Improbable.Unity.Core.EntityQueries;
+using Improbable.Collections;
 
 namespace Assets.Gamelogic.Core {
 
@@ -49,6 +60,10 @@ namespace Assets.Gamelogic.Core {
 
 		private System.Collections.IEnumerator TownTick() {
 			while (enabled) {
+
+				QueryBuildings ();
+
+
 				// tick ever minute
 				yield return new WaitForSeconds (60f);
 			}
@@ -142,6 +157,52 @@ namespace Assets.Gamelogic.Core {
 				.SetBuildings (newList)
 			);
 		}
+
+		private void QueryBuildings() {
+			IConstraint[] queryConstraints = new IConstraint[townCenterWriter.Data.buildings.Count];
+			int i = 0;
+			foreach (EntityId id in townCenterWriter.Data.buildings) {
+				queryConstraints [i] = Query.HasEntityId (id);
+				i++;
+			}
+
+			if (townCenterWriter.Data.buildings.Count == 0) {
+				return;
+			} else if (townCenterWriter.Data.buildings.Count == 1) {
+				var entityQuery = queryConstraints[0].ReturnComponents(Building.ComponentId);
+				SpatialOS.WorkerCommands.SendQuery (entityQuery)
+					.OnSuccess (OnSuccessfulBuildingQuery);
+			} else if (townCenterWriter.Data.buildings.Count >= 2) {
+				var entityQuery = Query.Or(queryConstraints[0], queryConstraints[1], queryConstraints).ReturnComponents(Building.ComponentId);
+				SpatialOS.WorkerCommands.SendQuery (entityQuery)
+					.OnSuccess (OnSuccessfulBuildingQuery);
+			}
+		}
+
+		private void OnSuccessfulBuildingQuery(EntityQueryResult queryResult) {
+			Map<EntityId, Entity> resultMap = queryResult.Entities;
+			if (resultMap.Count == 0) {
+				return;
+			}
+			int livingSpaces = 0;
+			foreach (EntityId id in resultMap.Keys) {
+				Entity e = resultMap[id];
+				Improbable.Collections.Option<IComponentData<Building>> g = e.Get<Building>();
+				BuildingData building = g.Value.Get().Value;
+				livingSpaces += building.livingSpaces;
+			}
+			int chances = livingSpaces - townCenterWriter.Data.citizens.Count;
+			for (int i = 0; i < chances; i++) {
+				// put randomizer in here...
+				SpatialOS.Commands.CreateEntity (townCenterWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate (
+					"character", 
+					transform.position, 
+					GetComponent<OwnedController> ().getOwner (), 
+					gameObject.EntityId ()
+				));
+			}
+		}
+
 
 	}
 

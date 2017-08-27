@@ -74,7 +74,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetPersistence (true)
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new TownCenter.Data(25, new List<EntityId>(), new List<EntityId>()), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Building.Data(town), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Building.Data(town, 0), CommonRequirementSets.PhysicsOnly)
 				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.Build ();
 		}
@@ -97,7 +97,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 5000), CommonRequirementSets.PhysicsOnly)
 				.AddComponent (new Storage.Data (types), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Building.Data(town), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Building.Data(town, 2), CommonRequirementSets.PhysicsOnly)
 				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 
@@ -120,7 +120,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Construction.Data(req,sourcing), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Building.Data(town), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Building.Data(town, 0), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CONSTRUCTION), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
