@@ -79,6 +79,9 @@ namespace Assets.Gamelogic.Core {
 
 		// called from ui picker
 		public static void OnCommandSelected(string command) {
+			foreach (Selectable s in SelectionManager.instance.selected) {
+				s.GetComponent<CharacterVisualizer> ().OnAcceptCommand ();
+			}
 			if (radial) {
 				ExecuteRadialTargetedCommand (command);
 			} if (target != null) {

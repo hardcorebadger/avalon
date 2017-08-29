@@ -24,7 +24,8 @@ namespace Assets.Gamelogic.Core {
 		private Animator anim;
 		private AudioSource audioSrc;
 		public AudioClip[] footstepSounds;
-
+		public AudioClip[] acceptSounds;
+		public AudioClip[] cheeringSounds;
 
 		void OnEnable() {
 			if (characterReader.HasAuthority) {
@@ -113,6 +114,10 @@ namespace Assets.Gamelogic.Core {
 
 		public void OnFootstep() {
 			audioSrc.PlayOneShot (footstepSounds [Random.Range (0, footstepSounds.Length - 1)],0.3f);
+		}
+
+		public void OnAcceptCommand() {
+			audioSrc.PlayOneShot (acceptSounds [Random.Range (0, acceptSounds.Length - 1)]);
 		}
 
 	}
