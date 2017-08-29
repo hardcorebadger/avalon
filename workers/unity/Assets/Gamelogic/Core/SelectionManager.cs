@@ -175,7 +175,11 @@ namespace Assets.Gamelogic.Core {
 		void LeftClickLMBMode() {
 			RaycastHit2D hit = GetHit ();
 
-			if (Input.GetKey (KeyCode.LeftShift) || selected.Count == 0) {
+			if (
+				Input.GetKey (KeyCode.LeftShift) || 
+				selected.Count == 0 || 
+				(hit.collider != null && hit.collider.GetComponent<CharacterVisualizer>() != null  && hit.collider.GetComponent<CharacterVisualizer>().CanControl())
+			) {
 				// If pos hits a character, select them
 
 				if (hit.collider != null) {

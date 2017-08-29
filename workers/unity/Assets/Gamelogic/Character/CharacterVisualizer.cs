@@ -22,6 +22,9 @@ namespace Assets.Gamelogic.Core {
 		public GameObject buildingParticle;
 		private Quaternion facing;
 		private Animator anim;
+		private AudioSource audioSrc;
+		public AudioClip[] footstepSounds;
+
 
 		void OnEnable() {
 			if (characterReader.HasAuthority) {
@@ -31,6 +34,7 @@ namespace Assets.Gamelogic.Core {
 			rigidBody = GetComponent<Rigidbody2D> ();
 			sprite = GetComponent<SpriteRenderer> ();
 			anim = GetComponent<Animator> ();
+			audioSrc = GetComponent<AudioSource> ();
 			PlayerColor c = Bootstrap.players [characterReader.Data.playerId].color;
 			sprite.color = new Color(c.red, c.green, c.blue, 1f); 
 			transform.position = positionReader.Data.coords.ToVector3();
@@ -105,6 +109,10 @@ namespace Assets.Gamelogic.Core {
 				break;
 			}
 				
+		}
+
+		public void OnFootstep() {
+			audioSrc.PlayOneShot (footstepSounds [Random.Range (0, footstepSounds.Length - 1)],0.3f);
 		}
 
 	}
