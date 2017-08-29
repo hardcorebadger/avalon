@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.Gamelogic.Core {
 	
@@ -13,13 +14,12 @@ namespace Assets.Gamelogic.Core {
 		public double downDelay = 0.2;
 		public double upDelay = 0.1;
 		public float dragTriggerDistance = 1f;
+		public bool leftMouseInputMode = true;
 
 		[HideInInspector]
 		public static SelectionManager instance;
 
-		private double downTime = 0;
-		private double upTime = 0;
-		private bool potentialDouble = false;
+
 		private bool hasTriggered = false;
 		private Vector3 startPos;
 		private Vector3 downPos;
@@ -37,12 +37,22 @@ namespace Assets.Gamelogic.Core {
 
 		void Update() {
 
+			if (EventSystem.current.IsPointerOverGameObject () && !boxSelecting)
+				return;
+
+			if (BuildingManager.isBuilding)
+				return;
+
 			if (boxSelecting)
 				UpdateBoxSelect ();
 			if (radiusSelecting)
 				UpdateRadiusSelect ();
 
-
+			if (leftMouseInputMode) {
+				if (Input.GetKeyDown (KeyCode.Escape)) {
+					ClearSelected ();
+				}
+			}
 
 			if (Input.GetMouseButtonDown (0)) {
 				downPos = Input.mousePosition;
@@ -57,7 +67,10 @@ namespace Assets.Gamelogic.Core {
 			}
 
 			if (Input.GetMouseButtonUp (0)) {
-				SingleClick();
+				if (leftMouseInputMode)
+					LeftClickLMBMode();
+				else
+					LeftClickRMBMode();
 
 				hasTriggered = false;
 				if (boxSelecting)
@@ -69,20 +82,11 @@ namespace Assets.Gamelogic.Core {
 				downPos = Input.mousePosition;
 			}
 
-			if (Input.GetMouseButton (1)) {
-				// If left button down for certain time /// Drag
-				if (!hasTriggered && Vector3.Distance(downPos,Input.mousePosition) > dragTriggerDistance) {
-					StartRadiusSelect ();
-					hasTriggered = true;
-				}
-			}
-
 			if (Input.GetMouseButtonUp (1)) {
-				RightClick();
-
-				hasTriggered = false;
-				if (radiusSelecting)
-					StopRadiusSelect ();
+				if (leftMouseInputMode)
+					RightClickLMBMode();
+				else
+					RightClickRMBMode();
 			}
 
 
@@ -124,19 +128,12 @@ namespace Assets.Gamelogic.Core {
 //			}
 		}
 
-		private void TriggerWipe() {
-			hasTriggered = true;
-			upTime = 0;
-			downTime = 0;
-			potentialDouble = false;
-		}
-
 		private RaycastHit2D GetHit() {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			return Physics2D.GetRayIntersection(ray,Mathf.Infinity);
 		}
 
-		void RightClick() {
+		void RightClickRMBMode() {
 			RaycastHit2D hit = GetHit();
 			if (selected.Count == 0) {
 				// info pop ups
@@ -147,7 +144,7 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		void SingleClick() {
+		void LeftClickRMBMode() {
 			// If Not Shift, clear selection
 			if (!Input.GetKey (KeyCode.LeftShift)) {
 				ClearSelected ();
@@ -166,6 +163,36 @@ namespace Assets.Gamelogic.Core {
 			} else {
 				// deselect
 				ClearSelected();
+			}
+		}
+
+		void RightClickLMBMode() {
+			RaycastHit2D hit = GetHit();
+			if (hit.collider != null)
+				UIManager.OpenPreview (hit.collider.gameObject);
+		}
+
+		void LeftClickLMBMode() {
+			RaycastHit2D hit = GetHit ();
+
+			if (Input.GetKey (KeyCode.LeftShift) || selected.Count == 0) {
+				// If pos hits a character, select them
+
+				if (hit.collider != null) {
+					Selectable s = hit.transform.GetComponent<Selectable> ();
+					if (s != null) {
+						if (Input.GetKey (KeyCode.LeftShift)) {
+							AddSelected (s);
+						} else {
+							SetSelected (s);
+						}
+					}
+				} else {
+					// deselect
+					ClearSelected ();
+				}
+			} else {
+				CommandCenter.InterpretClickCommand (selected, hit, Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z * -1)));
 			}
 		}
 
@@ -285,6 +312,24 @@ namespace Assets.Gamelogic.Core {
 
 		public bool IsSelected(Selectable s) {
 			return selected.Contains (s);
+		}
+
+		public Vector3 GetMedianSelectionPosition() {
+			if (selected.Count == 0)
+				return Vector3.zero;
+
+			float x = 0;
+			float y = 0;
+
+			foreach (Selectable s in selected) {
+				x += s.transform.position.x;
+				y += s.transform.position.y;
+			}
+
+			x /= selected.Count;
+			y /= selected.Count;
+
+			return new Vector3 (x, y);
 		}
 
 	}

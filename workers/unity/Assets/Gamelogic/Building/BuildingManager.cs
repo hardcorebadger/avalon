@@ -16,6 +16,7 @@ namespace Assets.Gamelogic.Core {
 		public static Dictionary<string, GameObject> constructionOptions;
 
 		public static BuildingManager instance;
+		public static bool isBuilding = false;
 		private static string currentConstructionGhost;
 
 		public void OnEnable() {
@@ -34,6 +35,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public static void StartBuilding(string option) {
+			isBuilding = true;
 			currentConstructionGhost = option;
 			GameObject g = Instantiate (constructionOptions [option]);
 			if (option == "Town Center") {
@@ -44,6 +46,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public static void StopBuilding() {
+			isBuilding = false;
 			DestroyTownRadialOverlays ();
 		}
 
