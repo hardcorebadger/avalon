@@ -22,7 +22,7 @@ namespace Assets.Gamelogic.Core {
 		[Require] public Rotation.Writer rotationWriter;
 
 		[HideInInspector]
-		public Rigidbody2D rigidBody;
+		public Rigidbody rigidBody;
 
 		public float speed = 5f;
 		public float range = 5f;
@@ -54,7 +54,7 @@ namespace Assets.Gamelogic.Core {
 			state = characterWriter.Data.state;
 			StartCoroutine ("UpdateTransform");
 
-			rigidBody = GetComponent<Rigidbody2D> ();
+			rigidBody = GetComponent<Rigidbody> ();
 			inventory = GetComponent<InventoryController> ();
 		
 			currentAction = new ActionBlank (this);
@@ -143,7 +143,7 @@ namespace Assets.Gamelogic.Core {
 			if (currentAction != null)
 				currentAction.OnKill ();
 			SetVelocity (0f);
-			rigidBody.angularVelocity = 0f;
+			rigidBody.angularVelocity = Vector3.zero;
 			SetState (CharacterState.DEFAULT);
 			currentAction = a;
 		}
@@ -157,7 +157,7 @@ namespace Assets.Gamelogic.Core {
 
 		public void SetVelocity(float f) {
 			velocity = f;
-			rigidBody.velocity = facing * new Vector2 (0, velocity);
+			rigidBody.velocity = facing * new Vector3 (0, 0, velocity);
 		}
 
 		public Vector3 GetFacingDirection() {

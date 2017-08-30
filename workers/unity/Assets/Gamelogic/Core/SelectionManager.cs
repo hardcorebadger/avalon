@@ -128,13 +128,15 @@ namespace Assets.Gamelogic.Core {
 //			}
 		}
 
-		private RaycastHit2D GetHit() {
+		private RaycastHit GetHit() {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			return Physics2D.GetRayIntersection(ray,Mathf.Infinity);
+			RaycastHit hit;
+			Physics.Raycast (ray, out hit);
+			return hit;
 		}
 
 		void RightClickRMBMode() {
-			RaycastHit2D hit = GetHit();
+			RaycastHit hit = GetHit();
 			if (selected.Count == 0) {
 				// info pop ups
 				if (hit.collider != null)
@@ -150,7 +152,7 @@ namespace Assets.Gamelogic.Core {
 				ClearSelected ();
 			}
 			// If pos hits a character, select them
-			RaycastHit2D hit = GetHit();
+			RaycastHit hit = GetHit();
 			if (hit.collider != null) {
 				Selectable s = hit.transform.GetComponent<Selectable> ();
 				if (s != null) {
@@ -167,14 +169,13 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void RightClickLMBMode() {
-			RaycastHit2D hit = GetHit();
+			RaycastHit hit = GetHit();
 			if (hit.collider != null)
 				UIManager.OpenPreview (hit.collider.gameObject);
 		}
 
 		void LeftClickLMBMode() {
-			RaycastHit2D hit = GetHit ();
-
+			RaycastHit hit = GetHit ();
 			if (
 				Input.GetKey (KeyCode.LeftShift) || 
 				selected.Count == 0 || 
@@ -262,12 +263,19 @@ namespace Assets.Gamelogic.Core {
 			}
 			currentDragSelection.Clear ();
 
-			Vector3 pt1 = Camera.main.ScreenToWorldPoint (dragSelector.position + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
-			Vector3 pt2 = Camera.main.ScreenToWorldPoint (dragSelector.position + new Vector3 (width, -1 * height, Camera.main.transform.position.z*-1));
+			Vector3 pt1 = Camera.main.ScreenToWorldPoint (dragSelector.position);
+			Vector3 pt2 = Camera.main.ScreenToWorldPoint (dragSelector.position + new Vector3 (width, height));
+			float worldDist = Vector3.Distance (pt1, pt2);
+			float screenDist = Vector3.Distance (dragSelector.position, dragSelector.position + new Vector3 (width, height));
+			float ratio = worldDist / screenDist;
 
-			Collider2D[] colliders = Physics2D.OverlapAreaAll (pt1, pt2);
-			foreach (Collider2D c in colliders) {
-				Selectable s = c.GetComponent<Selectable> ();
+			Vector3 center = Camera.main.ScreenToWorldPoint (dragSelector.position + new Vector3 (width/2, height/-2));
+			Debug.DrawRay (center, Camera.main.transform.forward, Color.red);
+
+			RaycastHit[] hits = Physics.BoxCastAll ( center, new Vector3 ((width/2f)*ratio, (height/2f)*ratio, 1f), Camera.main.transform.forward, Quaternion.LookRotation(Camera.main.transform.forward));
+
+			foreach (RaycastHit c in hits) {
+				Selectable s = c.collider.GetComponent<Selectable> ();
 				if (s && s.IsSelectable()) {
 					s.SetHighlighted (true);
 					currentDragSelection.Add (s);

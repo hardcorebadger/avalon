@@ -13,7 +13,7 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Position.Reader positionReader;
 		[Require] private Rotation.Reader rotationReader;
 
-		private Rigidbody2D rigidBody;
+		private Rigidbody rigidBody;
 		private SpriteRenderer sprite;
 		public CharacterState state;
 		public float ipAllowance = 0.1f;
@@ -32,7 +32,7 @@ namespace Assets.Gamelogic.Core {
 				this.enabled = false;
 				return;
 			}
-			rigidBody = GetComponent<Rigidbody2D> ();
+			rigidBody = GetComponent<Rigidbody> ();
 			sprite = GetComponent<SpriteRenderer> ();
 			anim = GetComponent<Animator> ();
 			audioSrc = GetComponent<AudioSource> ();
@@ -77,7 +77,7 @@ namespace Assets.Gamelogic.Core {
 					anim.SetBool ("walking", true);
 				else
 					anim.SetBool ("walking", false);
-				rigidBody.velocity = facing * new Vector2 (0, update.velocity.Value);
+				rigidBody.velocity = facing * new Vector3 (0, 0, update.velocity.Value);
 			}
 		}
 

@@ -23,7 +23,7 @@ namespace Assets.Gamelogic.Core {
 	public class CommandCenter : MonoBehaviour {
 
 		private static  List<EntityId> agents;
-		private static RaycastHit2D hit;
+		private static RaycastHit hit;
 		private static Vector3 position;
 		private static float radius;
 		private static GameObject target;
@@ -52,7 +52,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		// called from selection manager
-		public static void InterpretClickCommand(List<Selectable> s, RaycastHit2D h, Vector3 p) {
+		public static void InterpretClickCommand(List<Selectable> s, RaycastHit h, Vector3 p) {
 			agents = ParseControllableEntities (s);
 			if (agents.Count == 0)
 				return;
@@ -93,7 +93,7 @@ namespace Assets.Gamelogic.Core {
 
 		// called from ui picker
 		public static void OnCommandCancelled() {
-			hit = new RaycastHit2D();
+			hit = new RaycastHit();
 			position = Vector3.zero;
 			agents = null;
 			radial = false;

@@ -20,7 +20,7 @@ namespace Assets.Gamelogic.Core {
 			foreach (Collider2D c in colliders) {
 				if (c.gameObject == owner.gameObject) {
 					owner.SetVelocity (0f);
-					owner.rigidBody.angularVelocity = 0f;
+					owner.rigidBody.angularVelocity = Vector3.zero;
 					return ActionCode.Success;
 				}
 			}
