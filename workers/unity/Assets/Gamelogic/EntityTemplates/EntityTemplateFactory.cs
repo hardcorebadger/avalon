@@ -69,7 +69,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreateTownCenterBuildingTemplate(string name, Vector3 pos, int ownerId, Option<EntityId> town) {
 			return EntityBuilder.Begin ()
-				.AddPositionComponent (pos.Flip (), CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent (name)
 				.SetPersistence (true)
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
@@ -91,7 +91,7 @@ namespace Assets.Gamelogic.EntityTemplates
 			types.Add (ResourceType.RESOURCE_MISC);
 
 			return EntityBuilder.Begin ()
-				.AddPositionComponent (pos.Flip (), CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent (name)
 				.SetPersistence (true)
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
@@ -114,7 +114,7 @@ namespace Assets.Gamelogic.EntityTemplates
 			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 30f, new Vector3d (pos.x, pos.z, pos.y));
 
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
@@ -127,7 +127,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreatePineTemplate(string name, Vector3 pos) {
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
@@ -139,7 +139,7 @@ namespace Assets.Gamelogic.EntityTemplates
 			Improbable.Collections.Map<int,int> i = new Improbable.Collections.Map<int,int> ();
 			i.Add (1, 1);
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
@@ -149,7 +149,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreateBasicEntityTemplate(string name, Vector3 pos) {
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
@@ -160,7 +160,7 @@ namespace Assets.Gamelogic.EntityTemplates
 			Improbable.Collections.Map<int,int> i = new Improbable.Collections.Map<int,int> ();
 			i.Add (3, 1);
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
@@ -170,7 +170,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreateCharacterTemplate(Vector3 pos, int playerId, Option<EntityId> town) {
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.PhysicsOnly)
+				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent("character")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
@@ -193,7 +193,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreatePlayerTemplate(EntityId creator, string clientWorkerId, int playerId, Vector3 pos) {
 			return EntityBuilder.Begin()
-				.AddPositionComponent(pos.Flip(), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
+				.AddPositionComponent(pos, CommonRequirementSets.SpecificClientOnly(clientWorkerId))
 				.AddMetadataComponent("player")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)

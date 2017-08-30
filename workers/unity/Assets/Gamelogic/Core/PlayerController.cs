@@ -22,7 +22,7 @@ namespace Assets.Gamelogic.Core {
 
 
 		private void OnEnable() {
-			
+			transform.eulerAngles = new Vector3 (30, 45, 0);
 			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatSendingIntervalSecs, SendHeartbeat));
 		}
 
@@ -33,7 +33,8 @@ namespace Assets.Gamelogic.Core {
 		// Use this for initialization
 		void Start () {
 			Camera.main.transform.SetParent (transform);
-			Camera.main.transform.localPosition = new Vector3(0,0,-90);
+			Camera.main.transform.localPosition = new Vector3(0,0,-500);
+			Camera.main.transform.localEulerAngles = new Vector3 (0, 0, 0);
 			instance = this;
 		}
 		
@@ -45,7 +46,9 @@ namespace Assets.Gamelogic.Core {
 			if (SelectionManager.instance.selected.Count > 0) {
 				transform.position = Vector3.Lerp (transform.position, SelectionManager.instance.GetMedianSelectionPosition ()+Vector3.forward*transform.position.z, 0.1f);
 			} else {
-				transform.position += new Vector3 (Input.GetAxis ("Horizontal")*speed, Input.GetAxis ("Vertical")*speed, Input.GetAxis("Mouse ScrollWheel")*zoomSpeed);
+				transform.position += transform.TransformDirection(new Vector3 (Input.GetAxis ("Horizontal")*speed, 0f,  0f));
+				transform.position += new Vector3 (Input.GetAxis ("Vertical") * speed, 0f, Input.GetAxis ("Vertical") * speed);
+				Camera.main.orthographicSize -= Input.GetAxis ("Mouse ScrollWheel") * zoomSpeed;
 			}
 		}
 

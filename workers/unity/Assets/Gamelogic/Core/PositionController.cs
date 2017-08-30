@@ -30,17 +30,12 @@ namespace Assets.Gamelogic.Core {
 	{
 		public static Coordinates ToCoordinates(this Vector3 vector3)
 		{
-			return new Coordinates(vector3.x, vector3.z, vector3.y);
+			return new Coordinates(vector3.x, vector3.y, vector3.z);
 		}
 
 		public static Vector3 ToVector3(this Coordinates coord)
 		{
-			return new Vector3((float)coord.x, (float)coord.z, (float)coord.y);
-		}
-
-		public static Vector3 Flip(this Vector3 vector3)
-		{
-			return new Vector3(vector3.x, vector3.z, vector3.y);
+			return new Vector3((float)coord.x, (float)coord.y, (float)coord.z);
 		}
 	}
 

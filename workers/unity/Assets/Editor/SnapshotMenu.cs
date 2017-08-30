@@ -22,18 +22,18 @@ namespace Assets.Editor
 			var currentEntityId = 1;
 			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreatePlayerCreatorTemplate());
 
-			for (float y = -500; y <= 500; y++) {
+			for (float z = -500; z <= 500; z++) {
 				for (float x = -500; x <= 500; x++) {
-					if (Random.Range(0,400) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("pine", new Vector3(x,y,0)));
-					else if (Random.Range(0,400) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("oak", new Vector3(x,y,0)));
-					else if (Random.Range(0,400) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("rock", new Vector3(x,y,0)));
-					else if (Random.Range(0,400) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("grass", new Vector3(x,y,0)));
-					else if (Random.Range(0,800) == 0)
-						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("tulip", new Vector3(x,y,0)));
+					if (Random.Range(0,1100) == 0)
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("pine", new Vector3(x,0,z)));
+					else if (Random.Range(0,1100) == 0)
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("oak", new Vector3(x,0,z)));
+					else if (Random.Range(0,1100) == 0)
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("rock", new Vector3(x,0,z)));
+					else if (Random.Range(0,1100) == 0)
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("grass", new Vector3(x,0,z)));
+					else if (Random.Range(0,1100) == 0)
+						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("tulip", new Vector3(x,0,z)));
 					
 				}
 			}
