@@ -35,7 +35,7 @@ namespace Assets.Gamelogic.EntityTemplates
 			} else if (name == "grass") {
 				return CreateBasicEntityTemplate (GetRandomSize (name), pos);
 			}
-			return null;
+			return CreateBasicEntityTemplate(name,pos);
 		}
 
 		private static string GetRandomSize(string baseName) {
