@@ -65,7 +65,7 @@ namespace Assets.Gamelogic.Core {
 
 		void OnRotationUpdated(Rotation.Update update) {
 			if (!rotationReader.HasAuthority && update.rotation.HasValue)
-				facing.eulerAngles = new Vector3 (0, 0, rotationReader.Data.rotation);
+				facing.eulerAngles = new Vector3 (0, rotationReader.Data.rotation, 0);
 		}
 
 		void OnCharacterUpdated(Character.Update update) {

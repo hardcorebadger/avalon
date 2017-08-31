@@ -76,7 +76,7 @@ namespace Assets.Gamelogic.Core {
 			while (true) {
 				yield return new WaitForSeconds (0.1f);
 				positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
-				rotationWriter.Send (new Rotation.Update ().SetRotation(facing.eulerAngles.z));
+				rotationWriter.Send (new Rotation.Update ().SetRotation(facing.eulerAngles.y));
 				characterWriter.Send (new Character.Update ().SetVelocity (velocity));
 			}
 		}
@@ -161,7 +161,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public Vector3 GetFacingDirection() {
-			return facing*transform.up;
+			return facing*Vector3.forward;
 		}
 
 		public void SetTown(EntityId i) {

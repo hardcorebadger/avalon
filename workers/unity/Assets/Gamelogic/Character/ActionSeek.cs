@@ -14,10 +14,11 @@ namespace Assets.Gamelogic.Core {
 
 		public override ActionCode Update () {
 			Vector3 dir = (target - owner.transform.position);
+			dir.Normalize ();
 			Steer (ref dir);
 
-			Collider2D[] colliders = Physics2D.OverlapCircleAll (target, owner.arrivalRadius);
-			foreach (Collider2D c in colliders) {
+			Collider[] colliders = Physics.OverlapSphere (target, owner.arrivalRadius);
+			foreach (Collider c in colliders) {
 				if (c.gameObject == owner.gameObject) {
 					owner.SetVelocity (0f);
 					owner.rigidBody.angularVelocity = Vector3.zero;
@@ -28,9 +29,9 @@ namespace Assets.Gamelogic.Core {
 //			if (dist <= owner.arrivalRadius) {
 //				return ActionCode.Success;
 //			}
-				
+			float f = GetRotationTo (dir);
 			Vector3 v = owner.facing.eulerAngles;
-			v += new Vector3 (0, 0, GetRotationTo (dir));
+			v += new Vector3 (0, f, 0);
 			owner.facing.eulerAngles = v;
 
 //			owner.transform.Rotate(new Vector3(0,0,GetRotationTo (dir)));

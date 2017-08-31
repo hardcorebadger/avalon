@@ -10,7 +10,7 @@ namespace Assets.Gamelogic.Core {
 		public ActionLocomotion(CharacterController o) : base(o)	{}
 
 		private Vector3 CastPos() {
-			return owner.transform.position + new Vector3(0,-0.6f,0);
+			return owner.transform.position;
 		}
 
 		protected void Steer (ref Vector3 dir) {
@@ -22,9 +22,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		protected bool CanWalk(Vector3 dir, float castDist) {
-			RaycastHit2D[] hits = Physics2D.CircleCastAll (CastPos(), owner.width, dir, owner.range);
+			RaycastHit[] hits = Physics.SphereCastAll (CastPos(), owner.width, dir, owner.range);
 			bool flag = true;
-			foreach (RaycastHit2D hit in hits) {
+			foreach (RaycastHit hit in hits) {
 				if (hit.collider.gameObject == owner.gameObject)
 					continue;
 				if (!hit.collider.isTrigger)
@@ -62,17 +62,17 @@ namespace Assets.Gamelogic.Core {
 			float cos = Mathf.Cos (theta);
 			float sin = Mathf.Sin (theta);
 			v = owner.transform.InverseTransformDirection (v);
-			v = new Vector3(v.x*cos - v.y*sin,v.x*sin + v.y*cos, 0f);
+			v = new Vector3(v.x*cos - v.z*sin,0f,v.z*cos + v.x*sin);
 			v = owner.transform.TransformDirection (v);
 		}
 
 		protected float GetRotationTo(Vector3 dif) {
-			float deg = (float)(Mathf.Acos (Vector3.Dot (owner.GetFacingDirection(), dif)) * 180 / 3.14);
-			Vector3 cross = Vector3.Cross (owner.GetFacingDirection(), dif).normalized;
+			float deg = (float)(Mathf.Acos (Vector3.Dot (owner.GetFacingDirection(), dif.normalized)) * 180 / 3.14);
+			Vector3 cross = Vector3.Cross (owner.GetFacingDirection(), dif.normalized).normalized;
 
 			if (Single.IsNaN (deg))
 				return 0f;
-			if (cross.z < 0)
+			if (cross.y < 0)
 				return (float)deg * -1f;
 			else
 				return (float)deg;
