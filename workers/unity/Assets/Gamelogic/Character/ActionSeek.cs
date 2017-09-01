@@ -34,6 +34,7 @@ namespace Assets.Gamelogic.Core {
 			v += new Vector3 (0, f, 0);
 			owner.facing.eulerAngles = v;
 
+
 //			owner.transform.Rotate(new Vector3(0,0,GetRotationTo (dir)));
 			owner.SetVelocity (owner.speed);
 

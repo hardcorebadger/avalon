@@ -25,6 +25,9 @@ namespace Assets.Gamelogic.Core {
 			RaycastHit[] hits = Physics.SphereCastAll (CastPos(), owner.width, dir, owner.range);
 			bool flag = true;
 			foreach (RaycastHit hit in hits) {
+				// fix later for going up cliffs
+				if (hit.collider.gameObject.layer == 10)
+					continue;
 				if (hit.collider.gameObject == owner.gameObject)
 					continue;
 				if (!hit.collider.isTrigger)
@@ -67,8 +70,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		protected float GetRotationTo(Vector3 dif) {
-			float deg = (float)(Mathf.Acos (Vector3.Dot (owner.GetFacingDirection(), dif.normalized)) * 180 / 3.14);
-			Vector3 cross = Vector3.Cross (owner.GetFacingDirection(), dif.normalized).normalized;
+			float deg = (float)(Mathf.Acos (Vector3.Dot (owner.GetFacingDirection().normalized, dif.normalized)) * 180 / 3.14);
+			Vector3 cross = Vector3.Cross (owner.GetFacingDirection().normalized, dif.normalized).normalized;
 
 			if (Single.IsNaN (deg))
 				return 0f;

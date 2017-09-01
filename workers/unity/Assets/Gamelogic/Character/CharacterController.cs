@@ -157,7 +157,8 @@ namespace Assets.Gamelogic.Core {
 
 		public void SetVelocity(float f) {
 			velocity = f;
-			rigidBody.velocity = facing * new Vector3 (0, 0, velocity);
+			// preserve gravitational force
+			rigidBody.velocity = new Vector3(0f, rigidBody.velocity.y, 0f) + (facing * new Vector3 (0, 0, velocity));
 		}
 
 		public Vector3 GetFacingDirection() {

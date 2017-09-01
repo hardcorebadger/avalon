@@ -77,7 +77,7 @@ namespace Assets.Gamelogic.Core {
 					anim.SetBool ("walking", true);
 				else
 					anim.SetBool ("walking", false);
-				rigidBody.velocity = facing * new Vector3 (0, 0, update.velocity.Value);
+				rigidBody.velocity = new Vector3(0f, rigidBody.velocity.y, 0f) + facing * new Vector3 (0, 0, update.velocity.Value);
 			}
 		}
 
