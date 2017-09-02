@@ -34,7 +34,6 @@ namespace Assets.Gamelogic.Core {
 		void Start () {
 			Camera.main.transform.SetParent (transform);
 			Camera.main.transform.localPosition = new Vector3(0,0,-500);
-			Debug.Log (Camera.main.transform.position);
 			Camera.main.transform.localEulerAngles = new Vector3 (0, 0, 0);
 			instance = this;
 		}
