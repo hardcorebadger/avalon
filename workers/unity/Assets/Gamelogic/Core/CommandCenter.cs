@@ -52,17 +52,17 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		// called from selection manager
-		public static void InterpretClickCommand(List<Selectable> s, RaycastHit h, Vector3 p) {
+		public static void InterpretClickCommand(List<Selectable> s, RaycastHit h) {
 			agents = ParseControllableEntities (s);
 			if (agents.Count == 0)
 				return;
 
 			hit = h;
-			position = p;
+			position = hit.point;
 			radial = false;
 
 			List<string> options = new List<string> ();
-			if (hit.collider != null) {
+			if (hit.collider != null && hit.collider.gameObject.layer != 10) {
 				target = hit.collider.gameObject;
 				ParseOptions (ref options, target);
 			} else {
@@ -157,7 +157,7 @@ namespace Assets.Gamelogic.Core {
 
 		private static void ExecutePositionTargetedCommand(string command) {
 			foreach (EntityId id in agents) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.PositionTarget.Descriptor, new PositionTargetRequest (new Vector3d (position.x, 0, position.y), command), id);
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.PositionTarget.Descriptor, new PositionTargetRequest (new Vector3d (position.x, position.y, position.z), command), id);
 			}
 		}
 

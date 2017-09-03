@@ -90,7 +90,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "goto")
-				SetAction (new ActionSeek (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
+				SetAction (new ActionSeek (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.y, (float)request.targetPosition.z)));
 			else if (request.command == "stash")
 				SetAction (new ActionStash (this));
 			return new Nothing ();

@@ -142,7 +142,7 @@ namespace Assets.Gamelogic.Core {
 				if (hit.collider != null)
 					UIManager.OpenPreview (hit.collider.gameObject);
 			} else {
-				CommandCenter.InterpretClickCommand (selected, hit, Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z * -1)));
+				CommandCenter.InterpretClickCommand (selected, hit);
 			}
 		}
 
@@ -197,7 +197,7 @@ namespace Assets.Gamelogic.Core {
 					ClearSelected ();
 				}
 			} else {
-				CommandCenter.InterpretClickCommand (selected, hit, Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z * -1)));
+				CommandCenter.InterpretClickCommand (selected, hit);
 			}
 		}
 
