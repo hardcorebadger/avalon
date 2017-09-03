@@ -128,9 +128,9 @@ namespace Assets.Gamelogic.Core {
 			if (agents.Count < 1)
 				return;
 
-			Collider2D[] cols = Physics2D.OverlapCircleAll (position, UIManager.instance.coOpRadius);
-			List<Collider2D> clist = new List<Collider2D> (cols);
-			clist.Sort(delegate(Collider2D c1, Collider2D c2){
+			Collider[] cols = Physics.OverlapSphere (position, UIManager.instance.coOpRadius);
+			List<Collider> clist = new List<Collider> (cols);
+			clist.Sort(delegate(Collider c1, Collider c2){
 				return Vector3.Distance(target.transform.position, c1.transform.position).CompareTo
 					((Vector3.Distance(target.transform.position, c2.transform.position)));   
 			});
@@ -138,7 +138,7 @@ namespace Assets.Gamelogic.Core {
 			List<GameObject> used = new List<GameObject> ();
 			used.Add (target);
 
-			foreach (Collider2D c in clist) {
+			foreach (Collider c in clist) {
 				if (used.Contains (c.gameObject))
 					continue;
 				GatherableVisualizer gatherable = c.gameObject.GetComponent<GatherableVisualizer> ();
