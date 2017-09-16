@@ -1,12 +1,6 @@
 package improbable.core;
 
-import "improbable/core/Nothing.schema";
-
 component Building {
     id = 1013;
-    option<EntityId> town = 1;
     int32 living_spaces = 2;
-
-    command Nothing leave_town(Nothing);
-
 }

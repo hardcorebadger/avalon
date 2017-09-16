@@ -1,6 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Core/CommandCenter.cs">
+    <Files>
+      <File FileName="Assets/Gamelogic/Core/SelectionManager.cs" Line="200" Column="55" />
+      <File FileName="Assets/Gamelogic/Core/CommandCenter.cs" Line="140" Column="4" />
+      <File FileName="Assets/Gamelogic/Character/CharacterController.cs" Line="91" Column="99" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
