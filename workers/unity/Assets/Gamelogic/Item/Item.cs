@@ -29,10 +29,9 @@ namespace Assets.Gamelogic.Core {
 
 		public static void InitializeItems() {
 			items = new Dictionary<int,Item> ();
-			items.Add(0,new Item(0,1,"Berries"));
-			items.Add(1,new Item(1,100,"Log"));
-			items.Add(2,new Item(2,1,"Sticks"));
-			items.Add(3,new Item(3,2,"Dirt"));
+			items.Add(0,new Item(0,100,"Log"));
+			items.Add(1,new Item(1,100,"Stone"));
+			items.Add(2,new Item(2,50,"Grain"));
 		}
 
 	}
