@@ -185,11 +185,6 @@ namespace Assets.Gamelogic.Core {
 				if (!options.Contains ("work"))
 					options.Add ("work");
 			}
-			StorageVisualizer storage = g.GetComponent<StorageVisualizer> ();
-			if (storage != null) {
-				if (!options.Contains ("store"))
-					options.Add ("store");
-			}
 		}
 			
 	}

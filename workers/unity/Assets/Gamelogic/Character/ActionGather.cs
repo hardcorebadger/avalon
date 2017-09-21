@@ -21,7 +21,7 @@ namespace Assets.Gamelogic.Core {
 		public GatherableData gatherable;
 		public GatherResponse response;
 		public Vector3 position;
-		private int state = 0;
+		private int state = -1;
 		public bool failed = false;
 		private bool success = false;
 
@@ -41,6 +41,11 @@ namespace Assets.Gamelogic.Core {
 		public override ActionCode Update () {
 
 			switch (state) {
+			case -1:
+				if (!owner.EmptyHanded ())
+					success = true;
+				state = 0;
+				break;
 			case 0:
 				var entityQuery = Query.HasEntityId(target).ReturnComponents(Position.ComponentId, Gatherable.ComponentId);
 				SpatialOS.WorkerCommands.SendQuery(entityQuery)
@@ -52,24 +57,16 @@ namespace Assets.Gamelogic.Core {
 				// waiting on query
 				break;
 			case 2:
-				// query is back, can we harvest? if so, move to
-				int itemID = gatherable.items.id;
+				// lets go over there
+				if (seek == null) {
+					seek = new ActionSeek (owner, position);
+				}
 
-				if (Item.GetWeight (itemID) <= owner.inventory.GetAvailableWeight ()) {
-					// can harvest
-					if (seek == null) {
-						seek = new ActionSeek (owner, position);
-					}
-
-					ActionCode seekProgress = seek.Update ();
-					if (seekProgress == ActionCode.Success) {
-						state = 3;
-						owner.SetState (CharacterState.CHOPPING);
-						time = 0f;
-					}
-				} else {
-					// too full to harvest this
-					success = true;
+				ActionCode seekProgress = seek.Update ();
+				if (seekProgress == ActionCode.Success) {
+					state = 3;
+					owner.SetState (CharacterState.CHOPPING);
+					time = 0f;
 				}
 				break;
 			case 3:
@@ -89,8 +86,7 @@ namespace Assets.Gamelogic.Core {
 				//we got the gather response
 				if (response.success) {
 					int id = response.items.id;
-					int amount = response.items.amount;
-					owner.inventory.Insert (id, amount);
+					owner.SetInHandItem(id);
 					success = true;
 				} else {
 					//gatherable said no!

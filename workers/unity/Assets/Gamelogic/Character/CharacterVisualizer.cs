@@ -26,6 +26,8 @@ namespace Assets.Gamelogic.Core {
 		public AudioClip[] footstepSounds;
 		public AudioClip[] acceptSounds;
 		public AudioClip[] cheeringSounds;
+		public Sprite[] itemSprites;
+		public SpriteRenderer itemSprite;
 
 		void OnEnable() {
 			if (characterReader.HasAuthority) {
@@ -78,6 +80,14 @@ namespace Assets.Gamelogic.Core {
 				else
 					anim.SetBool ("walking", false);
 				rigidBody.velocity = new Vector3(0f, rigidBody.velocity.y, 0f) + facing * new Vector3 (0, 0, update.velocity.Value);
+			}
+			if (!characterReader.HasAuthority && update.itemInHand.HasValue) {
+				if (update.itemInHand.Value == -1) {
+					itemSprite.enabled = false;
+				} else {
+					itemSprite.sprite = itemSprites [update.itemInHand.Value];
+					itemSprite.enabled = true;
+				}
 			}
 		}
 

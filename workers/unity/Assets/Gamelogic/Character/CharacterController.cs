@@ -33,7 +33,6 @@ namespace Assets.Gamelogic.Core {
 		public float arrivalRadius = 2f;
 		public Quaternion facing = Quaternion.identity;
 
-		public InventoryController inventory;
 		private Action currentAction;
 		private float velocity;
 		public CharacterState state;
@@ -49,7 +48,6 @@ namespace Assets.Gamelogic.Core {
 			StartCoroutine ("UpdateTransform");
 
 			rigidBody = GetComponent<Rigidbody> ();
-			inventory = GetComponent<InventoryController> ();
 		
 			currentAction = new ActionBlank (this);
 		}
@@ -79,8 +77,6 @@ namespace Assets.Gamelogic.Core {
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "goto")
 				SetAction (new ActionSeek (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.y, (float)request.targetPosition.z)));
-			else if (request.command == "stash")
-				SetAction (new ActionStash (this));
 			return new Nothing ();
 		}
 
@@ -142,6 +138,36 @@ namespace Assets.Gamelogic.Core {
 
 		public Vector3 GetFacingDirection() {
 			return facing*Vector3.forward;
+		}
+
+		public bool HasApplicableItem(ConstructionData c) {
+			if (!c.requirements.ContainsKey(characterWriter.Data.itemInHand))
+				return false;
+			if (c.requirements [characterWriter.Data.itemInHand].required - c.requirements [characterWriter.Data.itemInHand].amount > 0)
+				return true;
+
+			return false;
+		}
+
+		public void DropItem() {
+			characterWriter.Send (new Character.Update ()
+				.SetItemInHand (-1)
+			);
+		}
+
+		public bool EmptyHanded() {
+			return (characterWriter.Data.itemInHand == -1);
+		}
+
+		public bool SetInHandItem(int id) {
+			if (characterWriter.Data.itemInHand != -1)
+				return false;
+			
+			characterWriter.Send (new Character.Update ()
+				.SetItemInHand (id)
+			);
+
+			return true;
 		}
 
 	}

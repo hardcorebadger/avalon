@@ -185,28 +185,6 @@ namespace Assets.Gamelogic.Core {
 			return o;
 		}
 
-		public bool CanStoreSomething(StorageData s, InventoryData sInv) {
-			foreach (int id in items.Keys) {
-				if (s.types.Contains (Item.GetType (id))) {
-					if (CanHold (sInv, id, 1))
-						return true;
-				}
-			}
-			return false;
-		}
-
-		public ItemStackList GetStorableItems(StorageData s, InventoryData sInv) {
-			Improbable.Collections.Map<int, int> l = new Improbable.Collections.Map<int, int> ();
-			foreach (int id in items.Keys) {
-				if (s.types.Contains (Item.GetType (id))) {
-					int a = TestFill (sInv, id, items [id]);
-					if (a > 0)
-						l.Add (id, a);
-				}
-			}
-			return new ItemStackList (l);
-		}
-
 		public static ItemStackList ToItemStackList(Dictionary<int,int> d) {
 			ItemStackList l = new ItemStackList (new Improbable.Collections.Map<int, int>());
 			foreach (int id in d.Keys) {

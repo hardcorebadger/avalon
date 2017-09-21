@@ -33,6 +33,7 @@ component Character {
     int32 player_id = 1;
     CharacterState state = 2;
     float velocity = 3;
+    int32 item_in_hand = 4;
 
     command Nothing position_target(PositionTargetRequest);
     command Nothing entity_target(EntityTargetRequest);

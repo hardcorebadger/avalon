@@ -22,7 +22,6 @@ namespace Assets.Gamelogic.Core {
 		private bool failed = false;
 		private bool success = false;
 		private Vector3 position;
-		private StorageData storageData;
 		private InventoryData inventoryData;
 		private Action subAction;
 		private ItemStackList storing;
@@ -34,7 +33,7 @@ namespace Assets.Gamelogic.Core {
 		public override ActionCode Update () {
 			switch (state) {
 			case 0:
-				var entityQuery = Query.HasEntityId (target).ReturnComponents (Position.ComponentId, Storage.ComponentId, Inventory.ComponentId);
+				var entityQuery = Query.HasEntityId (target).ReturnComponents (Position.ComponentId, Inventory.ComponentId);
 				SpatialOS.WorkerCommands.SendQuery (entityQuery)
 					.OnSuccess (OnSuccessfulEntityQuery)
 					.OnFailure (OnFailedEntityQuery);
@@ -52,11 +51,13 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 3:
 				// got there, now determine what u can store and throw it in there
-				storing = owner.inventory.GetStorableItems(storageData,inventoryData);
-				SpatialOS.Commands.SendCommand (owner.characterWriter, Inventory.Commands.GiveMultiple.Descriptor, storing, target)
-					.OnSuccess(response => OnGiveResult(response))
-					.OnFailure(response => OnRequestFailed());
-				state = 4;
+				if (InventoryController.CanHold (inventoryData, owner.characterWriter.Data.itemInHand, 1)) {
+					SpatialOS.Commands.SendCommand (owner.characterWriter, Inventory.Commands.Give.Descriptor, new ItemStack(owner.characterWriter.Data.itemInHand, 1), target)
+						.OnSuccess (response => OnGiveResult (response))
+						.OnFailure (response => OnRequestFailed ());
+					state = 4;
+				} else
+					success = true;
 				break;
 			case 4:
 				// waiting on command to give shit
@@ -75,13 +76,11 @@ namespace Assets.Gamelogic.Core {
 			Map<EntityId, Entity> resultMap = queryResult.Entities;
 			Entity e = resultMap.First.Value.Value;
 			Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position>();
-			Improbable.Collections.Option<IComponentData<Storage>> c = e.Get<Storage>();
 			Improbable.Collections.Option<IComponentData<Inventory>> i = e.Get<Inventory>();
 			position = p.Value.Get().Value.coords.ToVector3();
-			storageData = c.Value.Get().Value;
 			inventoryData = i.Value.Get().Value;
 
-			if (owner.inventory.CanStoreSomething (storageData, inventoryData)) {
+			if (InventoryController.CanHold(inventoryData,owner.characterWriter.Data.itemInHand, 1)) {
 				subAction = new ActionSeek (owner, position);
 				state = 2;
 			} else {
@@ -101,7 +100,7 @@ namespace Assets.Gamelogic.Core {
 				foreach (int id in storing.inventory.Keys) {
 					d.Add (id, storing.inventory [id]);
 				}
-				owner.inventory.Drop (d);
+				owner.DropItem();
 				success = true;
 			} else {
 				success = true;

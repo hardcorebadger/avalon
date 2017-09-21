@@ -80,22 +80,12 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreateStorageBuildingTemplate(string name, Vector3 pos, int ownerId) {
 
-			Improbable.Collections.List<ResourceType> types = new Improbable.Collections.List<ResourceType> ();
-			types.Add (ResourceType.RESOURCE_TIMBER);
-			types.Add (ResourceType.RESOURCE_STONE);
-			types.Add (ResourceType.RESOURCE_ORE);
-			types.Add (ResourceType.RESOURCE_FOOD);
-			types.Add (ResourceType.RESOURCE_TREASUE);
-			types.Add (ResourceType.RESOURCE_WEAPONRY);
-			types.Add (ResourceType.RESOURCE_MISC);
-
 			return EntityBuilder.Begin ()
 				.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent (name)
 				.SetPersistence (true)
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 5000), CommonRequirementSets.PhysicsOnly)
-				.AddComponent (new Storage.Data (types), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Building.Data(2), CommonRequirementSets.PhysicsOnly)
 				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.Build();
@@ -172,7 +162,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(playerId, OwnedType.OWNED_CHARACTER), CommonRequirementSets.PhysicsOnly)
 				.Build();
