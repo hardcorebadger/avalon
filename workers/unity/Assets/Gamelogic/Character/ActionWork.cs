@@ -63,6 +63,9 @@ namespace Assets.Gamelogic.Core {
 			case WorkType.WORK_BUILDING:
 				subAction = new ActionConstruction (owner, target);
 				break;
+			case WorkType.WORK_LOGGING:
+				subAction = new ActionForester (owner, target);
+				break;
 			default:
 				break;
 			}

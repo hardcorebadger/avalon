@@ -31,7 +31,7 @@ namespace Assets.Gamelogic.EntityTemplates
 			} else if (name == "rock") {
 				return CreateRockTemplate (GetRandomSize (name), pos);
 			} else if (name == "tulip") {
-				return CreatePineTemplate (GetRandomSize (GetRandomColor(name)), pos);
+				return CreateBasicEntityTemplate (GetRandomSize (GetRandomColor(name)), pos);
 			} else if (name == "grass") {
 				return CreateBasicEntityTemplate (GetRandomSize (name), pos);
 			}
@@ -59,6 +59,19 @@ namespace Assets.Gamelogic.EntityTemplates
 
 
 		public static Entity CreateBuildingTemplate(string name, Vector3 pos, int ownerId) {
+			if (name == "building-forester") {
+				return EntityBuilder.Begin ()
+					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
+					.AddMetadataComponent (name)
+					.SetPersistence (true)
+					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
+					.AddComponent (new Building.Data (0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 5000), CommonRequirementSets.PhysicsOnly)
+					.Build();
+			}
 			return CreateBasicBuildingTemplate (name, pos, ownerId);;
 		}
 
@@ -121,7 +134,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(1f, new ItemStack(0,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(20f, new ItemStack(0,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -133,7 +146,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(1f, new ItemStack(0,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(20f, new ItemStack(0,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -154,7 +167,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(1f, new ItemStack(1,1), WorkType.WORK_QUARRYING), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(20f, new ItemStack(1,1), WorkType.WORK_QUARRYING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 

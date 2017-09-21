@@ -96,6 +96,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public bool Insert(int id, int amount) {
+			
 			int weight = Item.GetWeight (id) * amount;
 			if (weight + GetWeight () > maxWeight) 
 				return false;
