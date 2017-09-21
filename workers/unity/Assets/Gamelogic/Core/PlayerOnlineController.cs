@@ -32,7 +32,6 @@ namespace Assets.Gamelogic.Core
 			playerReader.HeartbeatTriggered.Add(OnHeartbeat);
 			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatCheckIntervalSecs, CheckHeartbeat));
 			playerOnlineWriter.CommandReceiver.OnConstruct.RegisterResponse (OnConstruct);
-			playerOnlineWriter.CommandReceiver.OnConstructTown.RegisterResponse (OnConstructTown);
 		}
 
 		// Update is called once per frame
@@ -40,28 +39,15 @@ namespace Assets.Gamelogic.Core
 			playerReader.HeartbeatTriggered.Remove(OnHeartbeat);
 			StopCoroutine(heartbeatCoroutine);
 			playerOnlineWriter.CommandReceiver.OnConstruct.DeregisterResponse ();
-			playerOnlineWriter.CommandReceiver.OnConstructTown.DeregisterResponse ();
 
 		}
 
 		private ConstructionResponse OnConstruct(ConstructionRequest request, ICommandCallerInfo callerinfo) {
 
 			string entityName = "construction-" + request.buildingName;
-			Vector3 pos = new Vector3 ((float)request.position.x, (float)request.position.y);
 			int ownerId = playerOnlineWriter.Data.playerId;
 
-			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, pos, ownerId, new Improbable.Collections.Option<EntityId>()));
-			return new ConstructionResponse(true);
-		}
-
-		private ConstructionResponse OnConstructTown(ConstructionTownRequest request, ICommandCallerInfo callerinfo) {
-
-			string entityName = "construction-" + request.buildingName;
-			Vector3 pos = new Vector3 ((float)request.position.x, (float)request.position.y);
-			int ownerId = playerOnlineWriter.Data.playerId;
-
-			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate (entityName, pos, ownerId, request.townCenter));
-
+			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, request.position.ToUnityVector(), ownerId));
 			return new ConstructionResponse(true);
 		}
 

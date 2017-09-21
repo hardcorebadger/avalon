@@ -12,87 +12,59 @@ namespace Assets.Gamelogic.Core {
 
 	public class BuildingManager : MonoBehaviour {
 
-		public ConstructionOption[] options;
-		public static Dictionary<string, GameObject> constructionOptions;
+		public static Dictionary<string, ConstructionInfo> options;
+		public GameObject ghost;
 
 		public static BuildingManager instance;
 		public static bool isBuilding = false;
 		private static string currentConstructionGhost;
 
 		public void OnEnable() {
-			constructionOptions = new Dictionary<string, GameObject> ();
-			foreach (ConstructionOption c in options) {
-				constructionOptions.Add (c.name, c.constructionPrefab);
-			}
-		}
-
-		public static void Initialize() {
-			
+			instance = this;
+			options = new Dictionary<string, ConstructionInfo> ();
+			options.Add ("house-3d", new ConstructionInfo(1,1));
+			options.Add ("forester", new ConstructionInfo(3,1));
+			options.Add ("quarry", new ConstructionInfo(2,2));
+			options.Add ("farm", new ConstructionInfo(2,2));
 		}
 
 		public void OnBuildButton() {
-			UIManager.OpenToolbarWindow ("Build", OptionsList(), StartBuilding);
+			UIManager.OpenToolbarWindow ("Build", GetOptionsList(), StartBuilding);
 		}
 
 		public static void StartBuilding(string option) {
 			isBuilding = true;
 			currentConstructionGhost = option;
-			GameObject g = Instantiate (constructionOptions [option]);
-			if (option == "Town Center") {
-				g.GetComponent<ConstructionGhost> ().townOnly = false;
-				g.GetComponent<ConstructionGhost> ().isTownCenter = true;
-			}
-			CreateTownRadialOverlays ();
+			GameObject o = Instantiate (instance.ghost);
+			o.GetComponent<ConstructionGhost> ().SetSize (options [option].xWidth, options [option].zWidth);
 		}
 
 		public static void StopBuilding() {
 			isBuilding = false;
-			DestroyTownRadialOverlays ();
 		}
 
-		public static void Construct(Vector3 pos, GameObject townRadius) {
-
-			if (townRadius != null)
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.ConstructTown.Descriptor, new ConstructionTownRequest(new Vector3d(pos.x,pos.y,pos.z),constructionOptions[currentConstructionGhost].name, townRadius.GetComponent<TownRadiusMarker>().townCenter.EntityId()), PlayerController.instance.gameObject.EntityId());
-			else
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),constructionOptions[currentConstructionGhost].name), PlayerController.instance.gameObject.EntityId());
-
+		public static void Construct(Vector3 pos) {
+			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost), PlayerController.instance.gameObject.EntityId());
 		}
 
-		private static List<string> OptionsList() {
-			List<string> l = new List<string> ();
-			foreach (string s in constructionOptions.Keys) {
-				l.Add (s);
+		private List<string> GetOptionsList() {
+			List<string> s = new List<string> ();
+			foreach (string o in options.Keys) {
+				s.Add (o);
 			}
-			return l;
+			return s;
 		}
 
-		private static void CreateTownRadialOverlays() {
-			//find all town centers on your worker
-			TownCenterVisualizer[] townCenters = FindObjectsOfType<TownCenterVisualizer>();
-			foreach (TownCenterVisualizer t in townCenters) {
-				//tell each to create a radius object 
-				t.CreateRadiusMarker();
+		[System.Serializable]
+		public struct ConstructionInfo {
+			public int xWidth, zWidth;
+			public ConstructionInfo(int x, int z) {
+				xWidth = x;
+				zWidth = z;
 			}
-
-		}
-
-		private static void DestroyTownRadialOverlays() {
-			//find all town center radius objects
-			TownRadiusMarker[] radiuses = FindObjectsOfType<TownRadiusMarker>();
-			foreach (TownRadiusMarker r in radiuses) {
-				// destroy them
-				Destroy(r.gameObject);
-			}
-
 		}
 
 	}
 
-	[System.Serializable]
-	public struct ConstructionOption {
-		public string name;
-		public GameObject constructionPrefab;
-	}
 
 }

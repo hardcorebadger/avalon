@@ -22,7 +22,7 @@ namespace Assets.Gamelogic.Core {
 		[Require] public Rotation.Writer rotationWriter;
 
 		[HideInInspector]
-		public Rigidbody2D rigidBody;
+		public Rigidbody rigidBody;
 
 		public float speed = 5f;
 		public float range = 5f;
@@ -33,7 +33,6 @@ namespace Assets.Gamelogic.Core {
 		public float arrivalRadius = 2f;
 		public Quaternion facing = Quaternion.identity;
 
-		public InventoryController inventory;
 		private Action currentAction;
 		private float velocity;
 		public CharacterState state;
@@ -43,19 +42,12 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
 
-			characterWriter.CommandReceiver.OnLeaveTown.RegisterResponse(OnLeaveTown);
-
-			if (characterWriter.Data.town.HasValue) {
-				SpatialOS.Commands.SendCommand (characterWriter, TownCenter.Commands.TentativeAddCitizen.Descriptor, new TownAddRequest (gameObject.EntityId()), characterWriter.Data.town.Value);
-			}
-
 			transform.position = positionWriter.Data.coords.ToVector3();
 			transform.eulerAngles = new Vector3 (0, 0, rotationWriter.Data.rotation);
 			state = characterWriter.Data.state;
 			StartCoroutine ("UpdateTransform");
 
-			rigidBody = GetComponent<Rigidbody2D> ();
-			inventory = GetComponent<InventoryController> ();
+			rigidBody = GetComponent<Rigidbody> ();
 		
 			currentAction = new ActionBlank (this);
 		}
@@ -64,19 +56,13 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnPositionTarget.DeregisterResponse();
 			characterWriter.CommandReceiver.OnEntityTarget.DeregisterResponse();
 			characterWriter.CommandReceiver.OnRadiusTarget.DeregisterResponse();
-
-			characterWriter.CommandReceiver.OnLeaveTown.DeregisterResponse();
-
-			if (characterWriter.Data.town.HasValue) {
-				SpatialOS.Commands.SendCommand (characterWriter, TownCenter.Commands.TentativeRemoveCitizen.Descriptor, new TownRemoveRequest (gameObject.EntityId ()), characterWriter.Data.town.Value);
-			}
 		}
 
 		IEnumerator UpdateTransform() {
 			while (true) {
 				yield return new WaitForSeconds (0.1f);
 				positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
-				rotationWriter.Send (new Rotation.Update ().SetRotation(facing.eulerAngles.z));
+				rotationWriter.Send (new Rotation.Update ().SetRotation(facing.eulerAngles.y));
 				characterWriter.Send (new Character.Update ().SetVelocity (velocity));
 			}
 		}
@@ -90,9 +76,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "goto")
-				SetAction (new ActionSeek (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.z, 0f)));
-			else if (request.command == "stash")
-				SetAction (new ActionStash (this));
+				SetAction (new ActionSeek (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.y, (float)request.targetPosition.z)));
 			return new Nothing ();
 		}
 
@@ -105,8 +89,6 @@ namespace Assets.Gamelogic.Core {
 				SetAction (new ActionWork (this, request.target));
 			else if (request.command == "store")
 				SetAction (new ActionStore (this, request.target));
-			else if (request.command == "migrate")
-				SetAction (new ActionMigrate (this, request.target));
 			return new Nothing ();
 		}
 
@@ -132,18 +114,11 @@ namespace Assets.Gamelogic.Core {
 			return new Nothing ();
 		}
 
-		private Nothing OnLeaveTown(Nothing request, ICommandCallerInfo callerinfo) {
-			characterWriter.Send (new Character.Update ()
-				.SetTown (new Option<EntityId> ())
-			);
-			return request;
-		}
-
 		public void SetAction(Action a) {
 			if (currentAction != null)
 				currentAction.OnKill ();
 			SetVelocity (0f);
-			rigidBody.angularVelocity = 0f;
+			rigidBody.angularVelocity = Vector3.zero;
 			SetState (CharacterState.DEFAULT);
 			currentAction = a;
 		}
@@ -157,20 +132,42 @@ namespace Assets.Gamelogic.Core {
 
 		public void SetVelocity(float f) {
 			velocity = f;
-			rigidBody.velocity = facing * new Vector2 (0, velocity);
+			// preserve gravitational force
+			rigidBody.velocity = new Vector3(0f, rigidBody.velocity.y, 0f) + (facing * new Vector3 (0, 0, velocity));
 		}
 
 		public Vector3 GetFacingDirection() {
-			return facing*transform.up;
+			return facing*Vector3.forward;
 		}
 
-		public void SetTown(EntityId i) {
-			if (characterWriter.Data.town.HasValue) {
-				SpatialOS.Commands.SendCommand (characterWriter, TownCenter.Commands.TentativeRemoveCitizen.Descriptor, new TownRemoveRequest (gameObject.EntityId ()), characterWriter.Data.town.Value);
-			}
+		public bool HasApplicableItem(ConstructionData c) {
+			if (!c.requirements.ContainsKey(characterWriter.Data.itemInHand))
+				return false;
+			if (c.requirements [characterWriter.Data.itemInHand].required - c.requirements [characterWriter.Data.itemInHand].amount > 0)
+				return true;
+
+			return false;
+		}
+
+		public void DropItem() {
 			characterWriter.Send (new Character.Update ()
-				.SetTown (i)
+				.SetItemInHand (-1)
 			);
+		}
+
+		public bool EmptyHanded() {
+			return (characterWriter.Data.itemInHand == -1);
+		}
+
+		public bool SetInHandItem(int id) {
+			if (characterWriter.Data.itemInHand != -1)
+				return false;
+			
+			characterWriter.Send (new Character.Update ()
+				.SetItemInHand (id)
+			);
+
+			return true;
 		}
 
 	}

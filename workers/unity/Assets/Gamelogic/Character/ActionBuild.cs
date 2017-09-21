@@ -26,13 +26,11 @@ namespace Assets.Gamelogic.Core {
 		public ActionSeek seek;
 		private float time = 0;
 
-		public ActionBuild(CharacterController o, EntityId t, Dictionary<int,int> ov, Vector3 pos) : base(o)	{
+		public ActionBuild(CharacterController o, EntityId t, ConstructionData cdata, Vector3 pos) : base(o)	{
 			target = t;
-			overlap = ov;
 			position = pos;
-			if (overlap.Count == 0)
+			if (!owner.HasApplicableItem (cdata))
 				succeeded = true;
-
 			stage = 0;
 		}
 
@@ -52,10 +50,10 @@ namespace Assets.Gamelogic.Core {
 				return ActionCode.Success;
 
 			if (stage == -1) {
-				seek = new ActionSeek (owner, position);
+				seek = new ActionSeek (owner, target, position);
 				stage = 1;
 			} else if (stage == 0) {
-				seek = new ActionSeek (owner, position);
+				seek = new ActionSeek (owner, target, position);
 				stage = 1;
 			} else if (stage == 1) {
 				ActionCode seekProgress = seek.Update ();
@@ -68,11 +66,11 @@ namespace Assets.Gamelogic.Core {
 				stage = 3;
 			} else if (stage == 3) {
 				time += Time.deltaTime;
-				if (time > 20f)
+				if (time > 5f)
 					stage = 4;
 			} else if (stage == 4) {
 				owner.SetState (CharacterState.DEFAULT);
-				SpatialOS.Commands.SendCommand (owner.characterWriter, Construction.Commands.GiveMultiple.Descriptor, InventoryController.ToItemStackList(overlap), target)
+				SpatialOS.Commands.SendCommand (owner.characterWriter, Construction.Commands.Give.Descriptor, new ItemStack(owner.characterWriter.Data.itemInHand,1), target)
 					.OnSuccess(response => OnGiveResult(response))
 					.OnFailure(response => OnRequestFailed());
 				stage = 5;
@@ -89,8 +87,7 @@ namespace Assets.Gamelogic.Core {
 			position = p.Value.Get().Value.coords.ToVector3();
 			ConstructionData construction = c.Value.Get().Value;
 
-			overlap = owner.inventory.GetConstructionOverlap (construction);
-			if (overlap.Count == 0)
+			if (!owner.HasApplicableItem (construction))
 				succeeded = true;
 			
 			stage = 0;
@@ -102,7 +99,7 @@ namespace Assets.Gamelogic.Core {
 
 		public void OnGiveResult(GiveResponse response) {
 			if (response.success) {
-				owner.inventory.Drop (overlap);
+				owner.DropItem ();
 				succeeded = true;
 			} else {
 				Debug.LogWarning ("Construction Rejected Give");

@@ -23,7 +23,6 @@ namespace Assets.Gamelogic.Core {
 		private bool success = false;
 		private Action subAction = null;
 		private ConstructionData constructionData;
-		private Dictionary<int,int> overlap;
 		private bool didSource = false;
 
 		public ActionConstruction(CharacterController o, EntityId t) : base(o)	{
@@ -73,18 +72,18 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnSuccessfulEntityQuery(EntityQueryResult queryResult) {
 			Map<EntityId, Entity> resultMap = queryResult.Entities;
+			if (resultMap.Count < 1)
+				return;
 			Entity e = resultMap.First.Value.Value;
 			Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position>();
 			Improbable.Collections.Option<IComponentData<Construction>> c = e.Get<Construction>();
 			Vector3 position = p.Value.Get().Value.coords.ToVector3();
 			constructionData = c.Value.Get().Value;
 
-			overlap = owner.inventory.GetConstructionOverlap (constructionData);
-
-			if (overlap.Count == 0 && didSource)
+			if (!owner.HasApplicableItem (constructionData) && didSource)
 				success = true;
 
-			subAction = new ActionBuild (owner, target, overlap, position);
+			subAction = new ActionBuild (owner, target, constructionData, position);
 			state = 2;
 		}
 

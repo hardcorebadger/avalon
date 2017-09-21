@@ -1,0 +1,13 @@
+package improbable.core;
+
+import "improbable/core/Nothing.schema";
+
+type ForesterJobResponse {
+    option<EntityId> tree = 1;
+}
+
+component Forester {
+    id = 1014;
+
+    command ForesterJobResponse get_job(Nothing);
+}

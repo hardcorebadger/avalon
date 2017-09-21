@@ -23,7 +23,7 @@ namespace Assets.Gamelogic.Core {
 	public class CommandCenter : MonoBehaviour {
 
 		private static  List<EntityId> agents;
-		private static RaycastHit2D hit;
+		private static RaycastHit hit;
 		private static Vector3 position;
 		private static float radius;
 		private static GameObject target;
@@ -52,17 +52,17 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		// called from selection manager
-		public static void InterpretClickCommand(List<Selectable> s, RaycastHit2D h, Vector3 p) {
+		public static void InterpretClickCommand(List<Selectable> s, RaycastHit h) {
 			agents = ParseControllableEntities (s);
 			if (agents.Count == 0)
 				return;
 
 			hit = h;
-			position = p;
+			position = hit.point;
 			radial = false;
 
 			List<string> options = new List<string> ();
-			if (hit.collider != null) {
+			if (hit.collider != null && hit.collider.gameObject.layer != 10) {
 				target = hit.collider.gameObject;
 				ParseOptions (ref options, target);
 			} else {
@@ -93,7 +93,7 @@ namespace Assets.Gamelogic.Core {
 
 		// called from ui picker
 		public static void OnCommandCancelled() {
-			hit = new RaycastHit2D();
+			hit = new RaycastHit();
 			position = Vector3.zero;
 			agents = null;
 			radial = false;
@@ -128,9 +128,9 @@ namespace Assets.Gamelogic.Core {
 			if (agents.Count < 1)
 				return;
 
-			Collider2D[] cols = Physics2D.OverlapCircleAll (position, UIManager.instance.coOpRadius);
-			List<Collider2D> clist = new List<Collider2D> (cols);
-			clist.Sort(delegate(Collider2D c1, Collider2D c2){
+			Collider[] cols = Physics.OverlapSphere (position, UIManager.instance.coOpRadius);
+			List<Collider> clist = new List<Collider> (cols);
+			clist.Sort(delegate(Collider c1, Collider c2){
 				return Vector3.Distance(target.transform.position, c1.transform.position).CompareTo
 					((Vector3.Distance(target.transform.position, c2.transform.position)));   
 			});
@@ -138,7 +138,7 @@ namespace Assets.Gamelogic.Core {
 			List<GameObject> used = new List<GameObject> ();
 			used.Add (target);
 
-			foreach (Collider2D c in clist) {
+			foreach (Collider c in clist) {
 				if (used.Contains (c.gameObject))
 					continue;
 				GatherableVisualizer gatherable = c.gameObject.GetComponent<GatherableVisualizer> ();
@@ -157,7 +157,7 @@ namespace Assets.Gamelogic.Core {
 
 		private static void ExecutePositionTargetedCommand(string command) {
 			foreach (EntityId id in agents) {
-				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.PositionTarget.Descriptor, new PositionTargetRequest (new Vector3d (position.x, 0, position.y), command), id);
+				SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.PositionTarget.Descriptor, new PositionTargetRequest (new Vector3d (position.x, position.y, position.z), command), id);
 			}
 		}
 
@@ -184,16 +184,6 @@ namespace Assets.Gamelogic.Core {
 			if (worksite != null) {
 				if (!options.Contains ("work"))
 					options.Add ("work");
-			}
-			StorageVisualizer storage = g.GetComponent<StorageVisualizer> ();
-			if (storage != null) {
-				if (!options.Contains ("store"))
-					options.Add ("store");
-			}
-			TownCenterVisualizer townCenter = g.GetComponent<TownCenterVisualizer> ();
-			if (townCenter != null) {
-				if (!options.Contains ("migrate"))
-					options.Add ("migrate");
 			}
 		}
 			
