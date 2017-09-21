@@ -59,7 +59,7 @@ namespace Assets.Gamelogic.Core {
 			case 2:
 				// lets go over there
 				if (seek == null) {
-					seek = new ActionSeek (owner, position);
+					seek = new ActionSeek (owner, target, position);
 				}
 
 				ActionCode seekProgress = seek.Update ();

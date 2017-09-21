@@ -1,15 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Improbable;
 
 namespace Assets.Gamelogic.Core {
 
 	public class ActionSeek : ActionLocomotion {
 
 		public Vector3 target;
+		public EntityId targetId;//optional
+		public bool hasTargetEntity = false;
 
 		public ActionSeek(CharacterController o, Vector3 pos) : base(o)	{
 			target = pos;
+		}
+
+		public ActionSeek(CharacterController o, EntityId eid, Vector3 pos) : base(o)	{
+			target = pos;
+			targetId = eid;
+			hasTargetEntity = true;
 		}
 
 		public override ActionCode Update () {
@@ -17,12 +26,23 @@ namespace Assets.Gamelogic.Core {
 			dir.Normalize ();
 			Steer (ref dir);
 
-			Collider[] colliders = Physics.OverlapSphere (target, owner.arrivalRadius);
-			foreach (Collider c in colliders) {
-				if (c.gameObject == owner.gameObject) {
-					owner.SetVelocity (0f);
-					owner.rigidBody.angularVelocity = Vector3.zero;
-					return ActionCode.Success;
+			if (!hasTargetEntity) {
+				Collider[] colliders = Physics.OverlapSphere (target, owner.arrivalRadius);
+				foreach (Collider c in colliders) {
+					if (c.gameObject == owner.gameObject) {
+						owner.SetVelocity (0f);
+						owner.rigidBody.angularVelocity = Vector3.zero;
+						return ActionCode.Success;
+					}
+				}
+			} else {
+				Collider[] colliders = Physics.OverlapSphere (owner.transform.position, owner.arrivalRadius);
+				foreach (Collider c in colliders) {
+					if (c.gameObject.EntityId() == targetId) {
+						owner.SetVelocity (0f);
+						owner.rigidBody.angularVelocity = Vector3.zero;
+						return ActionCode.Success;
+					}
 				}
 			}
 

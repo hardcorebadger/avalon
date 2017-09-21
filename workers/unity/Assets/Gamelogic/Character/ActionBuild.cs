@@ -50,10 +50,10 @@ namespace Assets.Gamelogic.Core {
 				return ActionCode.Success;
 
 			if (stage == -1) {
-				seek = new ActionSeek (owner, position);
+				seek = new ActionSeek (owner, target, position);
 				stage = 1;
 			} else if (stage == 0) {
-				seek = new ActionSeek (owner, position);
+				seek = new ActionSeek (owner, target, position);
 				stage = 1;
 			} else if (stage == 1) {
 				ActionCode seekProgress = seek.Update ();
