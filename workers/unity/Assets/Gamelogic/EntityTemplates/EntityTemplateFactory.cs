@@ -59,11 +59,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 
 		public static Entity CreateBuildingTemplate(string name, Vector3 pos, int ownerId) {
-			if (name == "building-house-3d")
-				return CreateBasicBuildingTemplate (name, pos, ownerId);
-			if (name == "building-forester")
-				return CreateBasicBuildingTemplate (name, pos, ownerId);
-			return null;
+			return CreateBasicBuildingTemplate (name, pos, ownerId);;
 		}
 
 		public static Entity CreateBasicBuildingTemplate(string name, Vector3 pos, int ownerId) {
@@ -99,6 +95,10 @@ namespace Assets.Gamelogic.EntityTemplates
 			if (name == "construction-house-3d")
 				req.Add (0, new ConstructionRequirement (0, 3));
 			else if (name == "construction-forester")
+				req.Add (0, new ConstructionRequirement (0, 3));
+			else if (name == "construction-quarry")
+				req.Add (0, new ConstructionRequirement (0, 3));
+			else if (name == "construction-farm")
 				req.Add (0, new ConstructionRequirement (0, 3));
 
 			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 30f, new Vector3d (pos.x, pos.z, pos.y));

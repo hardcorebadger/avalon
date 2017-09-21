@@ -17,7 +17,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void SetSize(int x, int z) {
-			transform.localScale = new Vector3(x,1,z);
+			transform.localScale = new Vector3(x,z,1);
 		}
 
 		void Update() {
