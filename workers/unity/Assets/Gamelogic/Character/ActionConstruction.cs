@@ -72,6 +72,8 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnSuccessfulEntityQuery(EntityQueryResult queryResult) {
 			Map<EntityId, Entity> resultMap = queryResult.Entities;
+			if (resultMap.Count < 1)
+				return;
 			Entity e = resultMap.First.Value.Value;
 			Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position>();
 			Improbable.Collections.Option<IComponentData<Construction>> c = e.Get<Construction>();

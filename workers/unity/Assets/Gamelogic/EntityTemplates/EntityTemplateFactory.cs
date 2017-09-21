@@ -61,7 +61,8 @@ namespace Assets.Gamelogic.EntityTemplates
 		public static Entity CreateBuildingTemplate(string name, Vector3 pos, int ownerId) {
 			if (name == "building-house-3d")
 				return CreateBasicBuildingTemplate (name, pos, ownerId);
-
+			if (name == "building-forester")
+				return CreateBasicBuildingTemplate (name, pos, ownerId);
 			return null;
 		}
 
@@ -96,7 +97,9 @@ namespace Assets.Gamelogic.EntityTemplates
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
 
 			if (name == "construction-house-3d")
-				req.Add (1, new ConstructionRequirement (0, 10));
+				req.Add (0, new ConstructionRequirement (0, 3));
+			else if (name == "construction-forester")
+				req.Add (0, new ConstructionRequirement (0, 3));
 
 			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 30f, new Vector3d (pos.x, pos.z, pos.y));
 
@@ -118,7 +121,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(5f, new ItemStack(0,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(1f, new ItemStack(0,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -130,7 +133,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(5f, new ItemStack(0,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(1f, new ItemStack(0,1), WorkType.WORK_LOGGING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -151,7 +154,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Gatherable.Data(10f, new ItemStack(1,1), WorkType.WORK_QUARRYING), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Gatherable.Data(1f, new ItemStack(1,1), WorkType.WORK_QUARRYING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 

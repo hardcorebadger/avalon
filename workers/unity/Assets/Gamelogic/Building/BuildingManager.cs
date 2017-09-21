@@ -12,7 +12,7 @@ namespace Assets.Gamelogic.Core {
 
 	public class BuildingManager : MonoBehaviour {
 
-		public static List<string> options;
+		public static Dictionary<string, ConstructionInfo> options;
 		public GameObject ghost;
 
 		public static BuildingManager instance;
@@ -21,18 +21,20 @@ namespace Assets.Gamelogic.Core {
 
 		public void OnEnable() {
 			instance = this;
-			options = new List<string> ();
-			options.Add ("house-3d");
+			options = new Dictionary<string, ConstructionInfo> ();
+			options.Add ("house-3d", new ConstructionInfo(1,1));
+			options.Add ("forester", new ConstructionInfo(3,1));
 		}
 
 		public void OnBuildButton() {
-			UIManager.OpenToolbarWindow ("Build", options, StartBuilding);
+			UIManager.OpenToolbarWindow ("Build", GetOptionsList(), StartBuilding);
 		}
 
 		public static void StartBuilding(string option) {
 			isBuilding = true;
 			currentConstructionGhost = option;
-			Instantiate (instance.ghost);
+			GameObject o = Instantiate (instance.ghost);
+			o.GetComponent<ConstructionGhost> ().SetSize (options [option].xWidth, options [option].zWidth);
 		}
 
 		public static void StopBuilding() {
@@ -43,12 +45,24 @@ namespace Assets.Gamelogic.Core {
 			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost), PlayerController.instance.gameObject.EntityId());
 		}
 
+		private List<string> GetOptionsList() {
+			List<string> s = new List<string> ();
+			foreach (string o in options.Keys) {
+				s.Add (o);
+			}
+			return s;
+		}
+
+		[System.Serializable]
+		public struct ConstructionInfo {
+			public int xWidth, zWidth;
+			public ConstructionInfo(int x, int z) {
+				xWidth = x;
+				zWidth = z;
+			}
+		}
+
 	}
 
-	[System.Serializable]
-	public struct ConstructionOption {
-		public string name;
-		public GameObject constructionPrefab;
-	}
 
 }

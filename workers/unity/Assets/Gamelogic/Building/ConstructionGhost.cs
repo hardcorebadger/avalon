@@ -16,6 +16,10 @@ namespace Assets.Gamelogic.Core {
 			sprite = GetComponent<SpriteRenderer> ();
 		}
 
+		public void SetSize(int x, int z) {
+			transform.localScale = new Vector3(x,1,z);
+		}
+
 		void Update() {
 			RaycastHit h = GetHit ();
 			transform.position = new Vector3(h.point.x, 0f, h.point.z);
