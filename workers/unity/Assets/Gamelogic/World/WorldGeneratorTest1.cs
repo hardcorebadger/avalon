@@ -13,11 +13,18 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 		public float bimodalRounding;
 	}
 
+	[System.Serializable]
+	public struct GradientPoint {
+		public float point;
+		public Color color;
+	}
+
 	public int size = 1024;
 	public float scale = 0.6f;
 	public float seed = 420f;
 	public float mountainSeed = 40f;
 	public float amplitude = 40f;
+	public float edgeDropCutoff = 0.3f;
 
 	public PerlinSettings generalContinents;
 	public PerlinSettings generalHills;
@@ -26,6 +33,11 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 	public PerlinSettings mountainMap;
 	public PerlinSettings mountains;
 	public PerlinSettings mountainRoughness;
+
+	public float tempurature = 1f;
+	public float waterLevel = 0.3f;
+	public Color waterColor;
+	public GradientPoint[] gradient;
 
 
 	private float[,] heightmap;
@@ -64,17 +76,18 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 				// Initial 3-iteration perlin noise
 				float basicTerrain = MixPerlins(new PerlinSettings[]{generalContinents,generalHills,generalRoughness}, x, z, seed);
 
-
 				float mountainMixer = BimodalPerlin (mountainMap, x, z, mountainSeed);
 
 				basicTerrain += mountainMixer * MixPerlins(new PerlinSettings[]{mountains,mountainRoughness}, x, z, mountainSeed);
 
-				basicTerrain /= 2f;
+				basicTerrain /= ((mountains.weight + mountainRoughness.weight)+1f);
 
 				// round off the edges and set the heightmap!
 				heightmap[x,z] = EdgeDrop(basicTerrain, (float)x/(float)size, (float)z/(float)size);
+
 			}
 		}
+
 	}
 
 	private float BimodalPerlin(PerlinSettings s, int x, int z, float curSeed) {
@@ -118,7 +131,11 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 		// this equals 1 at the edge drop point and 0 at 0, with a gradient (input value is the average edginess)
 		float ratio = Mathf.Min(x,z)/0.5f;
 		// mixer with ratio value on original and inverse to 0
-		return preDrop * ratio;
+
+		if (ratio > edgeDropCutoff)
+			return preDrop;
+		else
+			return preDrop * (ratio/edgeDropCutoff);
 	}
 
 	public Texture2D GetTexture() {
@@ -139,7 +156,29 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 	}
 
 	private Color GetColor(float height) {
-		return new Color (height, height, height);
+		if (height < waterLevel)
+			return waterColor;
+		
+		height -= tempurature;
+		for (int i = 0; i < gradient.GetLength(0); i++) {
+			if (gradient [i].point > height) {
+				if (i == 0)
+					return gradient [i].color;
+				else {
+					float v = height - gradient [i-1].point;
+					float mix = v / (gradient [i].point - gradient [i-1].point);
+					return Mix (gradient [i-1].color, gradient [i].color, mix);
+				}
+			}
+		}
+		if (gradient.GetLength (0) > 0)
+			return gradient [gradient.GetLength (0)-1].color;
+		else
+			return new Color (height, height, height);
+	}
+
+	private Color Mix(Color c1, Color c2, float point) {
+		return (c2 - c1) * point + c1;
 	}
 
 }
