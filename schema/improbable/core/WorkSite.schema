@@ -1,8 +1,10 @@
 package improbable.core;
+import "improbable/vector3.schema";
 
 type EnlistRequest {}
 type EnlistResponse {
     WorkType work_type = 1;
+    Vector3d position = 2;
 }
 
 type UnEnlistRequest {}

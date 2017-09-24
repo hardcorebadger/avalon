@@ -21,7 +21,10 @@ namespace Assets.Gamelogic.Core {
 		private EntityId target;
 		private bool failed = false;
 		private Action subAction = null;
-		
+
+		private WorkType workType;
+		private Vector3 buildingPosition;
+
 		public ActionWork(CharacterController o, EntityId t) : base(o)	{
 			target = t;
 		}
@@ -39,6 +42,32 @@ namespace Assets.Gamelogic.Core {
 				// waiting to enlist
 				break;
 			case 2:
+				subAction = new ActionSeek (owner, target, buildingPosition);
+				state = 3;
+					
+				break;
+			case 3:
+				ActionCode seekC = subAction.Update ();
+				if (seekC == ActionCode.Failure || seekC == ActionCode.Success) {
+					switch (workType) {
+					case WorkType.WORK_BUILDING:
+						subAction = new ActionConstruction (owner, target, buildingPosition);
+						state = 4;
+
+						break;
+					case WorkType.WORK_LOGGING:
+						subAction = new ActionForester (owner, target, buildingPosition);
+						state = 4;
+						break;
+					case WorkType.WORK_MINING: 
+						//TAKE ME BABAY
+						Debug.LogError("TAKE ME");
+						state = 4;
+						break;
+					}
+				}
+				break;
+			case 4:
 				// enlisted, executing subaction, terminate on termination
 				ActionCode c = subAction.Update ();
 				if (c == ActionCode.Success)
@@ -59,16 +88,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void OnEnlistResult(EnlistResponse response) {
-			switch (response.workType) {
-			case WorkType.WORK_BUILDING:
-				subAction = new ActionConstruction (owner, target);
-				break;
-			case WorkType.WORK_LOGGING:
-				subAction = new ActionForester (owner, target);
-				break;
-			default:
-				break;
-			}
+
+			workType = response.workType;
+			buildingPosition = response.position.ToUnityVector();
 			state = 2;
 		}
 

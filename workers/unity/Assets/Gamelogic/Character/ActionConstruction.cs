@@ -24,15 +24,17 @@ namespace Assets.Gamelogic.Core {
 		private Action subAction = null;
 		private ConstructionData constructionData;
 		private bool didSource = false;
+		private Vector3 hqPosition;
 
-		public ActionConstruction(CharacterController o, EntityId t) : base(o)	{
+		public ActionConstruction(CharacterController o, EntityId t, Vector3 pos) : base(o)	{
 			target = t;
+			hqPosition = pos;
 		}
 
 		public override ActionCode Update () {
 			switch (state) {
 			case 0:
-				var entityQuery = Query.HasEntityId (target).ReturnComponents (Position.ComponentId, Construction.ComponentId);
+				var entityQuery = Query.HasEntityId (target).ReturnComponents (Construction.ComponentId);
 				SpatialOS.WorkerCommands.SendQuery (entityQuery)
 					.OnSuccess (OnSuccessfulEntityQuery)
 					.OnFailure (OnFailedEntityQuery);
@@ -75,15 +77,13 @@ namespace Assets.Gamelogic.Core {
 			if (resultMap.Count < 1)
 				return;
 			Entity e = resultMap.First.Value.Value;
-			Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position>();
 			Improbable.Collections.Option<IComponentData<Construction>> c = e.Get<Construction>();
-			Vector3 position = p.Value.Get().Value.coords.ToVector3();
 			constructionData = c.Value.Get().Value;
 
 			if (!owner.HasApplicableItem (constructionData) && didSource)
 				success = true;
 
-			subAction = new ActionBuild (owner, target, constructionData, position);
+			subAction = new ActionBuild (owner, target, constructionData, hqPosition);
 			state = 2;
 		}
 

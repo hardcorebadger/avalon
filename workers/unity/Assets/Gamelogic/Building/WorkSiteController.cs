@@ -25,7 +25,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private EnlistResponse OnEnlist(EnlistRequest request, ICommandCallerInfo callerinfo) {
-			return new EnlistResponse (workSiteWriter.Data.type);
+			return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d(transform.position.x, transform.position.y, transform.position.z));
 		}
 	}
 

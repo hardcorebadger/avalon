@@ -17,31 +17,23 @@ namespace Assets.Gamelogic.Core {
 
 	public class ActionForester : Action {
 
-		private int state = -2;
+		private int state = 0;
 		private EntityId target;
 		private bool failed = false;
 		private bool success = false;
 		private Action subAction = null;
 		private Vector3 hqPosition;
 
-		public ActionForester(CharacterController o, EntityId t) : base(o)	{
+		//do not use itemInHand synchonously, srsly guyz. fix at own risk
+		public ActionForester(CharacterController o, EntityId t, Vector3 pos) : base(o)	{
 			target = t;
+			hqPosition = pos;
 		}
 
 		public override ActionCode Update () {
 			switch (state) {
-			case -2:
-				var entityQuery = Query.HasEntityId(target).ReturnComponents(Position.ComponentId);
-				SpatialOS.WorkerCommands.SendQuery(entityQuery)
-					.OnSuccess(OnSuccessfulHQQuery)
-					.OnFailure(OnFailedEntityQuery);
-				break;
-			case -1:
-				//waiting
-				break;
 			case 0:
 				// set up walk to forester
-				subAction = new ActionSeek (owner, target, hqPosition);
 				if (owner.characterWriter.Data.itemInHand == 0) // split to 5 to stash the log in his hand
 					state = 5;
 				else if (owner.EmptyHanded ()) // gotta go chop a tree
@@ -50,47 +42,38 @@ namespace Assets.Gamelogic.Core {
 					failed = true;// gotta handle this better, he has something else in his hand..
 				break;
 			case 1:
-				ActionCode c = subAction.Update ();
-				if (c == ActionCode.Failure || c == ActionCode.Success) {
-					state = 2;
-				}
-				break;
-			case 2:
 				SpatialOS.Commands.SendCommand (owner.characterWriter, Forester.Commands.GetJob.Descriptor, new Nothing (), target)
 					.OnSuccess (response => OnJobResult (response))
 					.OnFailure (response => OnRequestFailed ());
-				state = 3;
+				state = 2;
 				break;
-			case 3:
+			case 2:
 				// waiting for response
 				break;
-			case 4:
+			case 3:
 				// got it back, run a gather action
-				c = subAction.Update ();
-				if (c == ActionCode.Failure || c == ActionCode.Success) {
-					if (owner.characterWriter.Data.itemInHand != 0) // that tree may be gone, just restart if so
-						state = 0;
-					else {
-						subAction = new ActionSeek (owner, target, hqPosition);
-						state = 5;
-					}
+				ActionCode c = subAction.Update ();
+				if (c == ActionCode.Failure || c == ActionCode.Success) {		
+					subAction = new ActionSeek (owner, target, hqPosition);
+					state = 4;
+			
 				}
 				break;
-			case 5:
+			case 4:
 				// walk back to forester
 				c = subAction.Update ();
 				if (c == ActionCode.Failure || c == ActionCode.Success) {
-					state = 6;
+					state = 5;
 				}
 				break;
-			case 6:
+			case 5:
 				// put the log in the forester
 				SpatialOS.Commands.SendCommand (owner.characterWriter, Inventory.Commands.Give.Descriptor, new ItemStack (owner.characterWriter.Data.itemInHand, 1), target)
 					.OnSuccess (response => OnGiveResult (response))
 					.OnFailure (response => OnRequestFailed ());
-				state = 7;
+				state = 6;
 				break;
-			case 7:
+			case 6:
 				// waiting for response
 				break;
 			}
@@ -106,7 +89,7 @@ namespace Assets.Gamelogic.Core {
 		private void OnJobResult (ForesterJobResponse response) {
 			if (response.tree.HasValue) {
 				subAction = new ActionGather (owner, response.tree.Value);
-				state = 4;
+				state = 3;
 			} else {
 				Debug.LogWarning ("boss says its quittin time");
 				success = true;
@@ -116,7 +99,7 @@ namespace Assets.Gamelogic.Core {
 		private void OnGiveResult(GiveResponse r) {
 			if (r.success) {
 				owner.DropItem ();
-				state = 2;
+				state = 1;
 			} else {
 				// theres no room in the forester
 				success = true;
@@ -124,20 +107,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void OnRequestFailed () {
-			failed = true;
-		}
-
-		private void OnSuccessfulHQQuery (EntityQueryResult queryResult) {
-			Map<EntityId, Entity> resultMap = queryResult.Entities;
-			if (resultMap.Count < 1)
-				failed = true;
-			Entity e = resultMap.First.Value.Value;
-			Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position> ();
-			hqPosition = p.Value.Get().Value.coords.ToVector3();
-			state = 0;
-		}
-
-		private void OnFailedEntityQuery (ICommandErrorDetails _) {
 			failed = true;
 		}
 

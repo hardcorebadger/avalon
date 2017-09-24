@@ -71,6 +71,17 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 5000), CommonRequirementSets.PhysicsOnly)
 					.Build();
+			} else if (name == "building-quarry") {
+				return EntityBuilder.Begin ()
+					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
+					.AddMetadataComponent (name)
+					.SetPersistence (true)
+					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
+					.AddComponent (new Building.Data (0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_MINING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 5000), CommonRequirementSets.PhysicsOnly)
+					.Build();
 			}
 			return CreateBasicBuildingTemplate (name, pos, ownerId);;
 		}
