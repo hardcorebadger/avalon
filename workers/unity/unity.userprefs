@@ -1,5 +1,6 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+<<<<<<< HEAD
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Character/ActionForester.cs">
     <Files>
       <File FileName="Assets/Gamelogic/Character/CharacterController.cs" Line="1" Column="1" />
@@ -9,6 +10,13 @@
       <File FileName="Assets/Gamelogic/Character/ActionMiner.cs" Line="1" Column="1" />
       <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="1" Column="1" />
       <File FileName="Assets/Gamelogic/Character/ActionConstruction.cs" Line="1" Column="1" />
+=======
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/World/WorldGeneratorTest1.cs">
+    <Files>
+      <File FileName="Assets/Gamelogic/World/WorldGeneratorTest1.cs" Line="79" Column="15" />
+      <File FileName="Assets/Gamelogic/World/Editor/WorldGeneratorTestEditor1.cs" Line="15" Column="33" />
+      <File FileName="../../../Poly Realms (1)/Assets/PolyRealms/Code/World/WorldTime.cs" Line="1" Column="1" />
+>>>>>>> 0c78295f80c28f6f6c14fcd96f00d7d89fac826d
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
