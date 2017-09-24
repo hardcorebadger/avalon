@@ -4,3 +4,4 @@ build/
 logs/
 .spatialos
 workers/unity/zip_toolbelt.log
+workers/unity/unity.userprefs
