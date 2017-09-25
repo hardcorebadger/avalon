@@ -9,26 +9,26 @@ namespace Assets.Gamelogic.Core {
 
 		public GameObject content;
 		public GameObject linePrefab;
-		public Text weightLabel;
+		public Text total;
 
 		public override void Load(UIPreviewWindow window, GameObject target) {
 			base.Load (window, target);
 			InventoryVisualizer inv = target.GetComponent<InventoryVisualizer> ();
 			Load (inv.items, inv.maxItems);
+			total.text = inv.maxItems + "";
 		}
 
-		public void Load(Dictionary<int,int> items, int maxWeight) {
-			// add max weight
+		public void Load(Dictionary<int,int> items, int maxItems) {
 			foreach (int id in items.Keys) {
 				GameObject line = Instantiate (linePrefab, content.transform);
 				line.GetComponent<UIInventoryLine> ().SetInfo (
-					Item.GetName (id),
+					id,
 					items [id],
-					0
+					maxItems
 				);
 			}
-			weightLabel.text = "depricated";
 		}
+
 	}
 
 }

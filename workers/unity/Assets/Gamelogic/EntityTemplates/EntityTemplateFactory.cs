@@ -69,7 +69,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING, new Improbable.Collections.List<WorkerData>(), false), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 5000), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
 					.Build();
 			} else if (name == "building-quarry") {
 				return EntityBuilder.Begin ()
@@ -81,7 +81,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_MINING, new Improbable.Collections.List<WorkerData>(), true), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Quarry.Data (), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 5000), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
 					.Build();
 			}
 			return CreateBasicBuildingTemplate (name, pos, ownerId);;
@@ -107,7 +107,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent (name)
 				.SetPersistence (true)
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 5000), CommonRequirementSets.PhysicsOnly)
+				.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 100), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Building.Data(2), CommonRequirementSets.PhysicsOnly)
 				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.Build();
@@ -191,7 +191,6 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Inventory.Data(new Improbable.Collections.Map<int,int>(), 200), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(playerId, OwnedType.OWNED_CHARACTER), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}

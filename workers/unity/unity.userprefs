@@ -1,25 +1,25 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-<<<<<<< HEAD
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs">
-    <Files>
-      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="173" Column="37" />
-=======
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Building/QuarryController.cs">
     <Files>
-      <File FileName="Assets/Gamelogic/Character/ActionWork.cs" Line="46" Column="11" />
-      <File FileName="Assets/Gamelogic/Building/WorkSiteController.cs" Line="46" Column="24" />
-      <File FileName="Assets/Gamelogic/Character/ActionForester.cs" Line="99" Column="46" />
-      <File FileName="Assets/Gamelogic/Character/ActionMiner.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="135" Column="158" />
-      <File FileName="Assets/Gamelogic/Character/ActionConstruction.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Building/ConstructionGhost.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Building/ConstructionController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Building/QuarryController.cs" Line="9" Column="3" />
-      <File FileName="Assets/Gamelogic/Core/OwnedController.cs" Line="32" Column="11" />
-      <File FileName="Assets/Gamelogic/Core/PositionController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Core/GatherableController.cs" Line="31" Column="49" />
->>>>>>> 11e18b5602aee71fd99d2e668f9a4b34f85fb7cc
+      <File FileName="Assets/Gamelogic/Item/InventoryController.cs" Line="213" Column="5" />
+      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="166" Column="31" />
+      <File FileName="Assets/Gamelogic/Item/Item.cs" Line="27" Column="23" />
+      <File FileName="Assets/Gamelogic/Item/InventoryVisualizer.cs" Line="27" Column="39" />
+      <File FileName="Assets/Gamelogic/UI/UIInventory.cs" Line="31" Column="1" />
+      <File FileName="Assets/Gamelogic/UI/UIInventoryLine.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/UI/UIPreviewWindowOLD.cs" Line="29" Column="5" />
+      <File FileName="Assets/Gamelogic/UI/UIManager.cs" Line="15" Column="29" />
+      <File FileName="Assets/Gamelogic/Core/CommandCenter.cs" Line="132" Column="26" />
+      <File FileName="Assets/Gamelogic/UI/UIPreviewWidget.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/UI/UIPreviewWindow.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/SelectionManager.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/CharacterController.cs" Line="168" Column="6" />
+      <File FileName="Assets/Gamelogic/Core/Bootstrap.cs" Line="32" Column="31" />
+      <File FileName="Assets/Gamelogic/Character/CharacterVisualizer.cs" Line="95" Column="4" />
+      <File FileName="Assets/Gamelogic/Character/ActionWork.cs" Line="106" Column="1" />
+      <File FileName="Assets/Gamelogic/Building/ForesterController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Building/QuarryController.cs" Line="42" Column="5" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

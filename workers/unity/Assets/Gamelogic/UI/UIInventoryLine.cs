@@ -3,16 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIInventoryLine : MonoBehaviour {
+namespace Assets.Gamelogic.Core {
 
-	public Text item;
-	public Text amount;
-	public Text weight;
+	public class UIInventoryLine : MonoBehaviour {
 
-	public void SetInfo(string i, int a, int w) {
-		item.text = i;
-		amount.text = "" + a;
-		weight.text = "" + w;
+		public Image icon;
+		public Slider fill;
+		public Text fillLabel;
+
+		public void SetInfo(int i, int a, int t) {
+			icon.sprite = Item.GetIcon (i);
+			fill.maxValue = t;
+			fill.value = a;
+			fillLabel.text = a + "/" + t;
+		}
+
 	}
 
 }
