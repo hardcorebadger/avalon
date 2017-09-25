@@ -26,20 +26,6 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		void Update () {
-			//depricated
-
-//			if (Input.GetKeyDown(KeyCode.Space)) {
-//				InterpretPreview ();
-//			}
-//			if (Input.GetKeyUp(KeyCode.Space)) {
-//				if (preview != null) {
-//					Destroy (preview);
-//					preview = null;
-//				}
-//			}
-		}
-
 		public static void OpenCommandPicker(List<string> options) {
 			Instantiate (instance.commandPickerPrefab, instance.transform).GetComponent<UICommandPicker> ().Load (options);
 		}
@@ -51,25 +37,7 @@ namespace Assets.Gamelogic.Core {
 		public static void OpenPreview(GameObject o) {
 			Instantiate (instance.previewPrefab, instance.transform).GetComponent<UIPreviewWindow> ().Load (o);
 		}
-
-		//depricated
-		private void InterpretPreview() {
-			if (SelectionManager.instance.selected.Count == 0)
-				return;
-
-			preview = Instantiate (previewPrefab, transform);
-
-			foreach (Selectable s in SelectionManager.instance.selected) {
-				if (s.GetComponent<ConstructionVisualizer> () != null) {
-					// any building gets priority
-					preview.GetComponent<UIPreviewWindowOLD> ().LoadConstruction(s.GetComponent<ConstructionVisualizer> ());
-					return;
-				}
-			}
-
-			// assume inventory
-			preview.GetComponent<UIPreviewWindowOLD> ().LoadInventoryFromSelection ();
-		}
+			
 	}
 
 }

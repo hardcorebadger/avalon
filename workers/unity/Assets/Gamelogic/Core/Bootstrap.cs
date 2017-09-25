@@ -15,6 +15,7 @@ namespace Assets.Gamelogic.Core
     public class Bootstrap : MonoBehaviour
     {
         public WorkerConfigurationData Configuration = new WorkerConfigurationData();
+		public Item[] items;
 
 		public static PlayerDataComponent playerDataObject;
 
@@ -28,7 +29,7 @@ namespace Assets.Gamelogic.Core
 				playerId = Bootstrap.playerDataObject.data.id;
 			}
             SpatialOS.ApplyConfiguration(Configuration);
-			Item.InitializeItems ();
+			Item.InitializeItems (items);
 
             Time.fixedDeltaTime = 1.0f / SimulationSettings.FixedFramerate;
 

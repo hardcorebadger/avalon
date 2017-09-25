@@ -14,7 +14,7 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private Inventory.Reader inventoryReader;
 		public Dictionary<int,int> items;
-		public int maxWeight = 0;
+		public int maxItems = 0;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -24,7 +24,7 @@ namespace Assets.Gamelogic.Core {
 			}
 			items = new Dictionary<int,int> ();
 			UnwrapComponentInventory ();
-			maxWeight = inventoryReader.Data.maxWeight;
+			maxItems = inventoryReader.Data.max;
 
 			inventoryReader.ComponentUpdated.Add (OnInventoryUpdated);
 		}
@@ -32,8 +32,8 @@ namespace Assets.Gamelogic.Core {
 		private void OnInventoryUpdated(Inventory.Update update) {
 			if (update.inventory.HasValue)
 				UnwrapComponentInventory ();
-			if (update.maxWeight.HasValue)
-				maxWeight = update.maxWeight.Value;
+			if (update.max.HasValue)
+				maxItems = update.max.Value;
 		}
 
 		private void UnwrapComponentInventory() {
@@ -45,19 +45,10 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		public void AppendInventory(ref int max, ref Dictionary<int,int> result) {
-			foreach (int id in items.Keys) {
-				int amount = 0;
-				result.TryGetValue (id, out amount);
-				result [id] = amount + items [id];
-			}
-			max  += maxWeight;
-		}
-
 		public void Log() {
 			foreach (int key in items.Keys) {
 				int val = items[key];
-				Debug.Log (Item.GetName (key) + " " + val + " " + (Item.GetWeight (key) * val) + "lbs");
+				Debug.Log (Item.GetName (key) + " " + val);
 			}
 		}
 	}

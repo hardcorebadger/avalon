@@ -14,7 +14,7 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private Inventory.Writer inventoryWriter;
 		private Dictionary<int,int> items;
-		private int maxWeight = 0;
+		private int maxItems;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -27,7 +27,7 @@ namespace Assets.Gamelogic.Core {
 
 			items = new Dictionary<int,int> ();
 			UnwrapComponentInventory ();
-			maxWeight = inventoryWriter.Data.maxWeight;
+			maxItems = inventoryWriter.Data.max;
 		}
 
 		void OnDisable() {
@@ -78,16 +78,16 @@ namespace Assets.Gamelogic.Core {
 		public void Log() {
 			foreach (int key in items.Keys) {
 				int val = items[key];
-				Debug.Log(Item.GetName (key) + " " + val + " " + (Item.GetWeight (key) * val) + "lbs");
+				Debug.Log(Item.GetName (key) + " " + val);
 			}
 		}
 
 		public bool Insert(Dictionary<int,int> insert) {
-			int w = 0;
+			int i = 0;
 			foreach (int id in insert.Keys) {
-				w += Item.GetWeight (id) * insert [id];
+				i += insert [id];
 			}
-			if (GetWeight () + w > maxWeight)
+			if (GetTotal () + i > maxItems)
 				return false;
 			foreach (int id in insert.Keys) {
 				Insert (id, insert [id]);
@@ -97,8 +97,7 @@ namespace Assets.Gamelogic.Core {
 
 		public bool Insert(int id, int amount) {
 			
-			int weight = Item.GetWeight (id) * amount;
-			if (weight + GetWeight () > maxWeight) 
+			if (!CanHold(id,amount)) 
 				return false;
 			
 
@@ -138,16 +137,16 @@ namespace Assets.Gamelogic.Core {
 			return true;
 		}
 
-		public int GetWeight() {
-			int weight = 0;
+		public int GetTotal() {
+			int i = 0;
 			foreach (int id in items.Keys) {
-				weight += Item.GetWeight (id) * items[id];
+				i += items [id];
 			}
-			return weight;
+			return i;
 		}
 
-		public int GetAvailableWeight() {
-			return maxWeight - GetWeight ();
+		public int GetAvailable() {
+			return maxItems - GetTotal ();
 		}
 
 		public bool Drop(Dictionary<int,int> drops) {
@@ -165,7 +164,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public bool CanHold(int id, int amount) {
-			return (GetWeight () + Item.GetWeight (id) * amount <= maxWeight);
+			return (GetTotal () + amount <= maxItems);
 		}
 
 		public ItemStackList GetItemStackList() {
@@ -211,41 +210,41 @@ namespace Assets.Gamelogic.Core {
 			return o;
 		}
 
-		public static Dictionary<int,int> GetCappedOverlap(Improbable.Collections.Map<int,int> inv1, Dictionary<int,int> inv2, int weight) {
-			Dictionary<int,int> o = new Dictionary<int,int> ();
-			foreach (int i in inv1.Keys) {
-				if (inv2.ContainsKey (i) && inv2 [i] > 0) {
-					int amount = Mathf.Min (inv1 [i], inv2 [i]);
-					int cap = weight / Item.GetWeight (i);
-					if (cap > 0 && amount > cap) {
-						o.Add (i, weight / Item.GetWeight (i));
-					} else if (cap > 0) {
-						o.Add (i, amount);
-					} else if (cap == 0) {
-					}
-				}
-			}
-			return o;
-		}
-
-		public static int TestFill(InventoryData inv, int id, int amount) {
-			int available = inv.maxWeight - GetWeight (inv);
-			int max = available / Item.GetWeight (id);
-			amount = Mathf.Min (max, amount);
-			int cur = 0;
-			inv.inventory.TryGetValue (id, out cur);
-			inv.inventory[id] = cur + amount;
-			return amount;
-		}
+//		public static Dictionary<int,int> GetCappedOverlap(Improbable.Collections.Map<int,int> inv1, Dictionary<int,int> inv2, int weight) {
+//			Dictionary<int,int> o = new Dictionary<int,int> ();
+//			foreach (int i in inv1.Keys) {
+//				if (inv2.ContainsKey (i) && inv2 [i] > 0) {
+//					int amount = Mathf.Min (inv1 [i], inv2 [i]);
+//					int cap = weight / Item.GetWeight (i);
+//					if (cap > 0 && amount > cap) {
+//						o.Add (i, weight / Item.GetWeight (i));
+//					} else if (cap > 0) {
+//						o.Add (i, amount);
+//					} else if (cap == 0) {
+//					}
+//				}
+//			}
+//			return o;
+//		}
+//
+//		public static int TestFill(InventoryData inv, int id, int amount) {
+//			int available = inv.maxWeight - GetWeight (inv);
+//			int max = available / Item.GetWeight (id);
+//			amount = Mathf.Min (max, amount);
+//			int cur = 0;
+//			inv.inventory.TryGetValue (id, out cur);
+//			inv.inventory[id] = cur + amount;
+//			return amount;
+//		}
 
 		public static bool CanHold(InventoryData inv, int id, int amount) {
-			return (Item.GetWeight (id) * amount + GetWeight (inv) <= inv.maxWeight);
+			return (amount + GetTotal (inv) <= inv.max);
 		}
 
-		public static int GetWeight(InventoryData inv) {
+		public static int GetTotal(InventoryData inv) {
 			int w = 0;
 			foreach (int i in inv.inventory.Keys) {
-				w += Item.GetWeight (i) * inv.inventory [i];
+				w += inv.inventory [i];
 			}
 			return w;
 		}

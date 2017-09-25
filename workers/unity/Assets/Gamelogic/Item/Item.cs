@@ -5,33 +5,34 @@ using Improbable.Core;
 
 namespace Assets.Gamelogic.Core {
 
+	[System.Serializable]
 	public class Item {
 
 		public int id;
-		public int weight;
 		public string name;
+		public Sprite icon;
 
 		private static Dictionary<int,Item> items;
 
-		public Item(int i, int w, string n) {
+		public Item(int i, string n, Sprite ic) {
 			id = i;
-			weight = w;
 			name = n;
+			icon = ic;
 		}
 
 		public static string GetName(int id) {
 			return items [id].name;
 		}
 
-		public static int GetWeight(int id) {
-			return items [id].weight;
+		public static Sprite GetIcon(int id) {
+			return items [id].icon;
 		}
 
-		public static void InitializeItems() {
+		public static void InitializeItems(Item[] i) {
 			items = new Dictionary<int,Item> ();
-			items.Add(0,new Item(0,100,"Log"));
-			items.Add(1,new Item(1,100,"Stone"));
-			items.Add(2,new Item(2,50,"Grain"));
+			foreach (Item item in i) {
+				items.Add (item.id, item);
+			}
 		}
 
 	}

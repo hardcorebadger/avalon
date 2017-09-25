@@ -26,7 +26,6 @@ namespace Assets.Gamelogic.Core {
 		public AudioClip[] footstepSounds;
 		public AudioClip[] acceptSounds;
 		public AudioClip[] cheeringSounds;
-		public Sprite[] itemSprites;
 		public SpriteRenderer itemSprite;
 
 		void OnEnable() {
@@ -85,7 +84,7 @@ namespace Assets.Gamelogic.Core {
 				if (update.itemInHand.Value == -1) {
 					itemSprite.enabled = false;
 				} else {
-					itemSprite.sprite = itemSprites [update.itemInHand.Value];
+					itemSprite.sprite = Item.GetIcon(update.itemInHand.Value);
 					itemSprite.enabled = true;
 				}
 			}

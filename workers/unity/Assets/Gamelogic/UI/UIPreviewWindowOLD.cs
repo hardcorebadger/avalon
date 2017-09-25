@@ -26,16 +26,16 @@ namespace Assets.Gamelogic.Core {
 			content.GetComponent<UIConstruction> ().Load (construction);
 		}
 
-		public void LoadInventoryFromSelection() {
-			int maxWeight;
-			Dictionary<int,int> items = AggregateInventories(out maxWeight);
-
-			ClearContent ();
-			SetTitle ("Inventory");
-
-			content = Instantiate (inventoryPrefab.gameObject, transform);
-			content.GetComponent<UIInventory> ().Load (items, maxWeight);
-		}
+//		public void LoadInventoryFromSelection() {
+//			int maxWeight;
+//			Dictionary<int,int> items = AggregateInventories(out maxWeight);
+//
+//			ClearContent ();
+//			SetTitle ("Inventory");
+//
+//			content = Instantiate (inventoryPrefab.gameObject, transform);
+//			content.GetComponent<UIInventory> ().Load (items, maxWeight);
+//		}
 
 		public void ClearContent() {
 			if (content != null) {
@@ -44,17 +44,17 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		private Dictionary<int,int> AggregateInventories(out int maxWeight) {
-			maxWeight = 0;
-			Dictionary<int,int> result = new Dictionary<int, int> ();
-			foreach (Selectable s in SelectionManager.instance.selected) {
-				InventoryVisualizer inv = s.GetComponent<InventoryVisualizer> ();
-				if (inv != null) {
-					inv.AppendInventory (ref maxWeight, ref result);
-				}
-			}
-			return result;
-		}
+//		private Dictionary<int,int> AggregateInventories(out int maxWeight) {
+//			maxWeight = 0;
+//			Dictionary<int,int> result = new Dictionary<int, int> ();
+//			foreach (Selectable s in SelectionManager.instance.selected) {
+//				InventoryVisualizer inv = s.GetComponent<InventoryVisualizer> ();
+//				if (inv != null) {
+//					inv.AppendInventory (ref maxWeight, ref result);
+//				}
+//			}
+//			return result;
+//		}
 
 	}
 

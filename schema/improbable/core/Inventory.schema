@@ -20,7 +20,7 @@ type TakeResponse {
 component Inventory {
     id = 1004;
     map<int32,int32> inventory = 1;
-    int32 max_weight = 2;
+    int32 max = 2;
 
     command GiveResponse give(ItemStack);
     command GiveResponse give_multiple(ItemStackList);
