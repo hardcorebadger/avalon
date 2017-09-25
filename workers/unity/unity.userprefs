@@ -1,22 +1,19 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-<<<<<<< HEAD
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Character/ActionForester.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/Building/QuarryController.cs">
     <Files>
-      <File FileName="Assets/Gamelogic/Character/CharacterController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Character/ActionWork.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/Building/WorkSiteController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Character/ActionWork.cs" Line="46" Column="11" />
+      <File FileName="Assets/Gamelogic/Building/WorkSiteController.cs" Line="46" Column="24" />
       <File FileName="Assets/Gamelogic/Character/ActionForester.cs" Line="99" Column="46" />
       <File FileName="Assets/Gamelogic/Character/ActionMiner.cs" Line="1" Column="1" />
-      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs" Line="135" Column="158" />
       <File FileName="Assets/Gamelogic/Character/ActionConstruction.cs" Line="1" Column="1" />
-=======
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Gamelogic/World/WorldGeneratorTest1.cs">
-    <Files>
-      <File FileName="Assets/Gamelogic/World/WorldGeneratorTest1.cs" Line="79" Column="15" />
-      <File FileName="Assets/Gamelogic/World/Editor/WorldGeneratorTestEditor1.cs" Line="15" Column="33" />
-      <File FileName="../../../Poly Realms (1)/Assets/PolyRealms/Code/World/WorldTime.cs" Line="1" Column="1" />
->>>>>>> 0c78295f80c28f6f6c14fcd96f00d7d89fac826d
+      <File FileName="Assets/Gamelogic/Building/ConstructionGhost.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Building/ConstructionController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Building/QuarryController.cs" Line="9" Column="3" />
+      <File FileName="Assets/Gamelogic/Core/OwnedController.cs" Line="32" Column="11" />
+      <File FileName="Assets/Gamelogic/Core/PositionController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Gamelogic/Core/GatherableController.cs" Line="31" Column="49" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

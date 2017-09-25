@@ -85,6 +85,7 @@ namespace Assets.Gamelogic.Core {
 			if (radial) {
 				ExecuteRadialTargetedCommand (command);
 			} if (target != null) {
+				SelectionManager.instance.ClearSelected ();
 				ExecuteEntityTargetedCommand (command);
 			} else {
 				ExecutePositionTargetedCommand (command);

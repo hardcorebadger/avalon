@@ -1,0 +1,14 @@
+package improbable.core;
+
+import "improbable/core/Nothing.schema";
+
+type WorkerChangeRequest {
+    int32 change = 1; 
+} 
+
+component Quarry {
+    id = 1015;
+
+    command Nothing change_workers(WorkerChangeRequest);
+
+}

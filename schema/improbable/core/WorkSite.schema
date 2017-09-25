@@ -1,14 +1,29 @@
 package improbable.core;
 import "improbable/vector3.schema";
 
-type EnlistRequest {}
+type EnlistRequest {
+    EntityId worker = 1;
+}
 type EnlistResponse {
     WorkType work_type = 1;
     Vector3d position = 2;
+    bool interior = 3;
+    bool full = 4;  
 }
 
 type UnEnlistRequest {}
 type UnEnlistResponse {}
+
+type StartWorkRequest {
+    EntityId worker = 1;
+}
+type StartWorkResponse {
+    bool success = 1; 
+} 
+
+type WorkerData {
+  int32 player_id = 1; 
+}
 
 enum WorkType {
   WORK_BUILDING = 0;
@@ -29,8 +44,11 @@ component WorkSite {
     
     list<EntityId> workers = 1;
     WorkType type = 2;
+    list<WorkerData> inside = 3;
+    bool interior = 4;
 
     command EnlistResponse enlist(EnlistRequest);
     command UnEnlistResponse un_enlist(UnEnlistRequest);
+    command StartWorkResponse start_work(StartWorkRequest);
 
 }
