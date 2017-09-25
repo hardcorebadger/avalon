@@ -24,16 +24,18 @@ namespace Assets.Gamelogic.Core {
 
 		private WorkType workType;
 		private Vector3 buildingPosition;
+		private EntityId character;
 
 		public ActionWork(CharacterController o, EntityId t) : base(o)	{
 			target = t;
+			character = o.characterWriter.EntityId;
 		}
 
 		public override ActionCode Update () {
 			switch (state) {
 			case 0:
 				// ask to work for the entity
-				SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.Enlist.Descriptor, new EnlistRequest (), target)
+				SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.Enlist.Descriptor, new EnlistRequest (character), target)
 					.OnSuccess (response => OnEnlistResult (response))
 					.OnFailure (response => OnRequestFailed ());
 				state = 1;
@@ -61,7 +63,9 @@ namespace Assets.Gamelogic.Core {
 						break;
 					case WorkType.WORK_MINING: 
 						//TAKE ME BABAY
-						Debug.LogError("TAKE ME");
+						SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.StartWork.Descriptor, new StartWorkRequest (character), target)
+							.OnSuccess (response => OnStartWorkResult (response))
+							.OnFailure (response => OnRequestFailed ());
 						state = 4;
 						break;
 					}
@@ -89,9 +93,24 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnEnlistResult(EnlistResponse response) {
 
-			workType = response.workType;
-			buildingPosition = response.position.ToUnityVector();
-			state = 2;
+			if (response.full) {
+				failed = true;
+				Debug.LogWarning ("Failed");
+			} else {
+				workType = response.workType;
+				buildingPosition = response.position.ToUnityVector ();
+				state = 2;
+			}
+		}
+
+		private void OnStartWorkResult(StartWorkResponse response) {
+
+			if (response.success) {
+
+				//we were taken
+
+			}
+
 		}
 
 		private void OnRequestFailed() {
