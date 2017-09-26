@@ -42,6 +42,8 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
 
+			characterWriter.CommandReceiver.OnFire.RegisterResponse(OnFire);
+
 			transform.position = positionWriter.Data.coords.ToVector3();
 			transform.eulerAngles = new Vector3 (0, 0, rotationWriter.Data.rotation);
 			state = characterWriter.Data.state;
@@ -56,6 +58,8 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnPositionTarget.DeregisterResponse();
 			characterWriter.CommandReceiver.OnEntityTarget.DeregisterResponse();
 			characterWriter.CommandReceiver.OnRadiusTarget.DeregisterResponse();
+
+			characterWriter.CommandReceiver.OnFire.DeregisterResponse();
 		}
 
 		IEnumerator UpdateTransform() {
@@ -111,6 +115,11 @@ namespace Assets.Gamelogic.Core {
 //					})
 //					.OnFailure(errorDetails => Debug.Log("Query failed with error: " + errorDetails));
 //			}
+			return new Nothing ();
+		}
+
+		private Nothing OnFire(Nothing request, ICommandCallerInfo callerinfo) {
+			SetAction (new ActionBlank (this));
 			return new Nothing ();
 		}
 

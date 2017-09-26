@@ -11,15 +11,23 @@ type EnlistResponse {
     bool full = 4;  
 }
 
-type UnEnlistRequest {}
+type UnEnlistRequest {
+    EntityId worker = 1;
+}
 type UnEnlistResponse {}
 
 type StartWorkRequest {
     EntityId worker = 1;
+    int32 player_id = 2;
 }
 type StartWorkResponse {
     bool success = 1; 
 } 
+
+type FireWorkerRequest {}
+type FireWorkerResponse {
+    bool success = 1;
+}
 
 type WorkerData {
   int32 player_id = 1; 
@@ -51,5 +59,6 @@ component WorkSite {
     command EnlistResponse enlist(EnlistRequest);
     command UnEnlistResponse un_enlist(UnEnlistRequest);
     command StartWorkResponse start_work(StartWorkRequest);
+    command FireWorkerResponse fire_worker(FireWorkerRequest);
 
 }

@@ -24,18 +24,16 @@ namespace Assets.Gamelogic.Core {
 
 		private WorkType workType;
 		private Vector3 buildingPosition;
-		private EntityId character;
 
 		public ActionWork(CharacterController o, EntityId t) : base(o)	{
 			target = t;
-			character = o.characterWriter.EntityId;
 		}
 
 		public override ActionCode Update () {
 			switch (state) {
 			case 0:
 				// ask to work for the entity
-				SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.Enlist.Descriptor, new EnlistRequest (character), target)
+				SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.Enlist.Descriptor, new EnlistRequest (owner.gameObject.EntityId()), target)
 					.OnSuccess (response => OnEnlistResult (response))
 					.OnFailure (response => OnRequestFailed ());
 				state = 1;
@@ -63,7 +61,7 @@ namespace Assets.Gamelogic.Core {
 						break;
 					case WorkType.WORK_MINING: 
 						//TAKE ME BABAY
-						SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.StartWork.Descriptor, new StartWorkRequest (character), target)
+						SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.StartWork.Descriptor, new StartWorkRequest (owner.gameObject.EntityId(), owner.characterWriter.Data.playerId), target)
 							.OnSuccess (response => OnStartWorkResult (response))
 							.OnFailure (response => OnRequestFailed ());
 						state = 4;
@@ -88,7 +86,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override void OnKill() {
-			SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.UnEnlist.Descriptor, new UnEnlistRequest (), target);
+			SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.UnEnlist.Descriptor, new UnEnlistRequest (owner.gameObject.EntityId()), target);
 		}
 
 		private void OnEnlistResult(EnlistResponse response) {

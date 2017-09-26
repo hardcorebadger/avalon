@@ -9,9 +9,11 @@ namespace Assets.Gamelogic.Core {
 
 		public string type;
 		public string title;
+		protected GameObject targetObject;
 
 		public virtual void Load(UIPreviewWindow window, GameObject target) {
 			window.title.text = title;
+			targetObject = target;
 		}
 
 	}
