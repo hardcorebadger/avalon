@@ -14,14 +14,32 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private WorkSite.Reader workSiteReader;
 
-		// Use this for initialization
-		void Start () {
-			
+		public int workers = 0;
+		public int maxWorkers = 0;
+
+		void OnEnable () {
+			workSiteReader.ComponentUpdated.Add(OnWorkSiteUpdated);
+			workers = workSiteReader.Data.workers.Count + workSiteReader.Data.inside.Count;
+			maxWorkers = workSiteReader.Data.maxWorkers;
+		}
+
+		void OnDisable () {
+			workSiteReader.ComponentUpdated.Remove(OnWorkSiteUpdated);
 		}
 		
-		// Update is called once per frame
-		void Update () {
-			
+		void OnWorkSiteUpdated (WorkSite.Update update) {
+			if (update.workers.HasValue && update.inside.HasValue) {
+				workers = update.workers.Value.Count + update.inside.Value.Count;
+			} else 
+			if (update.workers.HasValue) {
+				workers = update.workers.Value.Count + workSiteReader.Data.inside.Count;
+			} else
+			if (update.inside.HasValue) {
+				workers = update.inside.Value.Count + workSiteReader.Data.workers.Count;
+			}
+			if (update.maxWorkers.HasValue) {
+				maxWorkers = update.maxWorkers.Value; 
+			}
 		}
 	}
 
