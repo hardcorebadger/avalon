@@ -23,10 +23,12 @@ namespace Assets.Gamelogic.Core {
 
 		GameObject[] buttons;
 		int currentMax = -1;
+		private Color playerColor;
 
 		public override void Load(UIPreviewWindow window, GameObject target) {
 			base.Load (window, target);
 			WorkSiteVisualizer workSite = target.GetComponent<WorkSiteVisualizer> ();
+			playerColor = workSite.GetOwnerColor ();
 			buttons = new GameObject[workSite.maxWorkers];
 			currentMax = workSite.workers - 1;
 			for (int i = 0; i < workSite.maxWorkers; i++) {
@@ -34,7 +36,7 @@ namespace Assets.Gamelogic.Core {
 				btn.GetComponent<Button> ().onClick.AddListener (delegate{ButtonPressed (btn);});
 				buttons [i] = btn;
 				if (i < workSite.workers)
-					btn.GetComponent<UIWorkerButton> ().Enable ();
+					btn.GetComponent<UIWorkerButton> ().Enable (playerColor);
 			}
 		}
 
@@ -50,13 +52,13 @@ namespace Assets.Gamelogic.Core {
 		private void OnFireResult(FireWorkerResponse r) {
 			if (!r.success) {
 				currentMax++;
-				buttons [currentMax].GetComponent<UIWorkerButton> ().Enable ();
+				buttons [currentMax].GetComponent<UIWorkerButton> ().Enable (playerColor);
 			}
 		}
 
 		private void OnFailure() {
 			currentMax++;
-			buttons [currentMax].GetComponent<UIWorkerButton> ().Enable ();
+			buttons [currentMax].GetComponent<UIWorkerButton> ().Enable (playerColor);
 		}
 
 	}

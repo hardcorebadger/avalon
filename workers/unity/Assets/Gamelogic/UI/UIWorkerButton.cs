@@ -9,7 +9,6 @@ namespace Assets.Gamelogic.Core {
 	public class UIWorkerButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 
 		public GameObject xImage;
-		public Color enabledColor;
 
 		private GameObject currentX;
 		private Color disabledColor;
@@ -18,9 +17,9 @@ namespace Assets.Gamelogic.Core {
 			disabledColor = GetComponent<Image> ().color;
 		}
 
-		public void Enable() {
+		public void Enable(Color c) {
 			GetComponent<Button> ().interactable = true;
-			GetComponent<Image> ().color = enabledColor;
+			GetComponent<Image> ().color = c;
 		}
 
 		public void Disable() {

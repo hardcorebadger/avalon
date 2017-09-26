@@ -13,6 +13,7 @@ namespace Assets.Gamelogic.Core {
 	public class WorkSiteVisualizer : MonoBehaviour {
 
 		[Require] private WorkSite.Reader workSiteReader;
+		[Require] private Owned.Reader ownedReader;
 
 		public int workers = 0;
 		public int maxWorkers = 0;
@@ -24,7 +25,16 @@ namespace Assets.Gamelogic.Core {
 			workSiteReader.ComponentUpdated.Add(OnWorkSiteUpdated);
 			workers = workSiteReader.Data.workers.Count + workSiteReader.Data.inside.Count;
 			maxWorkers = workSiteReader.Data.maxWorkers;
+			Color c = GetOwnerColor();
+			foreach (GameObject g in characterVisualizers) {
+				g.GetComponent<SpriteRenderer> ().color = c;
+			}
 			RefreshCharacterViz ();
+		}
+
+		public Color GetOwnerColor() {
+			PlayerColor c = Bootstrap.players [ownedReader.Data.owner].color;
+			return new Color (c.red, c.green, c.blue);
 		}
 
 		private void RefreshCharacterViz() {
