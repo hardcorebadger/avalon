@@ -18,7 +18,6 @@ namespace Assets.Gamelogic.Core {
 			WorkSiteVisualizer workSite = target.GetComponent<WorkSiteVisualizer> ();
 			buttons = new GameObject[workSite.maxWorkers];
 			currentMax = workSite.workers - 1;
-			Debug.Log (workSite.workers);
 			for (int i = 0; i < workSite.maxWorkers; i++) {
 				GameObject btn = Instantiate (buttonPrefab, content.transform);
 				btn.GetComponent<Button> ().onClick.AddListener (delegate{ButtonPressed (btn);});
