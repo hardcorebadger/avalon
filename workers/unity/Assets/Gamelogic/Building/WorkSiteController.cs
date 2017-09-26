@@ -33,7 +33,7 @@ namespace Assets.Gamelogic.Core {
 
 		private EnlistResponse OnEnlist(EnlistRequest request, ICommandCallerInfo callerinfo) {
 			bool full = false;
-			if (workers.Count + inside.Count >= 4) {
+			if (workers.Count + inside.Count >= workSiteWriter.Data.maxWorkers) {
 				full = true;
 			} else {
 				workers.Add (request.worker);

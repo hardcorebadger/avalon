@@ -46,6 +46,7 @@ component WorkSite {
     WorkType type = 2;
     list<WorkerData> inside = 3;
     bool interior = 4;
+    int32 max_workers = 5;
 
     command EnlistResponse enlist(EnlistRequest);
     command UnEnlistResponse un_enlist(UnEnlistRequest);

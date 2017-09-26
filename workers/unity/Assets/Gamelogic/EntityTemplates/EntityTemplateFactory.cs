@@ -67,7 +67,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
 					.AddComponent (new Building.Data (0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
-					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING, new Improbable.Collections.List<WorkerData>(), false), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING, new Improbable.Collections.List<WorkerData>(), false, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
 					.Build();
@@ -79,7 +79,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
 					.AddComponent (new Building.Data (0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
-					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_MINING, new Improbable.Collections.List<WorkerData>(), true), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_MINING, new Improbable.Collections.List<WorkerData>(), true, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Quarry.Data (), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
 					.Build();
@@ -133,7 +133,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, new Improbable.Collections.List<WorkerData>(), false), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, new Improbable.Collections.List<WorkerData>(), false, 4), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Construction.Data(req,sourcing), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Building.Data(0), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CONSTRUCTION), CommonRequirementSets.PhysicsOnly)
