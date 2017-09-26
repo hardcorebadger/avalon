@@ -10,6 +10,7 @@ Assets/Gamelogic/Generated.meta
 Assembly-CSharp-Editor.csproj
 Assembly-CSharp-firstpass.csproj
 Assembly-CSharp.csproj
+unity.userprefs
 
 # Standard Unity Ignores
 /[Ll]ibrary/
@@ -41,3 +42,4 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
