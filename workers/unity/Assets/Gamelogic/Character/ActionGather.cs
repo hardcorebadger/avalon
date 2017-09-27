@@ -19,11 +19,11 @@ namespace Assets.Gamelogic.Core {
 
 		public EntityId target;
 		public GatherableData gatherable;
-		public GatherResponse response;
 		public Vector3 position;
 		private int state = -1;
 		public bool failed = false;
 		private bool success = false;
+		public bool gatherableNotFound = false;
 
 		public ActionSeek seek;
 
@@ -81,19 +81,7 @@ namespace Assets.Gamelogic.Core {
 				}
 				break;
 			case 4:
-				break;
-			case 5:
-				//we got the gather response
-				if (response.success) {
-					int id = response.items.id;
-					owner.SetInHandItem(id);
-					success = true;
-				} else {
-					//gatherable said no!
-					failed = true;
-				}
-				owner.SetState (CharacterState.DEFAULT);
-
+				// waiting - see callback
 				break;
 			}
 
@@ -109,7 +97,8 @@ namespace Assets.Gamelogic.Core {
 		private void OnSuccessfulEntityQuery(EntityQueryResult queryResult) {
 			Map<EntityId, Entity> resultMap = queryResult.Entities;
 			if (resultMap.Count == 0) {
-				Debug.Log("Gatherable no longer exits");
+				Debug.Log ("ish: gatherable no longer exits");
+				gatherableNotFound = true;
 				success = true;
 				return;
 			}
@@ -126,16 +115,22 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void OnGatherResponse(GatherResponse response) {
-
-			this.response = response;
-			state = 5;
-
+			//we got the gather response
+			if (response.success) {
+				int id = response.items.id;
+				owner.SetInHandItem(id);
+				success = true;
+			} else {
+				//gatherable said no!
+				failed = true;
+			}
+			owner.SetState (CharacterState.DEFAULT);
 		}
 
 		public void OnGatherFailed() {
-
-			state = 5;
-
+			Debug.Log ("gather fail fix happened");
+			owner.SetState (CharacterState.DEFAULT);
+			failed = true;
 		}
 
 	}

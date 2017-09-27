@@ -126,7 +126,7 @@ namespace Assets.Gamelogic.EntityTemplates
 			else if (name == "construction-farm")
 				req.Add (0, new ConstructionRequirement (0, 3));
 
-			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 30f, new Vector3d (pos.x, pos.z, pos.y));
+			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 100f, new Vector3d (pos.x, pos.z, pos.y));
 
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
@@ -190,7 +190,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1, 0), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(playerId, OwnedType.OWNED_CHARACTER), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}

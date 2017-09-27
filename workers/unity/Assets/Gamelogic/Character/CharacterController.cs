@@ -179,6 +179,12 @@ namespace Assets.Gamelogic.Core {
 			return true;
 		}
 
+		public void SetDebugMetadata(int i) {
+			characterWriter.Send (new Character.Update ()
+				.SetDebugMetadata (i)
+			);
+		}
+
 	}
 
 }

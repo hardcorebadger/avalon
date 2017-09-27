@@ -17,11 +17,13 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private Forester.Writer foresterWriter;
 		public float localTreeRefreshRate = 60f;
+		public int minTrees = 10;
 		private float timer = -1f;
 		private List<EntityId> localTrees;
 
 		void OnEnable () {
 			foresterWriter.CommandReceiver.OnGetJob.RegisterResponse (OnGetJob);
+			RefreshLocalTrees ();
 		}
 		
 		void OnDisable () {
@@ -65,7 +67,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private ForesterJobResponse OnGetJob(Nothing n, ICommandCallerInfo callerinfo) {
-			if (localTrees.Count < 1)
+			if (localTrees.Count < minTrees)
 				return new ForesterJobResponse (new Improbable.Collections.Option<EntityId>());
 			else {
 				EntityId id = localTrees [0];

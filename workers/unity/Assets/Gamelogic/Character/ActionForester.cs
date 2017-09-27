@@ -16,8 +16,9 @@ using Improbable.Collections;
 namespace Assets.Gamelogic.Core {
 
 	public class ActionForester : Action {
-
+		
 		private int state = 0;
+		private int branch = 0;
 		private EntityId target;
 		private bool failed = false;
 		private bool success = false;
@@ -31,53 +32,17 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override ActionCode Update () {
-			switch (state) {
+			switch (branch) {
 			case 0:
-				// set up walk to forester
-				if (owner.characterWriter.Data.itemInHand == 0) // split to 5 to stash the log in his hand
-					state = 5;
-				else if (owner.EmptyHanded ()) // gotta go chop a tree
-					state = 1;
-				else
-					failed = true;// gotta handle this better, he has something else in his hand..
+				GetJob ();
 				break;
 			case 1:
-				SpatialOS.Commands.SendCommand (owner.characterWriter, Forester.Commands.GetJob.Descriptor, new Nothing (), target)
-					.OnSuccess (response => OnJobResult (response))
-					.OnFailure (response => OnRequestFailed ());
-				state = 2;
+				Chop ();
 				break;
 			case 2:
-				// waiting for response
-				break;
-			case 3:
-				// got it back, run a gather action
-				ActionCode c = subAction.Update ();
-				if (c == ActionCode.Failure || c == ActionCode.Success) {		
-					subAction = new ActionSeek (owner, target, hqPosition);
-					state = 4;
-			
-				}
-				break;
-			case 4:
-				// walk back to forester
-				c = subAction.Update ();
-				if (c == ActionCode.Failure || c == ActionCode.Success) {
-					state = 5;
-				}
-				break;
-			case 5:
-				// put the log in the forester
-				SpatialOS.Commands.SendCommand (owner.characterWriter, Inventory.Commands.Give.Descriptor, new ItemStack (owner.characterWriter.Data.itemInHand, 1), target)
-					.OnSuccess (response => OnGiveResult (response))
-					.OnFailure (response => OnRequestFailed ());
-				state = 6;
-				break;
-			case 6:
-				// waiting for response
+				Plant ();
 				break;
 			}
-
 			if (success)
 				return ActionCode.Success;
 			else if (failed)
@@ -86,24 +51,97 @@ namespace Assets.Gamelogic.Core {
 				return ActionCode.Perpetual;
 		}
 
+		// GET JOB
+
+		// assumes empty hand and at work site
+		private void GetJob() {
+			switch (state) {
+			case 0:
+				// ask for a job
+				SpatialOS.Commands.SendCommand (owner.characterWriter, Forester.Commands.GetJob.Descriptor, new Nothing (), target)
+					.OnSuccess (response => OnJobResult (response))
+					.OnFailure (response => OnRequestFailed ());
+				state = 1;
+				break;
+			case 1:
+				// waiting for response - see callback
+				break;
+			}
+		}
+
 		private void OnJobResult (ForesterJobResponse response) {
+			// either we get a tree entity id or if not we plant a tree
 			if (response.tree.HasValue) {
 				subAction = new ActionGather (owner, response.tree.Value);
-				state = 3;
+				SetBranch (1);
 			} else {
-				Debug.LogWarning ("boss says its quittin time");
-				success = true;
+				subAction = new ActionSeek (owner, GetRandomTreePosition ());
+				SetBranch (2);
+			}
+		}
+
+		// CHOP
+
+		// assumes subAction is set to gather a tree, 
+		// gathers tree, returns to HQ, and places it in storage
+		private void Chop() {
+			switch (state) {
+			case 0:
+				// run gather action, walk back when done
+				ActionCode c = subAction.Update ();
+				if (c == ActionCode.Failure || c == ActionCode.Success) {		
+					subAction = new ActionSeek (owner, target, hqPosition);
+					state = 1;
+				}
+				break;
+			case 1:
+				// walk back. put log in there when you arrive
+				c = subAction.Update ();
+				if (c == ActionCode.Failure || c == ActionCode.Success) {
+					// basically, something went wrong, so lets just restart since we're back we can
+					if (owner.characterWriter.Data.itemInHand != 0)
+						SetBranch (0);
+					else {
+						SpatialOS.Commands.SendCommand (owner.characterWriter, Inventory.Commands.Give.Descriptor, new ItemStack (owner.characterWriter.Data.itemInHand, 1), target)
+							.OnSuccess (response => OnGiveResult (response))
+							.OnFailure (response => OnRequestFailed ());
+						state = 2;
+					}
+				}
+				break;
+			case 2:
+				// waiting for response - see callback
+				break;
 			}
 		}
 
 		private void OnGiveResult(GiveResponse r) {
 			if (r.success) {
 				owner.DropItem ();
-				state = 1;
+				SetBranch (0);
 			} else {
 				// theres no room in the forester
+				Debug.Log("ish: theres no room in the forester - quitting");
 				success = true;
 			}
+		}
+
+		// PLANT
+
+		private void Plant() {
+			Debug.LogWarning("ish: no action for planting, quitting");
+			success = true;
+		}
+
+		// HELPERS
+
+		private void SetBranch(int i) {
+			state = 0;
+			branch = i;
+		}
+
+		private Vector3 GetRandomTreePosition() {
+			return Vector3.zero;
 		}
 
 		private void OnRequestFailed () {
