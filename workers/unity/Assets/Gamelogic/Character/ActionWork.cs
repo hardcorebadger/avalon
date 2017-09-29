@@ -44,11 +44,11 @@ namespace Assets.Gamelogic.Core {
 			case 2:
 				subAction = new ActionSeek (owner, target, buildingPosition);
 				state = 3;
-					
 				break;
 			case 3:
 				ActionCode seekC = subAction.Update ();
 				if (seekC == ActionCode.Failure || seekC == ActionCode.Success) {
+
 					switch (workType) {
 					case WorkType.WORK_BUILDING:
 						subAction = new ActionConstruction (owner, target, buildingPosition);

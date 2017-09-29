@@ -39,8 +39,14 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 	public Color waterColor;
 	public GradientPoint[] gradient;
 
+	public int maxBlockHeight = 100;
+	public float blockSize = 5f;
+	public int chunkSize = 10;
+	public GameObject chunkPrefab;
 
-	private float[,] heightmap;
+
+	public float[,] heightmap;
+	public int[,] blockmap;
 
 	public void RandomWorldSeed() {
 		seed = Random.Range (-1000000,1000000);
@@ -64,10 +70,15 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 			GetComponent<Terrain> ().terrainData = GetTerrainData (GetComponent<Terrain> ().terrainData, amplitude);
 		if (GetComponent<RawImage> () != null)
 			GetComponent<RawImage> ().texture = GetTexture ();
+		if (GetComponent<MeshRenderer> () != null)
+			BuildBlockTerrain ();
+		if (chunkPrefab != null)
+			BuildChunks ();
 	}
 
 	public void GenerateWorld() {
 		heightmap = new float[size,size];
+		blockmap = new int[size,size];
 		for (int z = 0; z < size; z++) {
 			for (int x = 0; x < size; x++) {
 
@@ -84,6 +95,7 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 
 				// round off the edges and set the heightmap!
 				heightmap[x,z] = EdgeDrop(basicTerrain, (float)x/(float)size, (float)z/(float)size);
+				blockmap[x,z] = (int)(heightmap [x, z] * maxBlockHeight);
 
 			}
 		}
@@ -133,9 +145,9 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 		// mixer with ratio value on original and inverse to 0
 
 		if (ratio > edgeDropCutoff)
-			return preDrop;
+			return Mathf.Max(preDrop, waterLevel);
 		else
-			return preDrop * (ratio/edgeDropCutoff);
+			return Mathf.Max(preDrop * (ratio/edgeDropCutoff), waterLevel);
 	}
 
 	public Texture2D GetTexture() {
@@ -156,7 +168,7 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 	}
 
 	private Color GetColor(float height) {
-		if (height < waterLevel)
+		if (height <= waterLevel)
 			return waterColor;
 		
 		height -= tempurature;
@@ -179,6 +191,192 @@ public class WorldGeneratorTest1 : MonoBehaviour {
 
 	private Color Mix(Color c1, Color c2, float point) {
 		return (c2 - c1) * point + c1;
+	}
+
+	public void BuildBlockTerrain() {
+
+		Mesh mesh = new Mesh();
+
+		List<Vector3> vertList = new List<Vector3>();
+		List<Vector2> uvList = new List<Vector2>();
+		List<int> triList = new List<int> ();
+		List<Color> colorList = new List<Color> ();
+
+		int i = 0;
+		for (int zi = 0; zi < blockmap.GetLength(1); zi++) {
+			for (int xi = 0; xi <  blockmap.GetLength(0); xi++) {
+				if (xi + 1 <  blockmap.GetLength(0) && zi + 1 <  blockmap.GetLength(1) && xi > 0 && zi > 0) {
+					addFace(xi, zi, ref vertList, ref uvList, ref triList, ref colorList, ref i, GetColor(heightmap[xi,zi]));
+
+					int forward = blockmap [xi, zi] - blockmap [xi, zi + 1];
+					if (forward > 0)
+						addForwardEdge(forward, xi, zi, ref vertList, ref uvList, ref triList, ref colorList, ref i, GetColor(heightmap[xi,zi]));
+
+					int backward = blockmap [xi, zi] - blockmap [xi, zi - 1];
+					if (backward > 0)
+						addBackwardEdge(backward, xi, zi, ref vertList, ref uvList, ref triList, ref colorList, ref i, GetColor(heightmap[xi,zi]));
+
+					int left = blockmap [xi, zi] - blockmap [xi-1, zi];
+					if (left > 0)
+						addLeftEdge(left, xi, zi, ref vertList, ref uvList, ref triList, ref colorList, ref i, GetColor(heightmap[xi,zi]));
+
+					int right = blockmap [xi, zi] - blockmap [xi+1, zi];
+					if (right > 0)
+						addRightEdge(right, xi, zi, ref vertList, ref uvList, ref triList, ref colorList, ref i, GetColor(heightmap[xi,zi]));
+				}
+			}
+		}
+
+		mesh.vertices = vertList.ToArray();
+		mesh.uv = uvList.ToArray();
+		mesh.triangles = triList.ToArray();
+		mesh.colors = colorList.ToArray();
+		mesh.RecalculateNormals();
+
+		setMesh(mesh);
+
+	}
+
+	private void addForwardEdge(int length, int x, int z, ref List<Vector3> vertList, ref List<Vector2> uvList, ref List<int> triList, ref List<Color> colorList,  ref int i, Color color) {
+		Vector3 v1 = ToPosition (x+1, z+1, blockmap[x,z]);
+		Vector3 v2 = ToPosition (x, z+1, blockmap[x,z]);
+		Vector3 v3 = ToPosition (x, z+1, blockmap[x,z]-length);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+
+		v1 = ToPosition (x+1, z+1, blockmap[x,z]);
+		v2 = ToPosition (x, z+1, blockmap[x,z]-length);
+		v3 = ToPosition (x+1, z+1, blockmap[x,z]-length);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+	}
+
+	private void addBackwardEdge(int length, int x, int z, ref List<Vector3> vertList, ref List<Vector2> uvList, ref List<int> triList, ref List<Color> colorList,  ref int i, Color color) {
+		Vector3 v1 = ToPosition (x, z, blockmap [x, z] - length);
+		Vector3 v2 = ToPosition (x, z, blockmap[x,z]);
+		Vector3 v3 = ToPosition (x+1, z, blockmap[x,z]);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+
+		v1 = ToPosition (x+1, z, blockmap[x,z]-length);
+		v2 = ToPosition (x, z, blockmap[x,z]-length);
+		v3 = ToPosition (x+1, z, blockmap[x,z]);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+	}
+
+	private void addLeftEdge(int length, int x, int z, ref List<Vector3> vertList, ref List<Vector2> uvList, ref List<int> triList, ref List<Color> colorList,  ref int i, Color color) {
+		Vector3 v1 = ToPosition (x, z+1, blockmap[x,z]);
+		Vector3 v2 = ToPosition (x, z, blockmap[x,z]);
+		Vector3 v3 = ToPosition (x, z, blockmap [x, z] - length);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+
+		v1 = ToPosition (x, z+1, blockmap[x,z]);
+		v2 = ToPosition (x, z, blockmap[x,z]-length);
+		v3 = ToPosition (x, z+1, blockmap[x,z]-length);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+	}
+
+	private void addRightEdge(int length, int x, int z, ref List<Vector3> vertList, ref List<Vector2> uvList, ref List<int> triList, ref List<Color> colorList,  ref int i, Color color) {
+		Vector3 v1 = ToPosition (x+1, z, blockmap [x, z] - length);
+		Vector3 v2 = ToPosition (x+1, z, blockmap[x,z]);
+		Vector3 v3 = ToPosition (x+1, z+1, blockmap[x,z]);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+
+		v1 = ToPosition (x+1, z+1, blockmap[x,z]-length);
+		v2 = ToPosition (x+1, z, blockmap[x,z]-length);
+		v3 = ToPosition (x+1, z+1, blockmap[x,z]);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+	}
+
+	private void addFace(int x, int z, ref List<Vector3> vertList, ref List<Vector2> uvList, ref List<int> triList, ref List<Color> colorList,  ref int i, Color color) {
+		Vector3 v1 = ToPosition (x, z, blockmap[x,z]);
+		Vector3 v2 = ToPosition (x, z+1, blockmap[x,z]);
+		Vector3 v3 = ToPosition (x+1, z, blockmap[x,z]);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+
+		v1 = ToPosition (x, z+1, blockmap[x,z]);
+		v2 = ToPosition (x+1, z+1, blockmap[x,z]);
+		v3 = ToPosition (x+1, z, blockmap[x,z]);
+
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+	}
+
+	private void addTri(Vector3 v1, Vector3 v2, Vector3 v3, ref List<Vector3> vertList, ref List<Vector2> uvList, ref List<int> triList, ref List<Color> colorList,  ref int i, Color color) {
+		addVertex(v1, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v2, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+		addVertex(v3, ref vertList, ref uvList, ref triList, ref colorList, ref i, color);
+	}
+
+	private void addVertex(Vector3 pos, ref List<Vector3> vert, ref List<Vector2> uv, ref List<int> tri, ref List<Color> color,  ref int i, Color c) {
+		vert.Add (pos);
+		uv.Add (new Vector2 (0, 0));
+		tri.Add (i);
+		color.Add (c);
+		i++;
+	}
+
+	private void setMesh(Mesh m) {
+		GetComponent<MeshFilter> ().mesh = m;
+		GetComponent<MeshCollider> ().sharedMesh = m;
+	}
+
+	public struct HeightmapIndex {
+		public int x;
+		public int z;
+		public HeightmapIndex(int xi, int zi) {
+			x = xi;
+			z = zi;
+		}
+	};
+
+	public Vector3 ToPosition(int x, int z, float blockHeight) {
+		Vector3 v = Vector3.zero;
+		v.x = x * blockSize;
+		v.z = z * blockSize;
+		v.y = blockHeight * blockSize;
+		return v;
+	}
+
+	public void LoopDebug(string s, float f) {
+		if (Random.Range ((int)0, (int)(heightmap.GetLength (0) * heightmap.GetLength (1) / f)) == 0) {
+			Debug.Log (s);
+		}
+	}
+
+	public void BuildChunks() {
+		for (int z = 0; z < size/chunkSize; z++) {
+			for (int x = 0; x < size/chunkSize; x++) {
+				GameObject c = Instantiate (chunkPrefab);
+				c.GetComponent<ChunkTest> ().Setup (this, x*chunkSize, z*chunkSize);
+				c.GetComponent<ChunkTest> ().BuildBlockTerrain ();
+			}
+		}
 	}
 
 }

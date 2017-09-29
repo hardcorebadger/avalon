@@ -16,14 +16,22 @@ namespace Assets.Gamelogic.Core {
 	public class ForesterController : MonoBehaviour {
 
 		[Require] private Forester.Writer foresterWriter;
+		[Require] private Inventory.Reader inventoryReader;
 		public float localTreeRefreshRate = 60f;
+		// doesnt work yet
+		public int maxTrees = 100;
 		public int minTrees = 10;
 		private float timer = -1f;
 		private List<EntityId> localTrees;
+		private int incomingLogs = 0;
+		private int currentLogs = 0;
+		private bool treeDensitySatisfied = false;
 
 		void OnEnable () {
 			foresterWriter.CommandReceiver.OnGetJob.RegisterResponse (OnGetJob);
+			inventoryReader.ComponentUpdated.Add (OnInventoryUpdate);
 			RefreshLocalTrees ();
+			currentLogs = InventoryController.GetTotal (inventoryReader.Data);
 		}
 		
 		void OnDisable () {
@@ -60,6 +68,8 @@ namespace Assets.Gamelogic.Core {
 					localTrees.Add (id);
 
 			}
+
+			treeDensitySatisfied = localTrees.Count > maxTrees;
 		}
 
 		private void OnFailedEntityQuery (ICommandErrorDetails _) {
@@ -67,12 +77,25 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private ForesterJobResponse OnGetJob(Nothing n, ICommandCallerInfo callerinfo) {
-			if (localTrees.Count < minTrees)
-				return new ForesterJobResponse (new Improbable.Collections.Option<EntityId>());
-			else {
+			// basically "if you need to replant or the thing is full so be proactive why dont ya"
+			if ((localTrees.Count < minTrees || currentLogs+incomingLogs >= inventoryReader.Data.max)/* && !treeDensitySatisfied //need a way to make the workers go idle for this */) {
+				return new ForesterJobResponse (new Improbable.Collections.Option<EntityId> ());
+			} else {
+				incomingLogs++;
 				EntityId id = localTrees [0];
 				localTrees.RemoveAt (0);
 				return new ForesterJobResponse (new Improbable.Collections.Option<EntityId>(id));
+			}
+		}
+
+		private void OnInventoryUpdate(Inventory.Update u) {
+			if (u.inventory.HasValue) {
+				// one of the incomming logs has arrived
+				if (u.inventory.Value.Count - currentLogs > 0)
+					incomingLogs--;
+				// else basically someone removed logs to bring somewhere else
+
+				currentLogs = u.inventory.Value.Count;
 			}
 		}
 

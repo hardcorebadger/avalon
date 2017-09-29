@@ -22,6 +22,10 @@ namespace Assets.Editor
 			var currentEntityId = 1;
 			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreatePlayerCreatorTemplate());
 
+			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("pine", new Vector3(Random.Range(-10,10),0,Random.Range(-10,10))));
+			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("pine", new Vector3(Random.Range(-10,10),0,Random.Range(-10,10))));
+			snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("pine", new Vector3(Random.Range(-10,10),0,Random.Range(-10,10))));
+
 			for (float z = -500; z <= 500; z++) {
 				for (float x = -500; x <= 500; x++) {
 					if (Random.Range(0,1100) == 0)

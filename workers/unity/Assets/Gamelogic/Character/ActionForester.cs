@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Improbable;
@@ -29,6 +29,14 @@ namespace Assets.Gamelogic.Core {
 		public ActionForester(CharacterController o, EntityId t, Vector3 pos) : base(o)	{
 			target = t;
 			hqPosition = pos;
+
+			// handling items in hands
+			if (!owner.EmptyHanded ()) {
+				SetBranch (1);
+				subAction = new ActionSeek (owner, target, hqPosition);
+				state = 1;
+				Chop ();
+			}
 		}
 
 		public override ActionCode Update () {
@@ -121,16 +129,40 @@ namespace Assets.Gamelogic.Core {
 				SetBranch (0);
 			} else {
 				// theres no room in the forester
-				Debug.Log("ish: theres no room in the forester - quitting");
-				success = true;
+				Debug.Log("theres no room in the forester, wtf forester why did you make me get this tree");
+				owner.DropItem ();
+				SetBranch (0);
 			}
 		}
 
 		// PLANT
 
 		private void Plant() {
-			Debug.LogWarning("ish: no action for planting, quitting");
-			success = true;
+			switch (state) {
+			case 0:
+				// run walk action, plant when done
+				ActionCode c = subAction.Update ();
+				if (c == ActionCode.Failure || c == ActionCode.Success) {		
+					SpatialOS.Commands.CreateEntity (owner.characterWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("pine", owner.transform.position+owner.GetFacingDirection().normalized))
+						.OnSuccess (entityId => OnTreeCreated ());
+				}
+				break;
+			case 1:
+				// waiting on tree creation
+				break;
+			case 2:
+				// tree is created, go back
+				c = subAction.Update ();
+				if (c == ActionCode.Failure || c == ActionCode.Success) {		
+					SetBranch (0);
+				}
+				break;
+			}
+		}
+
+		private void OnTreeCreated() {
+			subAction = new ActionSeek (owner, target, hqPosition);
+			state = 2;
 		}
 
 		// HELPERS
@@ -141,7 +173,14 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Vector3 GetRandomTreePosition() {
-			return Vector3.zero;
+			return hqPosition + new Vector3(DonutRandom(), 0f, DonutRandom());
+		}
+
+		private float DonutRandom() {
+			float f = Random.Range (7f, 100f);
+			if (Random.Range(0,2) == 0)
+				f *= -1;
+			return f;
 		}
 
 		private void OnRequestFailed () {

@@ -17,15 +17,26 @@ public class WorldGeneratorTestEditor1 : UnityEditor.Editor {
 		}
 
 		if (GUILayout.Button ("Random Mountains")) {
+			foreach (ChunkTest g in FindObjectsOfType<ChunkTest>())
+				DestroyImmediate (g.gameObject);
 			generator.RandomMountainSeed();
 		}
 
 		if (GUILayout.Button ("Random")) {
+			foreach (ChunkTest g in FindObjectsOfType<ChunkTest>())
+				DestroyImmediate (g.gameObject);
 			generator.Randomize();
 		}
 
 		if (GUILayout.Button ("Generate")) {
+			foreach (ChunkTest g in FindObjectsOfType<ChunkTest>())
+				DestroyImmediate (g.gameObject);
 			generator.Regenerate ();
+		}
+
+		if (GUILayout.Button ("Clear Chunks")) {
+			foreach (ChunkTest g in FindObjectsOfType<ChunkTest>())
+				DestroyImmediate (g.gameObject);
 		}
 	}
 
