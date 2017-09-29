@@ -26,7 +26,6 @@ namespace Assets.Gamelogic.Core {
 		void OnEnable () {
 			workSiteWriter.InsideUpdated.Add (OnInsideUpdated);
 			inventoryController = GetComponent<InventoryController> ();
-
 		}
 
 		void OnDisable () {

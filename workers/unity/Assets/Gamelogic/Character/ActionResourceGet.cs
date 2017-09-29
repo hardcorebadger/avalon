@@ -36,6 +36,8 @@ namespace Assets.Gamelogic.Core
 			Debug.LogWarning ("init");
 			sourcing = s;
 			toGet = tg;
+			if (toGet.Count < 1)
+				success = true;
 		}
 
 		public override ActionCode Update ()
@@ -107,7 +109,6 @@ namespace Assets.Gamelogic.Core
 
 		private void OnSuccessfulEntityQuery (EntityQueryResult queryResult)
 		{
-			Debug.LogWarning ("kinda trying");
 			Map<EntityId, Entity> resultMap = queryResult.Entities;
 			foreach (EntityId id in resultMap.Keys) {
 				Entity e = resultMap [id];
@@ -116,12 +117,11 @@ namespace Assets.Gamelogic.Core
 
 				foreach (int idtg in toGet.Keys) {
 					if (targetInv.inventory.ContainsKey (idtg) && targetInv.inventory [idtg] > 0) {
-						Debug.LogWarning ("found");
 						Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position> ();
 						targetPosition = p.Value.Get ().Value.coords.ToVector3 ();
 						target = id;
 						state = 3;
-						subAction = new ActionSeek (owner, targetPosition);
+						subAction = new ActionSeek (owner, id, targetPosition);
 						return;
 					}
 				}

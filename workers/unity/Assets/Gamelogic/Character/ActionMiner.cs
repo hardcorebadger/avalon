@@ -27,7 +27,6 @@ namespace Assets.Gamelogic.Core {
 		public ActionMiner(CharacterController o, EntityId t, Vector3 pos) : base(o)	{
 			target = t;
 			hqPosition = pos;
-			Debug.LogError ("A");
 		}
 
 

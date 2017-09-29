@@ -36,6 +36,7 @@ namespace Assets.Gamelogic.Core {
 		private Action currentAction;
 		private float velocity;
 		public CharacterState state;
+		private int itemInHand = -1;
 
 		private void OnEnable() {
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
@@ -47,6 +48,7 @@ namespace Assets.Gamelogic.Core {
 			transform.position = positionWriter.Data.coords.ToVector3();
 			transform.eulerAngles = new Vector3 (0, 0, rotationWriter.Data.rotation);
 			state = characterWriter.Data.state;
+			itemInHand = characterWriter.Data.itemInHand;
 			StartCoroutine ("UpdateTransform");
 
 			rigidBody = GetComponent<Rigidbody> ();
@@ -150,30 +152,32 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public bool HasApplicableItem(ConstructionData c) {
-			if (!c.requirements.ContainsKey(characterWriter.Data.itemInHand))
+			if (!c.requirements.ContainsKey(itemInHand))
 				return false;
-			if (c.requirements [characterWriter.Data.itemInHand].required - c.requirements [characterWriter.Data.itemInHand].amount > 0)
+			if (c.requirements [itemInHand].required - c.requirements [itemInHand].amount > 0)
 				return true;
 
 			return false;
 		}
 
 		public void DropItem() {
+			itemInHand = -1;
 			characterWriter.Send (new Character.Update ()
-				.SetItemInHand (-1)
+				.SetItemInHand (itemInHand)
 			);
 		}
 
 		public bool EmptyHanded() {
-			return (characterWriter.Data.itemInHand == -1);
+			return (itemInHand == -1);
 		}
 
 		public bool SetInHandItem(int id) {
-			if (characterWriter.Data.itemInHand != -1)
+			if (itemInHand != -1)
 				return false;
-			
+
+			itemInHand = id;
 			characterWriter.Send (new Character.Update ()
-				.SetItemInHand (id)
+				.SetItemInHand (itemInHand)
 			);
 
 			return true;
