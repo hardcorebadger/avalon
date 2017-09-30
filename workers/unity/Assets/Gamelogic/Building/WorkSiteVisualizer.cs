@@ -22,6 +22,8 @@ namespace Assets.Gamelogic.Core {
 		private int currentCharViz = 0;
 
 		void OnEnable () {
+			if (workSiteReader.HasAuthority)
+				return;
 			workSiteReader.ComponentUpdated.Add(OnWorkSiteUpdated);
 			workers = workSiteReader.Data.workers.Count + workSiteReader.Data.inside.Count;
 			maxWorkers = workSiteReader.Data.maxWorkers;
@@ -55,6 +57,8 @@ namespace Assets.Gamelogic.Core {
 		}
 		
 		void OnWorkSiteUpdated (WorkSite.Update update) {
+			if (workSiteReader.HasAuthority)
+				return;
 			if (update.workers.HasValue && update.inside.HasValue) {
 				workers = update.workers.Value.Count + update.inside.Value.Count;
 				RefreshCharacterViz ();

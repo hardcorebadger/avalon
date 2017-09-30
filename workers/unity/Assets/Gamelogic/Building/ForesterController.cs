@@ -23,7 +23,6 @@ namespace Assets.Gamelogic.Core {
 		public int minTrees = 10;
 		private float timer = -1f;
 		private List<EntityId> localTrees;
-		private int incomingLogs = 0;
 		private int currentLogs = 0;
 		private bool treeDensitySatisfied = false;
 
@@ -77,12 +76,10 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private ForesterJobResponse OnGetJob(Nothing n, ICommandCallerInfo callerinfo) {
-			Debug.LogWarning (incomingLogs + ";" + currentLogs);
 			// basically "if you need to replant or the thing is full so be proactive why dont ya"
-			if ((localTrees.Count < minTrees || currentLogs+incomingLogs >= inventoryReader.Data.max)/* && !treeDensitySatisfied //need a way to make the workers go idle for this */) {
+			if ((localTrees.Count < minTrees || currentLogs >= inventoryReader.Data.max)/* && !treeDensitySatisfied //need a way to make the workers go idle for this */) {
 				return new ForesterJobResponse (new Improbable.Collections.Option<EntityId> ());
 			} else {
-				incomingLogs++;
 				EntityId id = localTrees [0];
 				localTrees.RemoveAt (0);
 				return new ForesterJobResponse (new Improbable.Collections.Option<EntityId>(id));
@@ -91,17 +88,12 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnInventoryUpdate(Inventory.Update u) {
 			if (u.inventory.HasValue) {
-				
-				// one of the incomming logs has arrived
-				if (u.inventory.Value.Count - currentLogs > 0) {
-					Debug.LogWarning ("hey");
-					incomingLogs--;
-				} else {
-					Debug.LogWarning ("nay");
-				}
-				// else basically someone removed logs to bring somewhere else
 
-				currentLogs = u.inventory.Value.Count;
+				if (!u.inventory.Value.ContainsKey (0)) {
+					currentLogs = 0;
+					return;
+				}
+				currentLogs = u.inventory.Value[0];
 			}
 		}
 

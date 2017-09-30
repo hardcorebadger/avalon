@@ -128,8 +128,7 @@ namespace Assets.Gamelogic.Core {
 				owner.DropItem ();
 				SetBranch (0);
 			} else {
-				// theres no room in the forester
-				Debug.Log("theres no room in the forester, wtf forester why did you make me get this tree");
+				// theres no room in the forester, drop and move on
 				owner.DropItem ();
 				SetBranch (0);
 			}
