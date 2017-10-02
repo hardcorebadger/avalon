@@ -104,13 +104,52 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private static void ExecuteEntityTargetedCommand(string command) {
-			if (command == "gather")
+			if (command == "gather") 
 				ExecuteGatherableTargetedCommand ();
+			else if (command == "attack")
+				ExecuteAttackTargetedCommand ();
 			else {
 				foreach (EntityId id in agents) {
 					SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), command), id);
 				}
 			}
+		}
+
+		private static void ExecuteAttackTargetedCommand() {
+			string command = "attack";
+			if (agents.Count < 1)
+				return;
+
+			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), command), agents[0]);
+			agents.RemoveAt (0);
+
+			if (agents.Count < 1)
+				return;
+
+			Collider[] cols = Physics.OverlapSphere (position, UIManager.instance.coOpRadius);
+			List<Collider> clist = new List<Collider> (cols);
+			clist.Sort(delegate(Collider c1, Collider c2){
+				return Vector3.Distance(target.transform.position, c1.transform.position).CompareTo
+					((Vector3.Distance(target.transform.position, c2.transform.position)));   
+			});
+			List<GameObject> used = new List<GameObject> ();
+			used.Add (target);
+
+			foreach (Collider c in clist) {
+				if (used.Contains (c.gameObject))
+					continue;
+				CharacterVisualizer character = c.gameObject.GetComponent<CharacterVisualizer> ();
+				if (character == null)
+					continue;
+				if (!character.CanControl()) {
+					used.Add (c.gameObject);
+					SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (c.gameObject.EntityId(), command), agents [0]);
+					agents.RemoveAt (0);
+					if (agents.Count < 1)
+						return;
+				}
+			}
+
 		}
 
 		private static void ExecuteGatherableTargetedCommand() {
