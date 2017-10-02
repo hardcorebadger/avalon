@@ -35,6 +35,7 @@ component Character {
     float velocity = 3;
     int32 item_in_hand = 4;
     int32 debug_metadata = 5;
+    float health = 6;     
 
     command Nothing position_target(PositionTargetRequest);
     command Nothing entity_target(EntityTargetRequest);

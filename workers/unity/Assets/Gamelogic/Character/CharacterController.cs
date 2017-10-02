@@ -89,12 +89,10 @@ namespace Assets.Gamelogic.Core {
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "gather") 
 				SetAction (new ActionGather (this, request.target));
-			else if (request.command == "build") 
-				SetAction (new ActionBuild (this, request.target));
 			else if (request.command == "work")
 				SetAction (new ActionWork (this, request.target));
-			else if (request.command == "store")
-				SetAction (new ActionStore (this, request.target));
+			else if (request.command == "attack")
+				SetAction (new ActionAttack (this, request.target));
 			return new Nothing ();
 		}
 

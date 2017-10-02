@@ -181,6 +181,11 @@ namespace Assets.Gamelogic.Core {
 				if (!options.Contains ("work"))
 					options.Add ("work");
 			}
+			CharacterVisualizer character = g.GetComponent<CharacterVisualizer> ();
+			if (character != null && !character.CanControl()) {
+				if (!options.Contains ("attack"))
+					options.Add ("attack");
+			}
 		}
 			
 	}
