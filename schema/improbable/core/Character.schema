@@ -17,6 +17,10 @@ type RadiusTargetRequest {
   string command = 3;
 }
 
+type ReceiveHitRequest {
+  EntityId source = 1;
+}
+
 enum CharacterState {
   DEFAULT = 0;
   FORAGING = 1;
@@ -41,4 +45,5 @@ component Character {
     command Nothing entity_target(EntityTargetRequest);
     command Nothing radius_target(RadiusTargetRequest);
     command Nothing fire(Nothing);
+    command Nothing receive_hit(ReceiveHitRequest); 
 }

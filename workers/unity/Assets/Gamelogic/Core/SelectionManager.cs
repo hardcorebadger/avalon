@@ -317,7 +317,10 @@ namespace Assets.Gamelogic.Core {
 
 		public void ClearSelected() {
 			foreach (Selectable s in selected) {
-				s.SetHighlighted (false);
+				if (s != null)
+					s.SetHighlighted (false);
+				else
+					selected.Remove (s);
 			}
 			selected.Clear ();
 		}
@@ -334,8 +337,10 @@ namespace Assets.Gamelogic.Core {
 			float y = 0;
 
 			foreach (Selectable s in selected) {
-				x += s.transform.position.x;
-				y += s.transform.position.y;
+				if (s != null) {
+					x += s.transform.position.x;
+					y += s.transform.position.y;
+				} 
 			}
 
 			x /= selected.Count;

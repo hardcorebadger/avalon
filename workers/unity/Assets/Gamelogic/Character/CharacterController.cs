@@ -32,23 +32,30 @@ namespace Assets.Gamelogic.Core {
 		public float approachRadius = 4f;
 		public float arrivalRadius = 2f;
 		public Quaternion facing = Quaternion.identity;
+		public Animator anim;
+
 
 		private Action currentAction;
 		private float velocity;
 		public CharacterState state;
 		private int itemInHand = -1;
+		public float health;
 
 		private void OnEnable() {
+			anim = GetComponent<Animator> ();
+
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
 
 			characterWriter.CommandReceiver.OnFire.RegisterResponse(OnFire);
+			characterWriter.CommandReceiver.OnReceiveHit.RegisterResponse(OnReceiveHit);
 
 			transform.position = positionWriter.Data.coords.ToVector3();
 			transform.eulerAngles = new Vector3 (0, 0, rotationWriter.Data.rotation);
 			state = characterWriter.Data.state;
 			itemInHand = characterWriter.Data.itemInHand;
+			health = characterWriter.Data.health;
 			StartCoroutine ("UpdateTransform");
 
 			rigidBody = GetComponent<Rigidbody> ();
@@ -75,6 +82,11 @@ namespace Assets.Gamelogic.Core {
 
 		private void Update() {
 			// if the controlling action completes, stop doing it
+
+			if (health <= 0F) {
+				SpatialOS.Commands.DeleteEntity(characterWriter, gameObject.EntityId());
+			}
+
 			ActionCode code = currentAction.Update ();
 			if (code == ActionCode.Success || code == ActionCode.Failure)
 				currentAction = new ActionBlank (this);
@@ -122,6 +134,18 @@ namespace Assets.Gamelogic.Core {
 			SetAction (new ActionBlank (this));
 			return new Nothing ();
 		}
+
+		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
+
+			Debug.LogWarning ("Received Hit!");
+			health -= 10F;
+			characterWriter.Send (new Character.Update ()
+				.SetHealth (health)
+			);
+
+			return new Nothing ();
+		}
+
 
 		public void SetAction(Action a) {
 			if (currentAction != null)
@@ -185,6 +209,12 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.Send (new Character.Update ()
 				.SetDebugMetadata (i)
 			);
+		}
+
+		public void OnDealHit() {
+			if (characterWriter.HasAuthority &&  currentAction != null) {
+				currentAction.OnDealHit ();
+			}
 		}
 
 	}

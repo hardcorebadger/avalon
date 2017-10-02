@@ -16,6 +16,8 @@ namespace Assets.Gamelogic.Core {
 
 		public virtual void OnKill () {}
 
+		public virtual void OnDealHit() {}
+
 		public virtual void Log() {}
 
 	}
