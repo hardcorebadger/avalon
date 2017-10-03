@@ -137,7 +137,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
 
-			Debug.LogWarning ("Received Hit!");
+//			Debug.LogWarning ("Received Hit!");
 			health -= 10F;
 			characterWriter.Send (new Character.Update ()
 				.SetHealth (health)

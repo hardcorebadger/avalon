@@ -20,9 +20,8 @@ namespace Assets.Gamelogic.Core {
 		public EntityId targetId;//optional
 		public int stage = 0;
 		public ActionSeek seek;
-		public CharacterController owner;
 		public GameObject targetObject;
-		private float time = 0;
+		private float time = 4f;
 
 		public ActionAttack(CharacterController o, EntityId eid) : base(o)	{
 			targetId = eid;
@@ -53,7 +52,6 @@ namespace Assets.Gamelogic.Core {
 						//can attack
 						stage = 3;
 						time = 0;
-						Debug.LogWarning ("Starting timer");
 
 					} else {
 
@@ -62,39 +60,33 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 3:
 				time += Time.deltaTime;
-				if (time > 6f) {
+				if (time > 3f) {
 					stage = 4;
 					time = 0;
-					Debug.LogWarning ("Calling og hit");
-
 				}
 				seek.Update ();
 				break;
 			case 4: 
+				Debug.LogWarning ("Hit");
 				seek.Update ();
 				owner.anim.SetTrigger ("attack");
 				stage = 5;
 				break;
 			case 5: 
 				seek.Update ();
-				Debug.LogWarning ("waiting for hit");
-
-				break;
-
-			
+				break;			
 			}
+
 			if (targetObject != null) {
-				
 				return ActionCode.Perpetual;
 			} else {
-				Debug.LogWarning ("WHY?");
 				return ActionCode.Success;
 			}
 		}
 
 		public override void OnDealHit () {
 			base.OnDealHit ();
-			Debug.LogWarning ("CALLING HIT");
+			Debug.LogWarning ("Callback");
 			SpatialOS.Commands.SendCommand (owner.characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest(owner.characterWriter.EntityId), targetId);
 			stage = 2;
 
