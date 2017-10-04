@@ -43,7 +43,6 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnEnable() {
 			anim = GetComponent<Animator> ();
-
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
@@ -138,7 +137,7 @@ namespace Assets.Gamelogic.Core {
 		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
 
 //			Debug.LogWarning ("Received Hit!");
-			health -= Random.Range(6.0f, 11.0f);
+			health -= Random.Range(3.0f, 6.0f);
 			characterWriter.Send (new Character.Update ()
 				.SetHealth (health)
 			);
@@ -219,7 +218,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void OnDealHit() {
-			if (characterWriter.HasAuthority &&  currentAction != null) {
+			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
 				currentAction.OnDealHit ();
 			}
 		}

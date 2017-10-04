@@ -46,4 +46,5 @@ component Character {
     command Nothing radius_target(RadiusTargetRequest);
     command Nothing fire(Nothing);
     command Nothing receive_hit(ReceiveHitRequest); 
+    event Nothing show_hit; 
 }

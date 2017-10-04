@@ -3,7 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Improbable;
 using Improbable.Core;
+using Improbable.Entity.Component;
+using Improbable.Unity;
+using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
+using Improbable.Worker.Query;
+using Improbable.Worker;
+using Improbable.Entity;
+using Improbable.Unity.Core.EntityQueries;
+using Improbable.Collections;
 
 namespace Assets.Gamelogic.Core {
 
@@ -46,6 +54,7 @@ namespace Assets.Gamelogic.Core {
 			positionReader.ComponentUpdated.Add(OnPositionUpdated);
 			rotationReader.ComponentUpdated.Add(OnRotationUpdated);
 			characterReader.ComponentUpdated.Add(OnCharacterUpdated);
+			characterReader.ShowHitTriggered.Add (OnShowHit);
 
 			if (GetComponent<OwnedVisualizer> ().GetOwnerId () != Bootstrap.playerId)
 				GetComponent<Selectable> ().enabled = false;
@@ -88,6 +97,13 @@ namespace Assets.Gamelogic.Core {
 					itemSprite.enabled = true;
 				}
 			}
+		}
+
+		private void OnShowHit(Nothing n) {
+
+			if (!characterReader.HasAuthority)
+				anim.SetTrigger ("attack");
+			
 		}
 
 		public bool CanControl() {

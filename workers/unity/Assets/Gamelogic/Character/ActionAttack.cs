@@ -68,9 +68,11 @@ namespace Assets.Gamelogic.Core {
 				seek.Update ();
 				break;
 			case 4: 
-				Debug.LogWarning ("Hit");
 				seek.Update ();
 				owner.anim.SetTrigger ("attack");
+				owner.characterWriter.Send (new Character.Update ()
+					.AddShowHit(new Nothing())
+				);
 				stage = 5;
 				break;
 			case 5: 
@@ -87,10 +89,9 @@ namespace Assets.Gamelogic.Core {
 
 		public override void OnDealHit () {
 			base.OnDealHit ();
-			Debug.LogWarning ("Callback");
 			SpatialOS.Commands.SendCommand (owner.characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest(owner.characterWriter.EntityId), targetId);
 			stage = 2;
-			timeMax = Random.Range (2.0f, 5.0f);
+			timeMax = Random.Range (1.0f, 2.0f);
 
 		}
 	
