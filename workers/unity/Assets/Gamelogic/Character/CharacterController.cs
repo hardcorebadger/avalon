@@ -138,11 +138,18 @@ namespace Assets.Gamelogic.Core {
 		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
 
 //			Debug.LogWarning ("Received Hit!");
-			health -= 10F;
+			health -= Random.Range(6.0f, 11.0f);
 			characterWriter.Send (new Character.Update ()
 				.SetHealth (health)
 			);
-
+			if (currentAction is ActionAttack) {
+				ActionAttack cAttack = (ActionAttack) currentAction;
+				if (cAttack.targetId != request.source) {
+					currentAction = new ActionAttack(this, request.source);
+				} 
+			} else {
+				currentAction = new ActionAttack(this, request.source);
+			}
 			return new Nothing ();
 		}
 

@@ -22,6 +22,7 @@ namespace Assets.Gamelogic.Core {
 		public ActionSeek seek;
 		public GameObject targetObject;
 		private float time = 4f;
+		private float timeMax = 3f;
 
 		public ActionAttack(CharacterController o, EntityId eid) : base(o)	{
 			targetId = eid;
@@ -60,7 +61,7 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 3:
 				time += Time.deltaTime;
-				if (time > 3f) {
+				if (time > timeMax) {
 					stage = 4;
 					time = 0;
 				}
@@ -89,6 +90,7 @@ namespace Assets.Gamelogic.Core {
 			Debug.LogWarning ("Callback");
 			SpatialOS.Commands.SendCommand (owner.characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest(owner.characterWriter.EntityId), targetId);
 			stage = 2;
+			timeMax = Random.Range (2.0f, 5.0f);
 
 		}
 	
