@@ -52,7 +52,6 @@ namespace Assets.Gamelogic.Core {
 						//can attack
 						stage = 3;
 						time = 0;
-
 					} else {
 
 					}

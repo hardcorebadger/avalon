@@ -30,6 +30,9 @@ namespace Assets.Gamelogic.Core
 		private InventoryData targetInv;
 		private EntityId target;
 		private Action subAction;
+		public bool foundViableStorage = false;
+		private EntityId asker;
+		private bool hasAsker = false;
 
 		public ActionResourceGet (CharacterController o, SourcingOption s, Dictionary<int,int> tg) : base (o)
 		{
@@ -38,6 +41,12 @@ namespace Assets.Gamelogic.Core
 			toGet = tg;
 			if (toGet.Count < 1)
 				success = true;
+		}
+
+		public ActionResourceGet (CharacterController o, SourcingOption s, Dictionary<int,int> tg, EntityId ask) : this (o,s,tg)
+		{
+			asker = ask;
+			hasAsker = true;
 		}
 
 		public override ActionCode Update ()
@@ -116,12 +125,13 @@ namespace Assets.Gamelogic.Core
 				targetInv = i.Value.Get ().Value;
 
 				foreach (int idtg in toGet.Keys) {
-					if (targetInv.inventory.ContainsKey (idtg) && targetInv.inventory [idtg] > 0) {
+					if (targetInv.inventory.ContainsKey (idtg) && targetInv.inventory [idtg] > 0 && (!hasAsker || id.Id != asker.Id)) {
 						Improbable.Collections.Option<IComponentData<Position>> p = e.Get<Position> ();
 						targetPosition = p.Value.Get ().Value.coords.ToVector3 ();
 						target = id;
 						state = 3;
 						subAction = new ActionSeek (owner, id, targetPosition);
+						foundViableStorage = true;
 						return;
 					}
 				}

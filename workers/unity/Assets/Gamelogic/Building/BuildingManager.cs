@@ -26,6 +26,7 @@ namespace Assets.Gamelogic.Core {
 			options.Add ("forester", new ConstructionInfo(3,1));
 			options.Add ("quarry", new ConstructionInfo(2,2));
 			options.Add ("farm", new ConstructionInfo(2,2));
+			options.Add ("stockpile", new ConstructionInfo(3,1));
 		}
 
 		public void OnBuildButton() {

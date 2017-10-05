@@ -1,17 +1,10 @@
 package improbable.core;
 
-enum ResourceType {
-  RESOURCE_TIMBER = 0;
-  RESOURCE_STONE = 1;
-  RESOURCE_FOOD = 2;
-  RESOURCE_ORE = 3;
-  RESOURCE_TREASUE = 4;
-  RESOURCE_WEAPONRY = 5;
-  RESOURCE_MISC = 6;
-}
+import "improbable/core/SourcingOption.schema";
 
 component Storage {
     id = 1009;
-    
-    list<ResourceType> types = 1;
+
+    SourcingOption work_sourcing = 1;
+    map<int32, int32> quotas = 2;
 }

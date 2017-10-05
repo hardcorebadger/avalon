@@ -45,6 +45,7 @@ enum WorkType {
   WORK_SMITHING = 8;
   WORK_SIEGECRAFTING = 9;
   WORK_TANNING = 10;
+  WORK_STORAGE = 11;
 }
 
 component WorkSite {

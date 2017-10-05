@@ -59,6 +59,9 @@ namespace Assets.Gamelogic.EntityTemplates
 
 
 		public static Entity CreateBuildingTemplate(string name, Vector3 pos, int ownerId) {
+
+			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 100f, new Vector3d (pos.x, pos.z, pos.y));
+
 			if (name == "building-forester") {
 				return EntityBuilder.Begin ()
 					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
@@ -83,6 +86,20 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Quarry.Data (), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
 					.Build();
+			} else if (name == "building-stockpile") {
+				Improbable.Collections.Map<int,int> initialQuotas = new Improbable.Collections.Map<int,int> ();
+				initialQuotas.Add (0, 10);
+				return EntityBuilder.Begin ()
+					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
+					.AddMetadataComponent (name)
+					.SetPersistence (true)
+					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
+					.AddComponent (new Building.Data (0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_STORAGE, new Improbable.Collections.List<WorkerData>(), true, 4), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Storage.Data (sourcing, initialQuotas), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
+					.Build();
 			}
 			return CreateBasicBuildingTemplate (name, pos, ownerId);;
 		}
@@ -100,20 +117,6 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		}
 
-		public static Entity CreateStorageBuildingTemplate(string name, Vector3 pos, int ownerId) {
-
-			return EntityBuilder.Begin ()
-				.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
-				.AddMetadataComponent (name)
-				.SetPersistence (true)
-				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 100), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Building.Data(2), CommonRequirementSets.PhysicsOnly)
-				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
-				.Build();
-
-		}
-
 		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId) {
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
 
@@ -124,6 +127,8 @@ namespace Assets.Gamelogic.EntityTemplates
 			else if (name == "construction-quarry")
 				req.Add (0, new ConstructionRequirement (0, 3));
 			else if (name == "construction-farm")
+				req.Add (0, new ConstructionRequirement (0, 3));
+			else if (name == "construction-stockpile")
 				req.Add (0, new ConstructionRequirement (0, 3));
 
 			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 100f, new Vector3d (pos.x, pos.z, pos.y));
