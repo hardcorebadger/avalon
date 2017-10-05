@@ -22,6 +22,7 @@ namespace Assets.Gamelogic.Core {
 		public ActionSeek seek;
 		public GameObject targetObject;
 		private float time = 4f;
+		private float timeMax = 3f;
 
 		public ActionAttack(CharacterController o, EntityId eid) : base(o)	{
 			targetId = eid;
@@ -59,16 +60,18 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 3:
 				time += Time.deltaTime;
-				if (time > 3f) {
+				if (time > timeMax) {
 					stage = 4;
 					time = 0;
 				}
 				seek.Update ();
 				break;
 			case 4: 
-				Debug.LogWarning ("Hit");
 				seek.Update ();
 				owner.anim.SetTrigger ("attack");
+				owner.characterWriter.Send (new Character.Update ()
+					.AddShowHit(new Nothing())
+				);
 				stage = 5;
 				break;
 			case 5: 
@@ -85,9 +88,9 @@ namespace Assets.Gamelogic.Core {
 
 		public override void OnDealHit () {
 			base.OnDealHit ();
-			Debug.LogWarning ("Callback");
 			SpatialOS.Commands.SendCommand (owner.characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest(owner.characterWriter.EntityId), targetId);
 			stage = 2;
+			timeMax = Random.Range (1.0f, 2.0f);
 
 		}
 	
