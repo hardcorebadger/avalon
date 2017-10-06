@@ -19,6 +19,11 @@ type RadiusTargetRequest {
 
 type ReceiveHitRequest {
   EntityId source = 1;
+  int32 player_id = 2; 
+}
+
+type HostileAlertRequest {
+  EntityId target = 1;
 }
 
 enum CharacterState {
@@ -45,6 +50,9 @@ component Character {
     command Nothing entity_target(EntityTargetRequest);
     command Nothing radius_target(RadiusTargetRequest);
     command Nothing fire(Nothing);
-    command Nothing receive_hit(ReceiveHitRequest); 
+    command Nothing receive_hit(ReceiveHitRequest);
+    command Nothing hostile_alert(HostileAlertRequest);  
     event Nothing show_hit; 
+    event Nothing show_hurt; 
+
 }

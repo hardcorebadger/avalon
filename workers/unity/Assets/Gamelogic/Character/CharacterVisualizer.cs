@@ -55,7 +55,7 @@ namespace Assets.Gamelogic.Core {
 			rotationReader.ComponentUpdated.Add(OnRotationUpdated);
 			characterReader.ComponentUpdated.Add(OnCharacterUpdated);
 			characterReader.ShowHitTriggered.Add (OnShowHit);
-
+			characterReader.ShowHurtTriggered.Add (OnShowHurt);
 			if (GetComponent<OwnedVisualizer> ().GetOwnerId () != Bootstrap.playerId)
 				GetComponent<Selectable> ().enabled = false;
 		}
@@ -104,6 +104,13 @@ namespace Assets.Gamelogic.Core {
 			if (!characterReader.HasAuthority)
 				anim.SetTrigger ("attack");
 			
+		}
+
+		private void OnShowHurt(Nothing n) {
+
+			if (!characterReader.HasAuthority)
+				anim.SetTrigger ("hurt");
+
 		}
 
 		public bool CanControl() {

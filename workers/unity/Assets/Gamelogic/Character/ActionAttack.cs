@@ -88,7 +88,7 @@ namespace Assets.Gamelogic.Core {
 
 		public override void OnDealHit () {
 			base.OnDealHit ();
-			SpatialOS.Commands.SendCommand (owner.characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest(owner.characterWriter.EntityId), targetId);
+			SpatialOS.Commands.SendCommand (owner.characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest(owner.characterWriter.EntityId, owner.characterWriter.Data.playerId), targetId);
 			stage = 2;
 			timeMax = Random.Range (1.0f, 2.0f);
 
