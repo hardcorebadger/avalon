@@ -107,6 +107,8 @@ namespace Assets.Gamelogic.Core {
 				SetAction (new ActionWork (this, request.target));
 			else if (request.command == "attack")
 				SetAction (new ActionAttack (this, request.target));
+			else if (request.command == "damage")
+				SetAction (new ActionDamage (this, request.target));
 			return new Nothing ();
 		}
 
@@ -145,7 +147,7 @@ namespace Assets.Gamelogic.Core {
 				.SetHealth (health)
 				.AddShowHurt(new Nothing())
 			);
-			if (!(currentAction is ActionAttack)) {
+			if (!(currentAction is ActionAttack) && !(currentAction is ActionDamage)) {
 				currentAction = new ActionAttack (this, request.source);
 			}
 			Collider[] cols = Physics.OverlapSphere (transform.position, 50);
@@ -183,7 +185,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnHostileAlert(HostileAlertRequest request, ICommandCallerInfo callerinfo) {
 
-			if (!(currentAction is ActionAttack)) {
+			if (!(currentAction is ActionAttack) && !(currentAction is ActionDamage)) {
 				currentAction = new ActionAttack (this, request.target);
 			}
 

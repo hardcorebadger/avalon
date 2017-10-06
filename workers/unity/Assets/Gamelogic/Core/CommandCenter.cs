@@ -225,6 +225,11 @@ namespace Assets.Gamelogic.Core {
 				if (!options.Contains ("attack"))
 					options.Add ("attack");
 			}
+			BuildingVisualizer building = g.GetComponent<BuildingVisualizer> ();
+			if (building != null && !building.CanControl()) {
+				if (!options.Contains ("damage"))
+					options.Add ("damage");
+			}
 		}
 			
 	}
