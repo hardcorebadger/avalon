@@ -23,6 +23,7 @@ namespace Assets.Gamelogic.Core {
 		private EntityId target;
 		private Vector3 hqPosition;
 		private Action subAction;
+		private float timeIdle = 0f;
 
 		public ActionStockpile(CharacterController o, EntityId t, Vector3 p) : base(o)	{
 			target = t;
@@ -70,6 +71,11 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 5:
 				// nothing to do
+				timeIdle += Time.deltaTime;
+				if (timeIdle > 60f) {
+					state = 0;
+					timeIdle = 0f;
+				}
 				break;
 			default:
 				break;
