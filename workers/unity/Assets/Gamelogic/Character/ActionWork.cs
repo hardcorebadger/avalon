@@ -64,6 +64,12 @@ namespace Assets.Gamelogic.Core {
 							.OnFailure (response => OnRequestFailed ());
 						state = 4;
 						break;
+					case WorkType.WORK_FARMING: 
+						SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.StartWork.Descriptor, new StartWorkRequest (owner.gameObject.EntityId(), owner.characterWriter.Data.playerId), target)
+							.OnSuccess (response => OnStartWorkResult (response))
+							.OnFailure (response => OnRequestFailed ());
+						state = 4;
+						break;
 					case WorkType.WORK_STORAGE:
 						subAction = new ActionStockpile (owner, target, buildingPosition);
 						state = 4;

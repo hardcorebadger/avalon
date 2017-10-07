@@ -1,0 +1,11 @@
+package improbable.core;
+
+import "improbable/core/Nothing.schema";
+import "improbable/core/Quarry.schema";
+
+component Farm {
+    id = 1016;
+
+    command Nothing change_workers(WorkerChangeRequest);
+
+}
