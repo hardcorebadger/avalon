@@ -100,6 +100,18 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Storage.Data (sourcing, initialQuotas), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
 					.Build();
+			} else if (name == "building-farm") {
+				return EntityBuilder.Begin ()
+					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
+					.AddMetadataComponent (name)
+					.SetPersistence (true)
+					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
+					.AddComponent (new Building.Data (0, 100F), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_FARMING, new Improbable.Collections.List<WorkerData>(), true, 4), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Farm.Data (), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 30), CommonRequirementSets.PhysicsOnly)
+					.Build();
 			}
 			return CreateBasicBuildingTemplate (name, pos, ownerId);;
 		}
