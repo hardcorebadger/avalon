@@ -237,6 +237,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void UpdateBoxSelect() {
+			float scaleFactor = GetComponent<Canvas> ().scaleFactor;
+
+
 			//draw rect between start and cur pos
 			Vector3 cur = Input.mousePosition;
 			Vector3 pos = dragSelector.position;
@@ -256,7 +259,7 @@ namespace Assets.Gamelogic.Core {
 				height *= -1;
 			}
 			dragSelector.position = pos;
-			dragSelector.sizeDelta = new Vector2 (width, height);
+			dragSelector.sizeDelta = new Vector2 (width/scaleFactor, height/scaleFactor);
 
 			foreach (Selectable s in currentDragSelection) {
 				s.SetHighlighted (false);
