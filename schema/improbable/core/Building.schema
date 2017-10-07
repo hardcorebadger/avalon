@@ -1,6 +1,19 @@
 package improbable.core;
 
+import "improbable/core/Nothing.schema";
+
+
+type ReceiveDamageRequest {
+  EntityId source = 1;
+  int32 player_id = 2; 
+}
+
 component Building {
     id = 1013;
     int32 living_spaces = 2;
+    float strength = 3; 
+
+    command Nothing receive_damage(ReceiveDamageRequest);
+    event Nothing show_damage; 
+
 }
