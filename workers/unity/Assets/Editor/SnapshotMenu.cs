@@ -42,6 +42,21 @@ namespace Assets.Editor
 				}
 			}
 
+//			// make blank chunk info
+//			Improbable.Collections.Map<int, Improbable.Core.BlockInfo> blankGrass = new Improbable.Collections.Map<int, Improbable.Core.BlockInfo>();
+//			for (int z = 0; z < 16; z++) {
+//				for (int x = 0; x < 16; x++) {
+//					blankGrass.Add (x + 16 * z, new Improbable.Core.BlockInfo(0));
+//				}
+//			}
+//			// block coord = chunk coord * 16
+//			// unity coord = block coord * 8
+//			for (int z = -4; z < 4; z++) {
+//				for (int x = -4; x < 4; x++) {
+//					snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateChunkTemplate(new Improbable.Core.ChunkData(blankGrass), new Vector3(x*16*8,0,z*16*8)));
+//				}
+//			}
+
 			SaveSnapshot(snapshotEntities);
 		}
 

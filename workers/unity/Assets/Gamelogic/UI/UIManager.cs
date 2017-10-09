@@ -18,11 +18,21 @@ namespace Assets.Gamelogic.Core {
 		public UIPreviewWidget[] previewWidgetList;
 		public Dictionary<Type,UIPreviewWidget> previewWidgetsOptions;
 
+		public UIHoverWidget[] hoverWidgetList;
+		public Dictionary<Type,UIHoverWidget> hoverWidgetsOptions;
+
+		public GameObject hoverContainer;
+
 		void OnEnable () {
 			instance = this;
 			previewWidgetsOptions = new Dictionary<Type,UIPreviewWidget> ();
 			foreach (UIPreviewWidget w in previewWidgetList) {
 				previewWidgetsOptions.Add (Type.GetType ("Assets.Gamelogic.Core."+w.type), w);
+			}
+
+			hoverWidgetsOptions = new Dictionary<Type,UIHoverWidget> ();
+			foreach (UIHoverWidget w in hoverWidgetList) {
+				hoverWidgetsOptions.Add (Type.GetType ("Assets.Gamelogic.Core."+w.type), w);
 			}
 		}
 

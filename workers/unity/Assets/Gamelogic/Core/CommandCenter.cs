@@ -25,7 +25,7 @@ namespace Assets.Gamelogic.Core {
 		private static bool radial;
 
 		// called from selection manager
-		public static void InterpretRadialCommand(List<Selectable> s, Vector3 p, float r) {
+		public static void InterpretRadialCommand(List<CharacterVisualizer> s, Vector3 p, float r) {
 			agents = ParseControllableEntities (s);
 			if (agents.Count == 0)
 				return;
@@ -47,7 +47,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		// called from selection manager
-		public static void InterpretClickCommand(List<Selectable> s, RaycastHit h) {
+		public static void InterpretClickCommand(List<CharacterVisualizer> s, RaycastHit h) {
 			agents = ParseControllableEntities (s);
 			if (agents.Count == 0)
 				return;
@@ -74,8 +74,8 @@ namespace Assets.Gamelogic.Core {
 
 		// called from ui picker
 		public static void OnCommandSelected(string command) {
-			foreach (Selectable s in SelectionManager.instance.selected) {
-				s.GetComponent<CharacterVisualizer> ().OnAcceptCommand ();
+			foreach (CharacterVisualizer s in SelectionManager.instance.selected) {
+				s.OnAcceptCommand ();
 			}
 			if (radial) {
 				ExecuteRadialTargetedCommand (command);
@@ -196,10 +196,9 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		private static List<EntityId> ParseControllableEntities(List<Selectable> selected) {
+		private static List<EntityId> ParseControllableEntities(List<CharacterVisualizer> selected) {
 			List<EntityId> ids = new List<EntityId>();
-			foreach (Selectable s in selected) {
-				CharacterVisualizer cv = s.GetComponent<CharacterVisualizer> ();
+			foreach (CharacterVisualizer cv in selected) {
 				if (cv != null && cv.CanControl ()) {
 					ids.Add (cv.gameObject.EntityId());
 				}

@@ -1,0 +1,12 @@
+package improbable.core;
+
+
+type BlockInfo {
+  int32 id = 1;
+}
+
+component Chunk {
+    id = 1019;
+    
+    map<int32, BlockInfo> blocks = 1;
+}

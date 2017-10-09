@@ -26,13 +26,15 @@ namespace Assets.Gamelogic.Core {
 		private bool boxSelecting = false;
 		private bool radiusSelecting = false;
 
-		public List<Selectable> selected;
-		private List<Selectable> currentDragSelection;
+		public List<CharacterVisualizer> selected;
+		private List<CharacterVisualizer> currentDragSelection;
+
+		private Hoverable currentHover = null;
 
 		void OnEnable() {
 			instance = this;
-			selected = new List<Selectable> ();
-			currentDragSelection = new List<Selectable> ();
+			selected = new List<CharacterVisualizer> ();
+			currentDragSelection = new List<CharacterVisualizer> ();
 		}
 
 		void Update() {
@@ -42,6 +44,19 @@ namespace Assets.Gamelogic.Core {
 
 			if (BuildingManager.isBuilding)
 				return;
+
+			RaycastHit hit = GetHit();
+			if (hit.collider != null && hit.collider.GetComponent<Hoverable> () != null) {
+				if (hit.collider.GetComponent<Hoverable> () != currentHover) {
+					if (currentHover != null && !selected.Contains(currentHover.GetComponent<CharacterVisualizer>()))
+						currentHover.SetHovered (false);
+					hit.collider.GetComponent<Hoverable> ().SetHovered (true);
+					currentHover = hit.collider.GetComponent<Hoverable> ();
+				}
+			} else if (currentHover != null && !selected.Contains(currentHover.GetComponent<CharacterVisualizer>())) {
+				currentHover.SetHovered (false);
+				currentHover = null;
+			}
 
 			if (boxSelecting)
 				UpdateBoxSelect ();
@@ -154,7 +169,7 @@ namespace Assets.Gamelogic.Core {
 			// If pos hits a character, select them
 			RaycastHit hit = GetHit();
 			if (hit.collider != null) {
-				Selectable s = hit.transform.GetComponent<Selectable> ();
+				CharacterVisualizer s = hit.transform.GetComponent<CharacterVisualizer> ();
 				if (s != null) {
 					if (Input.GetKey (KeyCode.LeftShift)) {
 						AddSelected (s);
@@ -184,7 +199,7 @@ namespace Assets.Gamelogic.Core {
 				// If pos hits a character, select them
 
 				if (hit.collider != null) {
-					Selectable s = hit.transform.GetComponent<Selectable> ();
+					CharacterVisualizer s = hit.transform.GetComponent<CharacterVisualizer> ();
 					if (s != null) {
 						if (Input.GetKey (KeyCode.LeftShift)) {
 							AddSelected (s);
@@ -261,8 +276,8 @@ namespace Assets.Gamelogic.Core {
 			dragSelector.position = pos;
 			dragSelector.sizeDelta = new Vector2 (width/scaleFactor, height/scaleFactor);
 
-			foreach (Selectable s in currentDragSelection) {
-				s.SetHighlighted (false);
+			foreach (CharacterVisualizer s in currentDragSelection) {
+				s.GetComponent<Hoverable> ().SetHovered (false);
 			}
 			currentDragSelection.Clear ();
 
@@ -278,9 +293,9 @@ namespace Assets.Gamelogic.Core {
 			RaycastHit[] hits = Physics.BoxCastAll ( center, new Vector3 ((width/2f)*ratio, (height/2f)*ratio, 1f), Camera.main.transform.forward, Quaternion.LookRotation(Camera.main.transform.forward));
 
 			foreach (RaycastHit c in hits) {
-				Selectable s = c.collider.GetComponent<Selectable> ();
-				if (s && s.IsSelectable()) {
-					s.SetHighlighted (true);
+				CharacterVisualizer s = c.collider.GetComponent<CharacterVisualizer> ();
+				if (s && s.CanControl()) {
+					s.GetComponent<Hoverable> ().SetHovered (false);
 					currentDragSelection.Add (s);
 				}
 			}
@@ -291,44 +306,44 @@ namespace Assets.Gamelogic.Core {
 			dragSelector.sizeDelta = Vector2.zero;
 			dragSelector.gameObject.SetActive (false);
 
-			foreach (Selectable s in currentDragSelection) {
+			foreach (CharacterVisualizer s in currentDragSelection) {
 				if (!selected.Contains (s))
 					AddSelected (s);
 			}
 			currentDragSelection.Clear ();
 		}
 
-		public void SetSelected(Selectable s) {
+		public void SetSelected(CharacterVisualizer s) {
 			ClearSelected ();
-			if (s.IsSelectable ()) {
-				s.SetHighlighted (true);
+			if (s.CanControl ()) {
+				s.GetComponent<Hoverable>().SetHovered (true);
 				selected.Add (s);
 			}
 		}
 
-		public void AddSelected(Selectable s) {
-			if (s.IsSelectable ()) {
-				s.SetHighlighted (true);
+		public void AddSelected(CharacterVisualizer s) {
+			if (s.CanControl ()) {
+				s.GetComponent<Hoverable>().SetHovered (true);
 				selected.Add (s);
 			}
 		}
 
-		public void RemoveSelected(Selectable s) {
-			s.SetHighlighted (false);
+		public void RemoveSelected(CharacterVisualizer s) {
+			s.GetComponent<Hoverable>().SetHovered (false);
 			selected.Remove (s);
 		}
 
 		public void ClearSelected() {
-			foreach (Selectable s in selected) {
+			foreach (CharacterVisualizer s in selected) {
 				if (s != null)
-					s.SetHighlighted (false);
+					s.GetComponent<Hoverable>().SetHovered (false);
 				else
 					selected.Remove (s);
 			}
 			selected.Clear ();
 		}
 
-		public bool IsSelected(Selectable s) {
+		public bool IsSelected(CharacterVisualizer s) {
 			return selected.Contains (s);
 		}
 
@@ -339,7 +354,7 @@ namespace Assets.Gamelogic.Core {
 			float x = 0;
 			float y = 0;
 
-			foreach (Selectable s in selected) {
+			foreach (CharacterVisualizer s in selected) {
 				if (s != null) {
 					x += s.transform.position.x;
 					y += s.transform.position.y;
