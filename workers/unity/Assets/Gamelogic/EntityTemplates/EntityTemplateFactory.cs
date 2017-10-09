@@ -12,6 +12,16 @@ namespace Assets.Gamelogic.EntityTemplates
     public static class EntityTemplateFactory
     {
 
+		public static Entity CreateChunkTemplate(Chunk.Data  d, Vector3 pos) {
+			return EntityBuilder.Begin ()
+				.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
+				.AddMetadataComponent ("chunk")
+				.SetPersistence (true)
+				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
+				.AddComponent (d, CommonRequirementSets.PhysicsOnly)
+				.Build();
+		}
+
 		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId) {
 			if (name == "character") {
 				return CreateCharacterTemplate (pos, ownerId);
