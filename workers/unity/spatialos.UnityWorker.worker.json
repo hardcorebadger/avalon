@@ -19,6 +19,7 @@
         "bounded_component_streaming_query":{
             "component_name":"improbable.core.Chunk",
             "radius":300
+            }
         }
     ],
     "component_delivery": {
