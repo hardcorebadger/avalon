@@ -152,6 +152,8 @@ namespace Assets.Gamelogic.EntityTemplates
 				req.Add (0, new ConstructionRequirement (0, 3));
 			else if (name == "construction-stockpile")
 				req.Add (0, new ConstructionRequirement (0, 3));
+			else if (name == "construction-settlement") 
+				req.Add (0, new ConstructionRequirement (0, 3));
 
 			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 100f, new Vector3d (pos.x, pos.z, pos.y));
 

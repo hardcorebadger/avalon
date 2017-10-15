@@ -14,6 +14,7 @@ namespace Assets.Gamelogic.Core {
 
 		public static Dictionary<string, ConstructionInfo> options;
 		public GameObject ghost;
+		public GameObject tile;
 
 		public static BuildingManager instance;
 		public static bool isBuilding = false;
@@ -27,6 +28,7 @@ namespace Assets.Gamelogic.Core {
 			options.Add ("quarry", new ConstructionInfo(2,2));
 			options.Add ("farm", new ConstructionInfo(2,2));
 			options.Add ("stockpile", new ConstructionInfo(3,1));
+			options.Add ("settlement", new ConstructionInfo(4,4));
 		}
 
 		public void OnBuildButton() {
@@ -36,12 +38,14 @@ namespace Assets.Gamelogic.Core {
 		public static void StartBuilding(string option) {
 			isBuilding = true;
 			currentConstructionGhost = option;
+			CreateTiles ();
 			GameObject o = Instantiate (instance.ghost);
 			o.GetComponent<ConstructionGhost> ().SetSize (options [option].xWidth, options [option].zWidth);
 		}
 
 		public static void StopBuilding() {
 			isBuilding = false;
+			ClearTiles ();
 		}
 
 		public static void Construct(Vector3 pos) {
@@ -54,6 +58,26 @@ namespace Assets.Gamelogic.Core {
 				s.Add (o);
 			}
 			return s;
+		}
+
+		private static void CreateTiles() {
+			BuildingVisualizer[] buildings = FindObjectsOfType<BuildingVisualizer> ();
+			foreach (BuildingVisualizer building in buildings) {
+				for (int z = -1 * building.tileMargin; z < building.zWidth + building.tileMargin; z++) {
+					for (int x = -1 * building.tileMargin; x < building.xWidth + building.tileMargin; x++) {
+						// relative position to block locked bottom tile on building
+						Vector3 pos = building.transform.position + new Vector3(z * 8, 0f, x * 8);
+						GameObject.Instantiate (instance.tile, pos, Quaternion.identity);
+					}
+				}
+			}
+		}
+
+		private static void ClearTiles() {
+			ConstructionTile[] con = FindObjectsOfType<ConstructionTile> ();
+			foreach (ConstructionTile c in con) {
+				Destroy (c.gameObject);
+			}
 		}
 
 		[System.Serializable]

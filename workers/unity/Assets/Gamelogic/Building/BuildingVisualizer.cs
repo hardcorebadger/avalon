@@ -16,6 +16,10 @@ namespace Assets.Gamelogic.Core {
 
 		private OwnedVisualizer owned;
 
+		public int tileMargin = 1;
+		public int xWidth = 1;
+		public int zWidth = 1;
+
 		// Use this for initialization
 		void OnEnable () {
 			if (buildingReader.HasAuthority) {
