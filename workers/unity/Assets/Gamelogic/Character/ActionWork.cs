@@ -101,7 +101,7 @@ namespace Assets.Gamelogic.Core {
 
 			if (response.full) {
 				failed = true;
-				Debug.LogWarning ("Failed");
+				Debug.LogWarning ("Action Work Failed");
 			} else {
 				workType = response.workType;
 				buildingPosition = response.position.ToUnityVector ();

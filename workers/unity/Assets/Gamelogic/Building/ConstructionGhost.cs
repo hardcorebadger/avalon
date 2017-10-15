@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Improbable;
+using Improbable.Collections;
 
 namespace Assets.Gamelogic.Core {
 
@@ -8,48 +10,62 @@ namespace Assets.Gamelogic.Core {
 
 		public Material yesMat;
 		public Material noMat;
-		public bool workaround = false;
 
 		private int xWidth, zWidth;
+		public bool requiresDistrict;
+
+		private EntityId district;
 
 		// Use this for initialization
 
-		public void SetSize(int x, int z) {
-			xWidth = x;
-			zWidth = z;
-			transform.GetChild(0).localScale = new Vector3(x*8,1f,z*8);
-			transform.GetChild(0).localPosition = new Vector3((x-1)*4,0f,(z-1)*4);
+		public void SetInfo(BuildingManager.ConstructionInfo info) {
+			xWidth = info.xWidth;
+			zWidth = info.zWidth;
+			requiresDistrict = info.requiresDistrict;
+			transform.GetChild(0).localScale = new Vector3(xWidth*8,1f,zWidth*8);
+			transform.GetChild(0).localPosition = new Vector3((xWidth-1)*4,0f,(zWidth-1)*4);
 		}
 
 		void Update() {
 			RaycastHit h = GetHit ();
 			transform.position = GetNearestBlock(h.point);
 
-			// overlaps box 
+			GameObject currentTile = null;
+			bool canBuild = true;
 
-			Collider[] c = Physics.OverlapBox (transform.position + new Vector3((xWidth-1)*4,0f,(zWidth-1)*4), new Vector3 (xWidth*4,0.125f,zWidth*4));
-			bool canBuild = false;
-			int tileCount = 0;
+			if (requiresDistrict) {
+				
+				Collider[] c = Physics.OverlapBox (transform.position + new Vector3((xWidth-1)*4,0f,(zWidth-1)*4), new Vector3 (xWidth*4,0.125f,zWidth*4));
 
-			foreach (Collider col in c) {
-				if (col.gameObject.layer == 11 && TrueOverlap(col.gameObject)) {
-					tileCount++;
+				int tileCount = 0;
+
+				foreach (Collider col in c) {
+					if (col.gameObject.layer == 11 && TrueOverlap(col.gameObject)) {
+						tileCount++;
+						currentTile = col.gameObject;
+					}
+				}
+				if (tileCount >= xWidth * zWidth) {
+					canBuild = true;
+				} else {
+					canBuild = false;
 				}
 			}
 
-			if (tileCount >= xWidth * zWidth) {
-				canBuild = true;
+			if (canBuild) {
 				transform.GetChild (0).GetComponent<MeshRenderer> ().material = yesMat;
 			} else {
-				canBuild = false;
 				transform.GetChild (0).GetComponent<MeshRenderer> ().material = noMat;
 			}
 
 			if (Input.GetMouseButtonDown (0)) {
 				// consider overlap
 
-				if (canBuild || workaround) {
-					BuildingManager.Construct (transform.position);
+				if (canBuild) {
+					if (requiresDistrict)
+						BuildingManager.Construct (transform.position, currentTile.GetComponentInParent<ConstructionTile>().district);
+					else
+						BuildingManager.Construct (transform.position);
 				}
 				Destroy (gameObject);
 				BuildingManager.StopBuilding ();

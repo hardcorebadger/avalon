@@ -1,0 +1,16 @@
+package improbable.core;
+
+import "improbable/core/Nothing.schema";
+
+type BuildingRegistrationRequest {
+    EntityId building_id = 1;
+}
+
+component District {
+    id = 1020;
+    
+    list<EntityId> buildings = 1;
+
+    command Nothing register_building(BuildingRegistrationRequest);
+
+}

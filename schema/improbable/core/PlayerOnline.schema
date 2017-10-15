@@ -5,12 +5,7 @@ import "improbable/vector3.schema";
 type ConstructionRequest {
   Vector3d position = 1;
   string building_name = 2;
-}
-
-type ConstructionTownRequest {
-  Vector3d position = 1;
-  string building_name = 2;
-  EntityId town_center = 3;
+  option<EntityId> district = 3;
 }
 
 type ConstructionResponse {
@@ -22,5 +17,4 @@ component PlayerOnline {
     int32 player_id = 1;
 
     command ConstructionResponse construct(ConstructionRequest);
-    command ConstructionResponse construct_town(ConstructionTownRequest);
 }

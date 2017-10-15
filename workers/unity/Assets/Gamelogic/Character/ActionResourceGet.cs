@@ -36,7 +36,6 @@ namespace Assets.Gamelogic.Core
 
 		public ActionResourceGet (CharacterController o, SourcingOption s, Dictionary<int,int> tg) : base (o)
 		{
-			Debug.LogWarning ("init");
 			sourcing = s;
 			toGet = tg;
 			if (toGet.Count < 1)

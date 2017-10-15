@@ -7,6 +7,7 @@ using Improbable.Entity.Component;
 using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
+using Improbable.Collections;
 
 namespace Assets.Gamelogic.Core {
 
@@ -15,6 +16,8 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Building.Reader buildingReader;
 
 		private OwnedVisualizer owned;
+
+		public Option<EntityId> district;
 
 		public int tileMargin = 1;
 		public int xWidth = 1;
@@ -30,7 +33,16 @@ namespace Assets.Gamelogic.Core {
 			tileMargin = buildingReader.Data.tileMargin;
 			xWidth = buildingReader.Data.xWidth;
 			zWidth = buildingReader.Data.zWidth;
+			district = buildingReader.Data.district;
+			buildingReader.ComponentUpdated.Add (OnBuildingUpdate);
 		}
+
+		private void OnBuildingUpdate(Building.Update u) {
+			if (u.district.HasValue) {
+				district = u.district.Value;
+			}
+		}
+
 
 		// Update is called once per frame
 		void OnDisable () {

@@ -1,12 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Improbable;
 
 namespace Assets.Gamelogic.Core {
 
 	public class ConstructionTile : MonoBehaviour {
 
 		public bool willDelete = false;
+
+		public EntityId district;
+
+		public void SetDistrict(EntityId i) {
+			district = i;
+		}
 
 		// Use this for initialization
 		void Start () {

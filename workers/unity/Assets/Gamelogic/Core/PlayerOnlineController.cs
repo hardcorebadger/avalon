@@ -43,12 +43,20 @@ namespace Assets.Gamelogic.Core
 		}
 
 		private ConstructionResponse OnConstruct(ConstructionRequest request, ICommandCallerInfo callerinfo) {
-
+			
 			string entityName = "construction-" + request.buildingName;
 			int ownerId = playerOnlineWriter.Data.playerId;
 
-			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, request.position.ToUnityVector(), ownerId));
+			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, request.position.ToUnityVector(), ownerId, request.district))
+				.OnSuccess (entityId => OnContructionCreated (entityId.CreatedEntityId, request));
 			return new ConstructionResponse(true);
+		}
+
+		public void OnContructionCreated(EntityId id, ConstructionRequest req) {
+			// send add request to req.district with the id created
+			if (req.district.HasValue) {
+				SpatialOS.Commands.SendCommand (playerOnlineWriter, District.Commands.RegisterBuilding.Descriptor, new BuildingRegistrationRequest (id), req.district.Value);
+			}
 		}
 
 		private void OnHeartbeat(Heartbeat _)

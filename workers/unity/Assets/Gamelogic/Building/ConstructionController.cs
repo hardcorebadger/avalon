@@ -8,16 +8,20 @@ using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
 
+
 namespace Assets.Gamelogic.Core {
 	
 	public class ConstructionController : MonoBehaviour {
 
 		[Require] private Construction.Writer constructionWriter;
+		[Require] private Building.Writer buildingWriter;
 
 		public string buildingToSpawn;
 
 		private Dictionary<int,Requirement> requirements;
 		private OwnedController owned;
+
+		public bool districtBuildingConstruction;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -117,7 +121,18 @@ namespace Assets.Gamelogic.Core {
 					return;
 			}
 			// fully stocked
-			SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-"+buildingToSpawn, transform.position, owned.getOwner()))
+			if (districtBuildingConstruction) {
+				// go pre-reserve id to set it
+				SpatialOS.Commands.ReserveEntityId (constructionWriter)
+					.OnSuccess (result => OnReserveEntityId (result.ReservedEntityId));
+			} else {
+				SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), buildingWriter.Data.district))
+					.OnSuccess (entityId => OnHouseCreated ());
+			}
+		}
+
+		private void OnReserveEntityId(EntityId id) {
+			SpatialOS.Commands.CreateEntity(constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), new Improbable.Collections.Option<EntityId>(id)))
 				.OnSuccess (entityId => OnHouseCreated ());
 		}
 
