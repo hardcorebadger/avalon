@@ -66,7 +66,7 @@ namespace Assets.Gamelogic.Core {
 				for (int z = -1 * building.tileMargin; z < building.zWidth + building.tileMargin; z++) {
 					for (int x = -1 * building.tileMargin; x < building.xWidth + building.tileMargin; x++) {
 						// relative position to block locked bottom tile on building
-						Vector3 pos = building.transform.position + new Vector3(z * 8, 0f, x * 8);
+						Vector3 pos = building.transform.position + new Vector3(x * 8, 0f, z * 8);
 						GameObject.Instantiate (instance.tile, pos, Quaternion.identity);
 					}
 				}

@@ -10,8 +10,10 @@ type ReceiveDamageRequest {
 
 component Building {
     id = 1013;
-    int32 living_spaces = 2;
-    float strength = 3; 
+    int32 tile_margin = 1;
+    int32 x_width = 2;
+    int32 z_width = 3;
+    float strength = 4; 
 
     command Nothing receive_damage(ReceiveDamageRequest);
     event Nothing show_damage; 

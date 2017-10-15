@@ -27,6 +27,9 @@ namespace Assets.Gamelogic.Core {
 				return;
 			}
 			owned = GetComponent<OwnedVisualizer> ();
+			tileMargin = buildingReader.Data.tileMargin;
+			xWidth = buildingReader.Data.xWidth;
+			zWidth = buildingReader.Data.zWidth;
 		}
 
 		// Update is called once per frame

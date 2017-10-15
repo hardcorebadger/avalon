@@ -78,7 +78,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (0, 100F), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1,3,1, 100F), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING, new Improbable.Collections.List<WorkerData>(), false, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
@@ -90,7 +90,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (0, 100F), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1,2,2, 100F), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_MINING, new Improbable.Collections.List<WorkerData>(), true, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Quarry.Data (), CommonRequirementSets.PhysicsOnly)
@@ -104,7 +104,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (0, 100F), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1,3,1, 100F), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_STORAGE, new Improbable.Collections.List<WorkerData>(), true, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Storage.Data (sourcing, initialQuotas), CommonRequirementSets.PhysicsOnly)
@@ -116,7 +116,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (0, 100F), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1,2,2, 100F), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_FARMING, new Improbable.Collections.List<WorkerData>(), true, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Farm.Data (), CommonRequirementSets.PhysicsOnly)
@@ -133,7 +133,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent (name)
 				.SetPersistence (true)
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Building.Data(0, 100F), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Building.Data(1,1,1, 100F), CommonRequirementSets.PhysicsOnly)
 				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 				.Build();
 
@@ -141,19 +141,31 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId) {
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
+			int tileMargin = 1;
+			int x = 1;
+			int z = 1;
+			if (name == "construction-house-3d") {
+				req.Add (0, new ConstructionRequirement (0, 3));
+			} else if (name == "construction-forester") {
+				req.Add (0, new ConstructionRequirement (0, 3));
+				x = 3;
+			} else if (name == "construction-quarry") {
+				req.Add (0, new ConstructionRequirement (0, 3));
+				x = 2;
+				z = 2;
+			} else if (name == "construction-farm") {
+				req.Add (0, new ConstructionRequirement (0, 3));
+				x = 2;
+				z = 2;
+			} else if (name == "construction-stockpile") {
+				req.Add (0, new ConstructionRequirement (0, 3));
+				x = 3;
+			} else if (name == "construction-settlement") {
+				req.Add (0, new ConstructionRequirement (0, 3));
+				x = 4;
+				z = 4;
 
-			if (name == "construction-house-3d")
-				req.Add (0, new ConstructionRequirement (0, 3));
-			else if (name == "construction-forester")
-				req.Add (0, new ConstructionRequirement (0, 3));
-			else if (name == "construction-quarry")
-				req.Add (0, new ConstructionRequirement (0, 3));
-			else if (name == "construction-farm")
-				req.Add (0, new ConstructionRequirement (0, 3));
-			else if (name == "construction-stockpile")
-				req.Add (0, new ConstructionRequirement (0, 3));
-			else if (name == "construction-settlement") 
-				req.Add (0, new ConstructionRequirement (0, 3));
+			}
 
 			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 100f, new Vector3d (pos.x, pos.z, pos.y));
 
@@ -164,7 +176,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, new Improbable.Collections.List<WorkerData>(), false, 4), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Construction.Data(req,sourcing), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Building.Data(0, 100F), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Building.Data(tileMargin,x,z, 100f), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CONSTRUCTION), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}

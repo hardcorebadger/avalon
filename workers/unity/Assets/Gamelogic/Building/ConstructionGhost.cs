@@ -10,14 +10,9 @@ namespace Assets.Gamelogic.Core {
 		public Material noMat;
 		public bool workaround = false;
 
-//		private GameObject mesh;
-
 		private int xWidth, zWidth;
 
 		// Use this for initialization
-		void Start () {
-//			mesh = transform.GetChild
-		}
 
 		public void SetSize(int x, int z) {
 			xWidth = x;
