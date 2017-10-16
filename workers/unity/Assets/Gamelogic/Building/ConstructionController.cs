@@ -140,7 +140,7 @@ namespace Assets.Gamelogic.Core {
 				SpatialOS.Commands.SendCommand (
 					constructionWriter, 
 					District.Commands.RegisterBuilding.Descriptor, 
-					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z)), 
+					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z), 4), 
 					buildingWriter.Data.district.Value
 				).OnSuccess (OnBuildingRegistered);
 			} else {

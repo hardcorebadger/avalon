@@ -82,7 +82,7 @@ namespace Assets.Gamelogic.Core {
 				SpatialOS.Commands.SendCommand (
 					buildingWriter, 
 					District.Commands.DeregisterBuilding.Descriptor, 
-					new BuildingDeregistrationRequest (gameObject.EntityId ()), 
+					new BuildingDeregistrationRequest (gameObject.EntityId (), 4), 
 					buildingWriter.Data.district.Value
 				).OnSuccess (OnDeregisteredSelf);
 			} else {

@@ -45,7 +45,7 @@ namespace Assets.Gamelogic.Core
 		private DisconnectPlayerResponse OnDisconnectPlayer(DisconnectPlayerRequest request, ICommandCallerInfo callerinfo) {
 
 			Improbable.Collections.Map<int, PlayerInfo> temp = playerCreatorWriter.Data.players;
-			temp [request.id] = new PlayerInfo (request.x, request.y, new PlayerColor (0, 0, 0));
+			temp [request.id] = new PlayerInfo (request.x, request.y);
 			return new DisconnectPlayerResponse();
 		}
 
@@ -109,7 +109,7 @@ namespace Assets.Gamelogic.Core
 					} else if (!playerCreatorWriter.Data.players.ContainsKey(player.id)) {
 						Vector3 playerPos = new Vector3 (0, 0, 0);
 						Improbable.Collections.Map<int, PlayerInfo> temp = playerCreatorWriter.Data.players;
-						temp [player.id] = new PlayerInfo (0, 0, new PlayerColor(player.red, player.green, player.blue));
+						temp [player.id] = new PlayerInfo (0, 0);
 						CreateFamily (player.id, playerPos);
 						CreatePlayer (callerInfo.CallerWorkerId, player.id, playerPos);
 

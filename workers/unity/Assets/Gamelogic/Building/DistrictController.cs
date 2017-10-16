@@ -14,8 +14,12 @@ namespace Assets.Gamelogic.Core {
 		[Require] private District.Writer districtWriter;
 		[Require] private Building.Writer buildingWriter;
 
+		public GameObject spawn;
+
 		Map<EntityId, Vector3d> positionMap;
 		Map<int, BuildingList> storageMap;
+		int beds;
+		float spawnTimer = -1f;
 
 		void OnEnable() {
 			districtWriter.CommandReceiver.OnRegisterBuilding.RegisterResponse (OnRegisterBuilding);
@@ -25,6 +29,7 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnFindAnyItem.RegisterResponse (OnFindAnyItem);
 			positionMap = districtWriter.Data.positionMap;
 			storageMap = districtWriter.Data.storageMap;
+			beds = districtWriter.Data.beds;
 		}
 
 		void OnDisable() {
@@ -35,18 +40,44 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnFindAnyItem.DeregisterResponse ();
 		}
 
+		void Update() {
+
+			if (districtWriter.HasAuthority) {
+
+				spawnTimer += Time.deltaTime;
+
+				if (spawnTimer < 2F) {
+					spawnTimer = 2f;
+					//spawn (so weird so that it spawns to begin with isntead of waiting for debug)
+
+					
+
+				}
+
+				if (spawnTimer >= 30f)
+					spawnTimer = -1f;
+
+
+			}
+
+		}
+
 		private Nothing OnRegisterBuilding(BuildingRegistrationRequest r, ICommandCallerInfo _) {
 			positionMap.Add (r.buildingId, r.position);
+			beds += r.beds;
 			districtWriter.Send (new District.Update ()
 				.SetPositionMap(positionMap)
+				.SetBeds(beds)
 			);
 			return new Nothing ();
 		}
 
 		private Nothing OnDeregisterBuilding(BuildingDeregistrationRequest r, ICommandCallerInfo _) {
 			positionMap.Remove (r.buildingId);
+			beds -= r.beds;
 			districtWriter.Send (new District.Update ()
 				.SetPositionMap(positionMap)
+				.SetBeds(beds)
 			);
 			return new Nothing ();
 		}

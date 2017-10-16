@@ -35,7 +35,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public Color GetOwnerColor() {
-			PlayerColor c = Bootstrap.players [ownedReader.Data.owner].color;
+			PlayerColor c = Bootstrap.players [ownedReader.Data.owner];
 			return new Color (c.red, c.green, c.blue);
 		}
 

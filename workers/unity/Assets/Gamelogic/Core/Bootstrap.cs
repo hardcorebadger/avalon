@@ -19,7 +19,7 @@ namespace Assets.Gamelogic.Core
 
 		public static PlayerDataComponent playerDataObject;
 
-		public static Improbable.Collections.Map<int, PlayerInfo> players = new Improbable.Collections.Map<int, PlayerInfo> ();
+		public static Improbable.Collections.Map<int, PlayerColor> players = new Improbable.Collections.Map<int, PlayerColor> ();
 
 		public static int playerId = 1;
 
@@ -101,12 +101,10 @@ namespace Assets.Gamelogic.Core
 					Players playerData = JsonUtility.FromJson<Players> (_w.text);
 					for (int x = 0; x < playerData.list.Count; x++) {
 						if (players.ContainsKey (playerData.list [x].id)) {
-							PlayerInfo i = players [playerData.list [x].id];
-							i.color = new PlayerColor (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue);
-							players [playerData.list [x].id] = i;
+
+							players [playerData.list [x].id] = new PlayerColor (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue);
 						} else {
-							PlayerInfo i = new PlayerInfo (0, 0, new PlayerColor (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue));
-							players [playerData.list [x].id] = i;
+							players [playerData.list [x].id] = new PlayerColor (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue);
 						}
 					}
 					SpatialOS.Connect(gameObject);

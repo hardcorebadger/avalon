@@ -6,10 +6,12 @@ import "improbable/vector3.schema";
 type BuildingRegistrationRequest {
     EntityId building_id = 1;
     Vector3d position = 2;
+    int32 beds = 3; 
 }
 
 type BuildingDeregistrationRequest {
     EntityId building_id = 1;
+    int32 beds = 2; 
 }
 
 type BuildingList {
@@ -37,6 +39,8 @@ component District {
     
     map<EntityId, Vector3d> position_map = 1;
     map<int32, BuildingList> storage_map = 2;
+    int32 beds = 3;
+    list<EntityId> character_list = 4; 
 
     command Nothing register_building(BuildingRegistrationRequest);
     command Nothing deregister_building(BuildingDeregistrationRequest);
