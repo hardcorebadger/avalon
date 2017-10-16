@@ -50,8 +50,19 @@ namespace Assets.Gamelogic.Core {
 				if (hit.collider.GetComponent<Hoverable> () != currentHover) {
 					if (currentHover != null && !selected.Contains(currentHover.GetComponent<CharacterVisualizer>()))
 						currentHover.SetHovered (false);
-					hit.collider.GetComponent<Hoverable> ().SetHovered (true);
-					currentHover = hit.collider.GetComponent<Hoverable> ();
+					CharacterVisualizer c = hit.collider.GetComponent<CharacterVisualizer> ();
+					if (c != null) {
+						if (c.CanControl ()) {
+							hit.collider.GetComponent<Hoverable> ().SetHovered (true);
+							currentHover = hit.collider.GetComponent<Hoverable> ();
+
+						}
+					} else {
+						
+						hit.collider.GetComponent<Hoverable> ().SetHovered (true);
+						currentHover = hit.collider.GetComponent<Hoverable> ();
+
+					}
 				}
 			} else if (currentHover != null && !selected.Contains(currentHover.GetComponent<CharacterVisualizer>())) {
 				currentHover.SetHovered (false);

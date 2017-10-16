@@ -47,7 +47,7 @@ namespace Assets.Gamelogic.Core {
 		public static void OpenPreview(GameObject o) {
 			Instantiate (instance.previewPrefab, instance.transform).GetComponent<UIPreviewWindow> ().Load (o);
 		}
-			
+
 	}
 
 }

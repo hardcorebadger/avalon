@@ -14,6 +14,7 @@ using Improbable.Unity.Core.EntityQueries;
 using Improbable.Collections;
 
 namespace Assets.Gamelogic.Core {
+	public delegate void OnUIChange();
 
 	public class CharacterVisualizer : MonoBehaviour {
 		
@@ -35,6 +36,8 @@ namespace Assets.Gamelogic.Core {
 		public AudioClip[] acceptSounds;
 		public AudioClip[] cheeringSounds;
 		public SpriteRenderer itemSprite;
+
+		private System.Collections.Generic.List<OnUIChange> listeners;
 
 		void OnEnable() {
 			if (characterReader.HasAuthority) {
@@ -58,6 +61,8 @@ namespace Assets.Gamelogic.Core {
 			characterReader.ShowHurtTriggered.Add (OnShowHurt);
 			if (GetComponent<OwnedVisualizer> ().GetOwnerId () != Bootstrap.playerId)
 				GetComponent<Selectable> ().enabled = false;
+
+			listeners = new System.Collections.Generic.List<OnUIChange> ();
 		}
 
 		void OnDisable() {
@@ -101,16 +106,30 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnShowHit(Nothing n) {
 
-			if (!characterReader.HasAuthority)
-				anim.SetTrigger ("attack");
+			if (characterReader != null && anim != null) {
+				
+				if (!characterReader.HasAuthority)
+					anim.SetTrigger ("attack");
+
+			}
 			
 		}
 
 		private void OnShowHurt(Nothing n) {
 
-			if (!characterReader.HasAuthority)
-				anim.SetTrigger ("hurt");
+			if (listeners != null && characterReader != null && anim != null) {
+				foreach (OnUIChange c in listeners) {
+					c ();
+				}
+				if (!characterReader.HasAuthority)
+					anim.SetTrigger ("hurt");
 
+			}
+
+		}
+
+		public float getHealth() {
+			return characterReader.Data.health;
 		}
 
 		public bool CanControl() {
@@ -142,6 +161,16 @@ namespace Assets.Gamelogic.Core {
 				break;
 			}
 				
+		}
+
+		public void RegisterUIListener(OnUIChange c) {
+		
+			listeners.Add(c);
+		}
+
+		public void DeRegisterUIListener(OnUIChange c) {
+			listeners.Remove(c);
+
 		}
 
 		public void OnFootstep() {
