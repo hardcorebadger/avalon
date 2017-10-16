@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Improbable;
 using Improbable.Core;
 using Improbable.Entity.Component;
@@ -21,13 +19,15 @@ namespace Assets.Gamelogic.Core {
 		private bool failed = false;
 		private bool success = false;
 		private EntityId target;
+		private Option<EntityId> district;
 		private Vector3 hqPosition;
 		private Action subAction;
 		private float timeIdle = 0f;
 
-		public ActionStockpile(CharacterController o, EntityId t, Vector3 p) : base(o)	{
+		public ActionStockpile(CharacterController o, EntityId t, Option<EntityId> d, Vector3 p) : base(o)	{
 			target = t;
 			hqPosition = p;
+			district = d;
 		}
 
 		public override ActionCode Update () {
@@ -47,7 +47,7 @@ namespace Assets.Gamelogic.Core {
 				// run resource get
 				ActionCode c = subAction.Update ();
 				if (c == ActionCode.Failure || c == ActionCode.Success) {
-					if (((ActionResourceGet)subAction).foundViableStorage) {
+					if (((ActionResourceGetDistrict)subAction).foundViableStorage) {
 						subAction = new ActionSeek (owner, target, hqPosition);
 						state = 3;
 					} else {
@@ -100,11 +100,11 @@ namespace Assets.Gamelogic.Core {
 			InventoryData invData = i.Value.Get().Value;
 			Improbable.Collections.Option<IComponentData<Storage>> s = e.Get<Storage>();
 			StorageData storageData = s.Value.Get().Value;
-			Dictionary<int,int> toGet = ParseToGet (invData, storageData);
+			List<int> toGet = ParseToGet (invData, storageData);
 			if (toGet.Count < 1)
 				state = 5; // nothing to get
 			else {
-				subAction = new ActionResourceGet (owner, storageData.workSourcing, toGet, target);
+				subAction = new ActionResourceGetDistrict (owner, district, toGet, target);
 				state = 2;
 			}
 		}
@@ -128,16 +128,16 @@ namespace Assets.Gamelogic.Core {
 			failed = true;
 		}
 
-		private Dictionary<int,int> ParseToGet(InventoryData inventory, StorageData storage) {
-			Dictionary<int,int> d = new Dictionary<int,int> ();
+		private List<int> ParseToGet(InventoryData inventory, StorageData storage) {
+			List<int> d = new List<int> ();
 			// for each thing in the quota, get the diff between that and the inv, add that
 			foreach (int id in storage.quotas.Keys) {
 				if (!inventory.inventory.ContainsKey (id)) {
-					d.Add (id, storage.quotas [id]);
+					d.Add (id);
 				} else {
 					int i =  storage.quotas [id] - inventory.inventory [id];
 					if (i > 0)
-						d.Add (id, i);
+						d.Add (id);
 				}
 			}
 

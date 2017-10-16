@@ -128,15 +128,16 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 30), CommonRequirementSets.PhysicsOnly)
 					.Build();
 			} else if (name == "building-settlement") {
-				List<EntityId> b = new List<EntityId> ();
-				b.Add (district.Value);
+				Map<EntityId, Vector3d> p = new Map<EntityId, Vector3d> ();
+				Map<int, BuildingList> s = new Map<int, BuildingList> ();
+				p.Add (district.Value, new Vector3d(pos.x,pos.y,pos.z));
 				return EntityBuilder.Begin ()
 					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
 					.AddComponent (new Building.Data (3,4,4, 100F, district), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new District.Data (b), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new District.Data (p, s), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
 					.Build();
 			}

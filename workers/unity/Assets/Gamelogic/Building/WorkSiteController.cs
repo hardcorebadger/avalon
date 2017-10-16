@@ -14,6 +14,7 @@ namespace Assets.Gamelogic.Core {
 	public class WorkSiteController : MonoBehaviour {
 
 		[Require] private WorkSite.Writer workSiteWriter;
+		[Require] private Building.Writer buildingWriter;
 
 		public GameObject door;
 
@@ -48,7 +49,7 @@ namespace Assets.Gamelogic.Core {
 					.SetWorkers (workers)
 				);
 			}
-			return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d(transform.position.x, transform.position.y, transform.position.z), workSiteWriter.Data.interior, full);
+			return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d(transform.position.x, transform.position.y, transform.position.z), workSiteWriter.Data.interior, full, buildingWriter.Data.district);
 		}
 
 		private UnEnlistResponse OnUnEnlist(UnEnlistRequest request, ICommandCallerInfo callerinfo) {

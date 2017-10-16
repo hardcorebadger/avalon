@@ -55,7 +55,7 @@ namespace Assets.Gamelogic.Core
 		public void OnContructionCreated(EntityId id, ConstructionRequest req) {
 			// send add request to req.district with the id created
 			if (req.district.HasValue) {
-				SpatialOS.Commands.SendCommand (playerOnlineWriter, District.Commands.RegisterBuilding.Descriptor, new BuildingRegistrationRequest (id), req.district.Value);
+				SpatialOS.Commands.SendCommand (playerOnlineWriter, District.Commands.RegisterBuilding.Descriptor, new BuildingRegistrationRequest (id, req.position), req.district.Value);
 			}
 		}
 

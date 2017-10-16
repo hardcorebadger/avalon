@@ -9,6 +9,7 @@ type EnlistResponse {
     Vector3d position = 2;
     bool interior = 3;
     bool full = 4;  
+    option<EntityId> district = 5;
 }
 
 type UnEnlistRequest {

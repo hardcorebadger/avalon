@@ -13,6 +13,7 @@ namespace Assets.Gamelogic.Core {
 	public class InventoryController : MonoBehaviour {
 
 		[Require] private Inventory.Writer inventoryWriter;
+		[Require] private Building.Writer buildingWriter;
 		private Dictionary<int,int> items;
 		private int maxItems;
 
@@ -51,6 +52,22 @@ namespace Assets.Gamelogic.Core {
 
 		private TakeResponse OnTakeMultiple(ItemStackList itemStackList, ICommandCallerInfo callerinfo) {
 			return new TakeResponse (Drop(ToDictionary(itemStackList)));
+		}
+
+		private void SendDistrictStorageUpdateHas(int id) {
+			if (!buildingWriter.Data.district.HasValue)
+				return;
+
+			SpatialOS.Commands.SendCommand (buildingWriter, District.Commands.StorageUpdateHas.Descriptor, new StorageUpdateRequest (gameObject.EntityId (), id), buildingWriter.Data.district.Value);
+			
+		}
+
+		private void SendDistrictStorageUpdateOut(int id) {
+			if (!buildingWriter.Data.district.HasValue)
+				return;
+
+			SpatialOS.Commands.SendCommand (buildingWriter, District.Commands.StorageUpdateOut.Descriptor, new StorageUpdateRequest (gameObject.EntityId (), id), buildingWriter.Data.district.Value);
+		
 		}
 
 		private void UnwrapComponentInventory() {
@@ -103,9 +120,11 @@ namespace Assets.Gamelogic.Core {
 
 			int val = 0;
 			items.TryGetValue (id, out val);
+			bool newItem = val == 0;
 			val += amount;
 			items [id] = val;
-
+			if (newItem)
+				SendDistrictStorageUpdateHas (id);
 			SendInventoryUpdate ();
 			return true;
 		}
@@ -128,9 +147,10 @@ namespace Assets.Gamelogic.Core {
 			if (amount < 0)
 				return false;
 			
-			if (amount == 0)
+			if (amount == 0) {
 				items.Remove (i);
-			else
+				SendDistrictStorageUpdateOut (i);
+			} else
 				items [i] = amount;
 
 			SendInventoryUpdate ();

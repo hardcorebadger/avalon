@@ -29,7 +29,7 @@ namespace Assets.Gamelogic.Core {
 			// if the controlling action completes, stop doing it
 
 			if (strength <= 0F) {
-				SpatialOS.Commands.DeleteEntity(buildingWriter, gameObject.EntityId());
+				DestroyBuilding ();
 			}
 
 		}
@@ -74,6 +74,26 @@ namespace Assets.Gamelogic.Core {
 
 			return new Nothing ();
 
+		}
+
+		public void DestroyBuilding() {
+			if (buildingWriter.Data.district.HasValue) {
+				// deregiste the construction site
+				SpatialOS.Commands.SendCommand (
+					buildingWriter, 
+					District.Commands.DeregisterBuilding.Descriptor, 
+					new BuildingDeregistrationRequest (gameObject.EntityId ()), 
+					buildingWriter.Data.district.Value
+				).OnSuccess (OnDeregisteredSelf);
+			} else {
+				// settlement construction is not registered, so no deregistration
+				OnDeregisteredSelf (new Nothing ());
+			}
+		}
+
+		private void OnDeregisteredSelf(Nothing n) {
+			// finally delete yourself
+			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId ());
 		}
 
 	}

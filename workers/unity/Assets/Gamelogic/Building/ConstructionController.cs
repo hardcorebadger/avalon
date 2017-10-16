@@ -120,24 +120,37 @@ namespace Assets.Gamelogic.Core {
 				if (val.amount < val.required)
 					return;
 			}
-			// fully stocked
-			if (districtBuildingConstruction) {
-				// go pre-reserve id to set it
-				SpatialOS.Commands.ReserveEntityId (constructionWriter)
-					.OnSuccess (result => OnReserveEntityId (result.ReservedEntityId));
-			} else {
-				SpatialOS.Commands.CreateEntity (constructionWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), buildingWriter.Data.district))
-					.OnSuccess (entityId => OnHouseCreated ());
-			}
+			SpatialOS.Commands.ReserveEntityId (constructionWriter)
+				.OnSuccess (result => OnReserveEntityId (result.ReservedEntityId));
+			
 		}
 
 		private void OnReserveEntityId(EntityId id) {
-			SpatialOS.Commands.CreateEntity(constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), new Improbable.Collections.Option<EntityId>(id)))
-				.OnSuccess (entityId => OnHouseCreated ());
+			if (districtBuildingConstruction) {
+				SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), new Improbable.Collections.Option<EntityId> (id)))
+					.OnSuccess (entityId => OnBuildingCreated (id));
+			} else {
+				SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), buildingWriter.Data.district))
+					.OnSuccess (entityId => OnBuildingCreated (id));
+			}
 		}
 
-		private void OnHouseCreated() {
-			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId());
+		private void OnBuildingCreated(EntityId id) {
+			if (!districtBuildingConstruction) {
+				SpatialOS.Commands.SendCommand (
+					constructionWriter, 
+					District.Commands.RegisterBuilding.Descriptor, 
+					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z)), 
+					buildingWriter.Data.district.Value
+				).OnSuccess (OnBuildingRegistered);
+			} else {
+				// pre registered if its a settlement
+				OnBuildingRegistered (new Nothing ());
+			}
+		}
+
+		private void OnBuildingRegistered(Nothing n) {
+			GetComponent<BuildingController> ().DestroyBuilding ();
 		}
 
 		public struct Requirement {

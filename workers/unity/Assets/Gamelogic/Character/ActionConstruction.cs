@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Improbable;
 using Improbable.Core;
 using Improbable.Entity.Component;
@@ -25,10 +23,12 @@ namespace Assets.Gamelogic.Core {
 		private ConstructionData constructionData;
 		private bool didSource = false;
 		private Vector3 hqPosition;
+		private Option<EntityId> district;
 
-		public ActionConstruction(CharacterController o, EntityId t, Vector3 pos) : base(o)	{
+		public ActionConstruction(CharacterController o, EntityId t, Option<EntityId> d, Vector3 pos) : base(o)	{
 			target = t;
 			hqPosition = pos;
+			district = d;
 		}
 
 		public override ActionCode Update () {
@@ -48,7 +48,7 @@ namespace Assets.Gamelogic.Core {
 				ActionCode c = subAction.Update ();
 				if (c == ActionCode.Failure || c == ActionCode.Success) {
 					state = 3;
-					subAction = new ActionResourceGet (owner, constructionData.workSourcing, ParseConstructionRequirements());
+					subAction = new ActionResourceGetDistrict (owner, district, ParseConstructionRequirements());
 				}
 				break;
 			case 3:
@@ -91,10 +91,11 @@ namespace Assets.Gamelogic.Core {
 			failed = true;
 		}
 
-		private Dictionary<int,int> ParseConstructionRequirements() {
-			Dictionary<int,int> p = new Dictionary<int,int> ();
+		private List<int> ParseConstructionRequirements() {
+			List<int> p = new List<int> ();
 			foreach (int id in constructionData.requirements.Keys) {
-				p.Add (id, constructionData.requirements [id].required - constructionData.requirements [id].amount);
+				if (constructionData.requirements [id].required - constructionData.requirements [id].amount > 0)
+					p.Add (id);
 			}
 			return p;
 		}

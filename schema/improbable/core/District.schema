@@ -1,16 +1,47 @@
 package improbable.core;
 
 import "improbable/core/Nothing.schema";
+import "improbable/vector3.schema";
 
 type BuildingRegistrationRequest {
     EntityId building_id = 1;
+    Vector3d position = 2;
+}
+
+type BuildingDeregistrationRequest {
+    EntityId building_id = 1;
+}
+
+type BuildingList {
+    list<EntityId> list = 1;
+}
+
+type StorageUpdateRequest {
+    EntityId building = 1;
+    int32 item = 2;
+}
+
+type ItemFindRequest {
+    list<int32> ids = 1;
+    option<EntityId> asker = 2;
+}
+
+type ItemFindResponse {
+    int32 id = 1;
+    option<EntityId> storage = 2;
+    Vector3d position = 3;
 }
 
 component District {
     id = 1020;
     
-    list<EntityId> buildings = 1;
+    map<EntityId, Vector3d> position_map = 1;
+    map<int32, BuildingList> storage_map = 2;
 
     command Nothing register_building(BuildingRegistrationRequest);
+    command Nothing deregister_building(BuildingDeregistrationRequest);
+    command Nothing storage_update_has(StorageUpdateRequest);
+    command Nothing storage_update_out(StorageUpdateRequest);
+    command ItemFindResponse find_any_item(ItemFindRequest);
 
 }

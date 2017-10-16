@@ -19,6 +19,7 @@ namespace Assets.Gamelogic.Core {
 
 		private int state = 0;
 		private EntityId target;
+		private Option<EntityId> district;
 		private bool failed = false;
 		private Action subAction = null;
 
@@ -51,7 +52,7 @@ namespace Assets.Gamelogic.Core {
 
 					switch (workType) {
 					case WorkType.WORK_BUILDING:
-						subAction = new ActionConstruction (owner, target, buildingPosition);
+						subAction = new ActionConstruction (owner, target, district, buildingPosition);
 						state = 4;
 						break;
 					case WorkType.WORK_LOGGING:
@@ -71,7 +72,7 @@ namespace Assets.Gamelogic.Core {
 						state = 4;
 						break;
 					case WorkType.WORK_STORAGE:
-						subAction = new ActionStockpile (owner, target, buildingPosition);
+						subAction = new ActionStockpile (owner, target, district, buildingPosition);
 						state = 4;
 						break;
 					}
@@ -105,6 +106,7 @@ namespace Assets.Gamelogic.Core {
 			} else {
 				workType = response.workType;
 				buildingPosition = response.position.ToUnityVector ();
+				district = response.district;
 				state = 2;
 			}
 		}
