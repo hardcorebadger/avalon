@@ -51,12 +51,20 @@ namespace Assets.Gamelogic.Core {
 					if (currentHover != null && !selected.Contains(currentHover.GetComponent<CharacterVisualizer>()))
 						currentHover.SetHovered (false);
 					CharacterVisualizer c = hit.collider.GetComponent<CharacterVisualizer> ();
+					ConstructionVisualizer cons = hit.collider.GetComponent<ConstructionVisualizer> ();
+
 					if (c != null) {
 						if (c.CanControl ()) {
 							hit.collider.GetComponent<Hoverable> ().SetHovered (true);
 							currentHover = hit.collider.GetComponent<Hoverable> ();
 
 						}
+					} else if (cons != null) {
+						if (cons.CanControl ()) {
+							hit.collider.GetComponent<Hoverable> ().SetHovered (true);
+							currentHover = hit.collider.GetComponent<Hoverable> ();
+						}
+					
 					} else {
 						
 						hit.collider.GetComponent<Hoverable> ().SetHovered (true);
@@ -309,6 +317,14 @@ namespace Assets.Gamelogic.Core {
 					s.GetComponent<Hoverable> ().SetHovered (false);
 					currentDragSelection.Add (s);
 				}
+
+				ConstructionVisualizer cons = c.collider.GetComponent<ConstructionVisualizer> ();
+				if (cons && cons.CanControl()) {
+					cons.GetComponent<Hoverable> ().SetHovered (false);
+				}
+
+				//ifinitely adding stuff here for hoverables???
+
 			}
 		}
 

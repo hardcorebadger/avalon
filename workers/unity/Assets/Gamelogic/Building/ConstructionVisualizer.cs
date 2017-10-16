@@ -15,7 +15,11 @@ namespace Assets.Gamelogic.Core
 
 		[Require] private Construction.Reader constructionReader;
 
+		private OwnedVisualizer owned;
 		public Dictionary<int,ConstructionController.Requirement> requirements;
+		private System.Collections.Generic.List<OnUIChange> listeners;
+
+		public float completion = 0.0f;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -23,9 +27,12 @@ namespace Assets.Gamelogic.Core
 				this.enabled = false;
 				return;
 			}
+			owned = GetComponent<OwnedVisualizer> ();
 			requirements = new Dictionary<int,ConstructionController.Requirement> ();
 			UnwrapComponentRequirements ();
 			constructionReader.ComponentUpdated.Add (OnConstructionUpdated);
+			listeners = new System.Collections.Generic.List<OnUIChange> ();
+
 		}
 
 		// Update is called once per frame
@@ -37,8 +44,17 @@ namespace Assets.Gamelogic.Core
 			if (update.requirements.HasValue) {
 				requirements.Clear ();
 				UnwrapComponentRequirements ();
+				int total = requirements.Count;
+				float percentage = 0;
+				foreach(var item in requirements) {
+					percentage += ((float)item.Value.amount / (float)item.Value.required);
+				}
+				completion = percentage / total;
 			}
-		}
+			foreach (OnUIChange c in listeners) {
+				c ();
+			}
+		} 
 
 		private void UnwrapComponentRequirements() {
 			foreach (int key in constructionReader.Data.requirements.Keys) {
@@ -53,6 +69,25 @@ namespace Assets.Gamelogic.Core
 				Debug.Log(Item.GetName (key) + ": " + val.amount + " / " + val.required);
 			}
 		}
+
+		public bool CanControl() {
+			return owned.GetOwnerId() == Bootstrap.playerId;
+		}
+
+		public void RegisterUIListener(OnUIChange c) {
+
+			listeners.Add(c);
+		}
+
+		public void DeRegisterUIListener(OnUIChange c) {
+			listeners.Remove(c);
+
+		}
+
+		public float getProgress() {
+			return completion;
+		}
+
 	}
 
 }
