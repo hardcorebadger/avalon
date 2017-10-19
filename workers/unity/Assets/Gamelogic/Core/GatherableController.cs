@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Improbable;
@@ -12,6 +12,7 @@ using Improbable.Worker;
 using Improbable.Entity;
 using Improbable.Unity.Core.EntityQueries;
 using Improbable.Collections;
+
 
 namespace Assets.Gamelogic.Core {
 	public class GatherableController : MonoBehaviour {

@@ -1,5 +1,6 @@
 ﻿using Assets.Gamelogic.EntityTemplates;
 using System.Collections;
+using Improbable.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Improbable;
@@ -17,10 +18,13 @@ namespace Assets.Gamelogic.Core
 	{
 		[Require] private PlayerCreator.Writer playerCreatorWriter;
 
+		private Map<int, PlayerInfo> players;
+
 		private void OnEnable()
 		{
 			playerCreatorWriter.CommandReceiver.OnCreatePlayer.RegisterResponse(OnCreatePlayer);
 			playerCreatorWriter.CommandReceiver.OnDisconnectPlayer.RegisterResponse(OnDisconnectPlayer);
+			players = playerCreatorWriter.Data.players;
 
 		}
 
@@ -42,13 +46,56 @@ namespace Assets.Gamelogic.Core
 			return new CreatePlayerResponse();
 		}
 
-		private DisconnectPlayerResponse OnDisconnectPlayer(DisconnectPlayerRequest request, ICommandCallerInfo callerinfo) {
+		private IEnumerator LoadPlayerData(WWW _w, ICommandCallerInfo callerInfo) {
+			yield return _w; 
 
-			Improbable.Collections.Map<int, PlayerInfo> temp = playerCreatorWriter.Data.players;
-			temp [request.id] = new PlayerInfo (request.x, request.y);
-			return new DisconnectPlayerResponse();
+			if (_w.error == null) {
+				if (_w.text.Contains ("!!BAD!!LOGIN!!")) {
+					Debug.LogError ("Bad Login!");
+				} else {
+					LoginMenu.PlayerData player = JsonUtility.FromJson<LoginMenu.PlayerData> (_w.text);
+
+					if (player.status != 200) {
+						//failed
+						Debug.LogError ("Bad Login!");
+					} else if (!players.ContainsKey(player.id)) {
+						FirstLogin (callerInfo.CallerWorkerId, player.id, Vector3.zero);
+
+					} else {
+						// Find the player
+						ReturningPlayer (callerInfo.CallerWorkerId, player.id);
+					}
+				}
+			} else {
+				Debug.LogError(_w.error);
+
+			}
 		}
 
+		private void FirstLogin(string clientWorkerId, int playerId, Vector3 pos) {
+			CreateFamily (playerId, pos);
+			CreatePlayer (clientWorkerId, playerId, pos);
+		}
+
+		private void ReturningPlayer(string clientWorkerId, int playerId) {
+			PlayerInfo i = players[playerId];
+			i.online = true;
+			players[playerId] = i;
+			playerCreatorWriter.Send(new PlayerCreator.Update()
+				.SetPlayers(players)
+			);
+			SpatialOS.Commands.SendCommand (playerCreatorWriter, PlayerOnline.Commands.PlayerLoginAccess.Descriptor, new LoginAccessRequest (clientWorkerId), players[playerId].id);
+		}
+
+		private DisconnectPlayerResponse OnDisconnectPlayer(DisconnectPlayerRequest request, ICommandCallerInfo callerinfo) {
+			PlayerInfo i = players[request.id];
+			i.online = false;
+			players[request.id] = i;
+			playerCreatorWriter.Send(new PlayerCreator.Update()
+				.SetPlayers(players)
+			);
+			return new DisconnectPlayerResponse();
+		}
 
 		private void CreateFamily(int playerId, Vector3 pos) {
 			ReserveCharacterId (playerId, pos, 0);
@@ -81,9 +128,21 @@ namespace Assets.Gamelogic.Core
 		}
 
 		private void CreatePlayerEntity(string clientWorkerId, int playerId, EntityId entityId, Vector3 pos) {
+
+			// create the entity
 			var playerEntityTemplate = EntityTemplateFactory.CreatePlayerTemplate(playerCreatorWriter.EntityId, clientWorkerId, playerId, pos);
 			SpatialOS.Commands.CreateEntity(playerCreatorWriter, entityId, playerEntityTemplate)
+				.OnSuccess(result => OnPlayerEntityCreated(playerId, entityId))
 				.OnFailure(failure => OnFailedEntityCreation(failure, entityId));
+		}
+
+		private void OnPlayerEntityCreated(int playerId, EntityId entityId) {
+
+			// add them to the player map
+			players.Add(playerId, new PlayerInfo(entityId, true));
+			playerCreatorWriter.Send(new PlayerCreator.Update()
+				.SetPlayers(players)
+			);
 		}
 
 		private void OnFailedReservation(ICommandErrorDetails response) {
@@ -94,39 +153,7 @@ namespace Assets.Gamelogic.Core
 			Debug.LogError("Failed to Create Entity: " + response.ErrorMessage);
 		}
 
-		private IEnumerator LoadPlayerData(WWW _w, ICommandCallerInfo callerInfo) {
-			yield return _w; 
-
-			if (_w.error == null) {
-				if (_w.text.Contains ("!!BAD!!LOGIN!!")) {
-					Debug.LogError ("Bad Login!");
-				} else {
-					LoginMenu.PlayerData player = JsonUtility.FromJson<LoginMenu.PlayerData> (_w.text);
-
-					if (player.status != 200) {
-						//failed
-						Debug.LogError ("Bad Login!");
-					} else if (!playerCreatorWriter.Data.players.ContainsKey(player.id)) {
-						Vector3 playerPos = new Vector3 (0, 0, 0);
-						Improbable.Collections.Map<int, PlayerInfo> temp = playerCreatorWriter.Data.players;
-						temp [player.id] = new PlayerInfo (0, 0);
-						CreateFamily (player.id, playerPos);
-						CreatePlayer (callerInfo.CallerWorkerId, player.id, playerPos);
-
-						playerCreatorWriter.Send (new PlayerCreator.Update ()
-							.SetPlayers (temp)
-						);
-
-					} else {
-						Vector3 playerPos = new Vector3 (playerCreatorWriter.Data.players[player.id].lastX, playerCreatorWriter.Data.players[player.id].lastY, 0);
-						CreatePlayer (callerInfo.CallerWorkerId, player.id, playerPos);
-					}
-				}
-			} else {
-				Debug.LogError(_w.error);
-
-			}
-		}
+		
 
 	}
 }

@@ -2,6 +2,13 @@ package improbable.core;
 
 import "improbable/vector3.schema";
 
+type LoginAccessRequest {
+  string client_worker_id = 1;
+}
+
+type LoginAccessResponse {
+}
+
 type ConstructionRequest {
   Vector3d position = 1;
   string building_name = 2;
@@ -17,4 +24,5 @@ component PlayerOnline {
     int32 player_id = 1;
 
     command ConstructionResponse construct(ConstructionRequest);
+    command LoginAccessResponse player_login_access(LoginAccessRequest);
 }

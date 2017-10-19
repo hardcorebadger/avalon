@@ -264,7 +264,15 @@ namespace Assets.Gamelogic.EntityTemplates
 		}
 
 		public static Entity CreatePlayerTemplate(EntityId creator, string clientWorkerId, int playerId, Vector3 pos) {
-			return EntityBuilder.Begin()
+			var acl = Acl.Build()
+				.SetReadAccess(CommonRequirementSets.PhysicsOrVisual)
+				.SetWriteAccess<EntityAcl>(CommonRequirementSets.PhysicsOnly)
+				.SetWriteAccess<Position>(CommonRequirementSets.SpecificClientOnly(clientWorkerId))
+				.SetWriteAccess<Player>(CommonRequirementSets.SpecificClientOnly(clientWorkerId))
+				.SetWriteAccess<PlayerOnline>(CommonRequirementSets.PhysicsOnly)
+				.SetWriteAccess<HeartbeatCounter>(CommonRequirementSets.PhysicsOnly);
+
+			var e = EntityBuilder.Begin()
 				.AddPositionComponent(pos, CommonRequirementSets.SpecificClientOnly(clientWorkerId))
 				.AddMetadataComponent("player")
 				.SetPersistence(true)
@@ -273,6 +281,9 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddComponent(new PlayerOnline.Data(playerId), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new HeartbeatCounter.Data(SimulationSettings.TotalHeartbeatsBeforeTimeout),CommonRequirementSets.PhysicsOnly)
 				.Build();
+
+			e.SetAcl(acl);
+			return e;
 		}
 
     }
