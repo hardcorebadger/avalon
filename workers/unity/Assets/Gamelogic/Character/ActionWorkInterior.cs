@@ -51,7 +51,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override void OnKill () {
-			Debug.LogWarning ("killed");
 			owner.transform.position = doorPosition;
 			owner.SetIndoors (false);
 		}

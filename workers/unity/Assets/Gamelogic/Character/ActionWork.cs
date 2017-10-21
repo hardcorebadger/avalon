@@ -92,7 +92,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override void OnKill() {
-			Debug.LogWarning ("workin no mo");
 			if (subAction != null)
 				subAction.OnKill ();
 			SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.UnEnlist.Descriptor, new UnEnlistRequest (owner.gameObject.EntityId()), target);

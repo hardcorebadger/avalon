@@ -137,7 +137,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnFire(Nothing request, ICommandCallerInfo callerinfo) {
-			Debug.LogWarning ("fired");
 			SetAction (new ActionBlank (this));
 			return new Nothing ();
 		}
@@ -198,7 +197,6 @@ namespace Assets.Gamelogic.Core {
 
 		public void SetAction(Action a) {
 			if (currentAction != null) {
-				Debug.LogWarning ("onKill");
 				currentAction.OnKill ();
 			}
 			SetVelocity (0f);
