@@ -33,6 +33,7 @@ namespace Assets.Gamelogic.Core {
 		public float arrivalRadius = 2f;
 		public Quaternion facing = Quaternion.identity;
 		public Animator anim;
+		public bool indoors = false;
 
 
 		private Action currentAction;
@@ -60,6 +61,7 @@ namespace Assets.Gamelogic.Core {
 			rigidBody = GetComponent<Rigidbody> ();
 		
 			currentAction = new ActionBlank (this);
+			indoors = characterWriter.Data.isIndoors;
 		}
 
 		private void OnDisable() {
@@ -135,6 +137,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnFire(Nothing request, ICommandCallerInfo callerinfo) {
+			Debug.LogWarning ("fired");
 			SetAction (new ActionBlank (this));
 			return new Nothing ();
 		}
@@ -194,8 +197,10 @@ namespace Assets.Gamelogic.Core {
 
 
 		public void SetAction(Action a) {
-			if (currentAction != null)
+			if (currentAction != null) {
+				Debug.LogWarning ("onKill");
 				currentAction.OnKill ();
+			}
 			SetVelocity (0f);
 			rigidBody.angularVelocity = Vector3.zero;
 			SetState (CharacterState.DEFAULT);
@@ -260,6 +265,20 @@ namespace Assets.Gamelogic.Core {
 		public void OnDealHit() {
 			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
 				currentAction.OnDealHit ();
+			}
+		}
+
+		public void SetIndoors(bool b) {
+			indoors = b;
+			characterWriter.Send (new Character.Update ()
+				.SetIsIndoors (indoors)
+			);
+			if (indoors) {
+				GetComponent<Collider> ().enabled = false;
+				GetComponent<Rigidbody> ().isKinematic = true;
+			} else {
+				GetComponent<Collider> ().enabled = true;
+				GetComponent<Rigidbody> ().isKinematic = false;
 			}
 		}
 

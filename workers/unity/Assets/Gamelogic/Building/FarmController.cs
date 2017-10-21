@@ -16,27 +16,19 @@ namespace Assets.Gamelogic.Core {
 	public class FarmController : MonoBehaviour {
 
 		[Require] private Farm.Writer farmWriter;
-		[Require] private WorkSite.Writer workSiteWriter;
 
 		public float farmFoodGenerationRate = 20f;
 		private float timer = -1f;
-		private int workerCount;
 		private InventoryController inventoryController;
 
 		void OnEnable () {
-			workSiteWriter.InsideUpdated.Add (OnInsideUpdated);
 			inventoryController = GetComponent<InventoryController> ();
 		}
-
-		void OnDisable () {
-			farmWriter.CommandReceiver.OnChangeWorkers.DeregisterResponse ();
-		}
-
 
 		void Update() {
 
 			if (timer < 0f) {
-				inventoryController.Insert (1, workerCount);
+				inventoryController.Insert (1, GetComponent<WorkSiteController>().workers.Count);
 				timer = 0f + Time.deltaTime;
 
 			} else {
@@ -44,12 +36,6 @@ namespace Assets.Gamelogic.Core {
 				if (timer >= farmFoodGenerationRate)
 					timer = -1f;
 			}
-		}
-
-		private void OnInsideUpdated(List<WorkerData> inside) {
-
-			workerCount = inside.Count;
-
 		}
 
 	}
