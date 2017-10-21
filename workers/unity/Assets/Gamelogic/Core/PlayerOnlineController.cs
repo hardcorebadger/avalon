@@ -25,6 +25,7 @@ namespace Assets.Gamelogic.Core
 		private HeartbeatCounter.Writer HeartbeatCounterWriter;
 
 		private Coroutine heartbeatCoroutine;
+		List<EntityId> characters;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -32,6 +33,10 @@ namespace Assets.Gamelogic.Core
 			playerReader.HeartbeatTriggered.Add(OnHeartbeat);
 			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatCheckIntervalSecs, CheckHeartbeat));
 			playerOnlineWriter.CommandReceiver.OnConstruct.RegisterResponse (OnConstruct);
+			playerOnlineWriter.CommandReceiver.OnRegisterCharacter.RegisterResponse (OnRegisterCharacter);
+			playerOnlineWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
+			characters = playerOnlineWriter.Data.characters;
+
 		}
 
 		// Update is called once per frame
@@ -89,6 +94,25 @@ namespace Assets.Gamelogic.Core
 			SpatialOS.WorkerCommands.SendCommand (PlayerCreator.Commands.DisconnectPlayer.Descriptor, new DisconnectPlayerRequest (playerOnlineWriter.Data.playerId, (long)positionReader.Data.coords.x, (long)positionReader.Data.coords.z), playerReader.Data.creator);
 			SpatialOS.Commands.DeleteEntity(HeartbeatCounterWriter, gameObject.EntityId());
 		}
+
+		private Nothing OnRegisterCharacter(CharacterPlayerRegisterRequest r, ICommandCallerInfo _) {
+			characters.Add(r.characterId);
+
+			playerOnlineWriter.Send (new PlayerOnline.Update ()
+				.SetCharacters(characters)
+			);
+			return new Nothing ();
+		}
+
+		private Nothing OnDeregisterCharacter(CharacterPlayerDeregisterRequest r, ICommandCallerInfo _) {
+			characters.Remove(r.characterId);
+
+			playerOnlineWriter.Send (new PlayerOnline.Update ()
+				.SetCharacters(characters)
+			);
+			return new Nothing ();
+		}
+
 
 	}
 

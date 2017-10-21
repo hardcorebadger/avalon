@@ -76,6 +76,12 @@ namespace Assets.Gamelogic.Core {
 
 		}
 
+		public int GetBeds() {
+
+			return buildingWriter.Data.beds;
+
+		}
+
 		public void DestroyBuilding() {
 			if (buildingWriter.Data.district.HasValue) {
 				// deregiste the construction site

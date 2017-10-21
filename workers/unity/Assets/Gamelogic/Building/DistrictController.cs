@@ -18,6 +18,7 @@ namespace Assets.Gamelogic.Core {
 
 		Map<EntityId, Vector3d> positionMap;
 		Map<int, BuildingList> storageMap;
+		List<EntityId> characters;
 		int beds;
 		float spawnTimer = -1f;
 
@@ -27,9 +28,21 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnStorageUpdateHas.RegisterResponse (OnStorageUpdateHas);
 			districtWriter.CommandReceiver.OnStorageUpdateOut.RegisterResponse (OnStorageUpdateOut);
 			districtWriter.CommandReceiver.OnFindAnyItem.RegisterResponse (OnFindAnyItem);
+			districtWriter.CommandReceiver.OnRegisterCharacter.RegisterResponse (OnRegisterCharacter);
+			districtWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
+
 			positionMap = districtWriter.Data.positionMap;
 			storageMap = districtWriter.Data.storageMap;
+			characters = districtWriter.Data.characterList;
 			beds = districtWriter.Data.beds;
+
+			if (beds == 0) {
+				BuildingController b = GetComponent<BuildingController> ();
+
+				if (b != null) {
+					beds = b.GetBeds();
+				}
+			}
 		}
 
 		void OnDisable() {
@@ -125,6 +138,27 @@ namespace Assets.Gamelogic.Core {
 			// nope.
 			return new ItemFindResponse (-1, new Option<EntityId> (), Vector3d.ZERO);
 		}
+
+		private Nothing OnRegisterCharacter(CharacterRegistrationRequest r, ICommandCallerInfo _) {
+			foreach (var e in r.characters) {
+				characters.Add(e);
+			}
+			districtWriter.Send (new District.Update ()
+				.SetCharacterList(characters)
+			);
+			return new Nothing ();
+		}
+
+		private Nothing OnDeregisterCharacter(CharacterDeregistrationRequest r, ICommandCallerInfo _) {
+			foreach (var e in r.characters) {
+				characters.Remove(e);
+			}
+			districtWriter.Send (new District.Update ()
+				.SetCharacterList(characters)
+			);
+			return new Nothing ();
+		}
+
 
 	}
 

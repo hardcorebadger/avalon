@@ -15,7 +15,8 @@ component Building {
     int32 z_width = 3;
     float strength = 4; 
     option<EntityId> district = 5;
-
+    int32 beds = 6;
+ 
     command Nothing receive_damage(ReceiveDamageRequest);
     event Nothing show_damage; 
 

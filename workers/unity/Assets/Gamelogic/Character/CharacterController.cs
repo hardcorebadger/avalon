@@ -83,7 +83,7 @@ namespace Assets.Gamelogic.Core {
 			// if the controlling action completes, stop doing it
 
 			if (health <= 0F) {
-				SpatialOS.Commands.DeleteEntity(characterWriter, gameObject.EntityId());
+				DestroyCharacter ();
 			}
 
 			if (currentAction == null) 
@@ -261,6 +261,29 @@ namespace Assets.Gamelogic.Core {
 			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
 				currentAction.OnDealHit ();
 			}
+		}
+
+		public void DestroyCharacter() {
+			if (characterWriter.Data.district.HasValue) {
+				// deregiste the construction site
+
+				Improbable.Collections.List<EntityId> l = new Improbable.Collections.List<EntityId> ();
+				l.Add (gameObject.EntityId());
+				SpatialOS.Commands.SendCommand (
+					characterWriter, 
+					District.Commands.DeregisterCharacter.Descriptor, 
+					new CharacterDeregistrationRequest (l), 
+				characterWriter.Data.district.Value
+				).OnSuccess (OnDeregisteredSelf);
+			} else {
+				// settlement construction is not registered, so no deregistration
+				OnDeregisteredSelf (new Nothing ());
+			}
+		}
+
+		private void OnDeregisteredSelf(Nothing n) {
+			// finally delete yourself
+			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId ());
 		}
 
 	}
