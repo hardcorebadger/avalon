@@ -3,7 +3,7 @@
  [
   {
   "follow_symlinks": true,
-  "path": "workers/unity/Assets/",
+  "path": "/",
    "file_exclude_patterns":
    [
     "*.dll",
@@ -11,5 +11,5 @@
    ]
   }
  ],
- "solution_file": "./workers/unity/unity.sln"
+ "solution_file": "./unity.sln"
 }

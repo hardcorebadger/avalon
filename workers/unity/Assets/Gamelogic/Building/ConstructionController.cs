@@ -127,10 +127,10 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnReserveEntityId(EntityId id) {
 			if (districtBuildingConstruction) {
-				SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), new Improbable.Collections.Option<EntityId> (id)))
+				SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), owned.getOwnerObject(), new Improbable.Collections.Option<EntityId> (id)))
 					.OnSuccess (entityId => OnBuildingCreated (id));
 			} else {
-				SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), buildingWriter.Data.district))
+				SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), owned.getOwnerObject(), buildingWriter.Data.district))
 					.OnSuccess (entityId => OnBuildingCreated (id));
 			}
 		}
@@ -145,6 +145,9 @@ namespace Assets.Gamelogic.Core {
 				).OnSuccess (OnBuildingRegistered);
 			} else {
 				// pre registered if its a settlement
+
+				SpatialOS.Commands.SendCommand(constructionWriter, PlayerOnline.Commands.RegisterDistrict.Descriptor, new DistrictRegisterRequest(id), owned.getOwnerObject());
+
 				OnBuildingRegistered (new Nothing ());
 			}
 		}

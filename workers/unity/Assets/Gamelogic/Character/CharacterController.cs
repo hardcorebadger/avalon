@@ -33,16 +33,19 @@ namespace Assets.Gamelogic.Core {
 		public float arrivalRadius = 2f;
 		public Quaternion facing = Quaternion.identity;
 		public Animator anim;
-
+		public OwnedController owned;
 
 		private Action currentAction;
 		private float velocity;
 		public CharacterState state;
 		private int itemInHand = -1;
 		public float health;
+		public Option<EntityId> district;
 
 		private void OnEnable() {
 			anim = GetComponent<Animator> ();
+			owned = GetComponent<OwnedController> ();
+
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
 			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
@@ -50,6 +53,7 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnFire.RegisterResponse(OnFire);
 			characterWriter.CommandReceiver.OnReceiveHit.RegisterResponse(OnReceiveHit);
 			characterWriter.CommandReceiver.OnHostileAlert.RegisterResponse(OnHostileAlert);
+			characterWriter.CommandReceiver.OnSetDistrict.RegisterResponse(OnSetDistrict);
 			transform.position = positionWriter.Data.coords.ToVector3();
 			transform.eulerAngles = new Vector3 (0, 0, rotationWriter.Data.rotation);
 			state = characterWriter.Data.state;
@@ -58,6 +62,7 @@ namespace Assets.Gamelogic.Core {
 			StartCoroutine ("UpdateTransform");
 
 			rigidBody = GetComponent<Rigidbody> ();
+			district = characterWriter.Data.district;
 		
 			currentAction = new ActionBlank (this);
 		}
@@ -68,6 +73,10 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.CommandReceiver.OnRadiusTarget.DeregisterResponse();
 
 			characterWriter.CommandReceiver.OnFire.DeregisterResponse();
+			characterWriter.CommandReceiver.OnReceiveHit.DeregisterResponse();
+			characterWriter.CommandReceiver.OnHostileAlert.DeregisterResponse();
+			characterWriter.CommandReceiver.OnSetDistrict.DeregisterResponse();
+
 		}
 
 		IEnumerator UpdateTransform() {
@@ -192,6 +201,16 @@ namespace Assets.Gamelogic.Core {
 			return new Nothing ();
 		}
 
+		private Nothing OnSetDistrict(SetCharacterDistrictRequest request, ICommandCallerInfo callerinfo) {
+
+			district = request.districtId;
+			characterWriter.Send (new Character.Update ()
+				.SetDistrict (district)
+			);
+
+
+			return new Nothing ();
+		}
 
 		public void SetAction(Action a) {
 			if (currentAction != null)
@@ -264,7 +283,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void DestroyCharacter() {
-			if (characterWriter.Data.district.HasValue) {
+			if (district.HasValue) {
 				// deregiste the construction site
 
 				Improbable.Collections.List<EntityId> l = new Improbable.Collections.List<EntityId> ();
@@ -273,16 +292,28 @@ namespace Assets.Gamelogic.Core {
 					characterWriter, 
 					District.Commands.DeregisterCharacter.Descriptor, 
 					new CharacterDeregistrationRequest (l), 
-				characterWriter.Data.district.Value
-				).OnSuccess (OnDeregisteredSelf);
+				district.Value
+				).OnSuccess (OnDeregisteredSelfDistrict);
 			} else {
 				// settlement construction is not registered, so no deregistration
-				OnDeregisteredSelf (new Nothing ());
+				OnDeregisteredSelfDistrict (new Nothing ());
 			}
+		}
+
+		private void OnDeregisteredSelfDistrict(Nothing n) {
+
+			SpatialOS.Commands.SendCommand (
+				characterWriter, 
+				PlayerOnline.Commands.DeregisterCharacter.Descriptor, 
+				new CharacterPlayerDeregisterRequest (gameObject.EntityId()), 
+				owned.getOwnerObject()
+			).OnSuccess (OnDeregisteredSelf);
+
 		}
 
 		private void OnDeregisteredSelf(Nothing n) {
 			// finally delete yourself
+
 			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId ());
 		}
 

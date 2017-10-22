@@ -11,15 +11,13 @@ type CreatePlayerResponse {}
 
 type DisconnectPlayerRequest {
   int32 id = 1; 
-  int64 x = 2;
-  int64 y = 3; 
 }
 type DisconnectPlayerResponse {}
 
 
 type PlayerInfo {
-  int64 last_x = 1;
-  int64 last_y = 2;
+  EntityId id = 1;
+  bool online = 2;
 }
 
 component PlayerCreator {

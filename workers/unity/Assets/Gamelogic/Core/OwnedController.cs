@@ -38,6 +38,10 @@ public class OwnedController : MonoBehaviour {
 		return ownedWriter.Data.owner;
 	}
 
+	public EntityId getOwnerObject() {
+		return ownedWriter.Data.player;
+	}
+
 	private OwnResponse OnSetOwner(OwnRequest request, ICommandCallerInfo callerinfo) {
 		if (this.ownedWriter.Data.owner == 0) {
 			ownedWriter.Send (new Owned.Update ()

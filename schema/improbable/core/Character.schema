@@ -26,6 +26,10 @@ type HostileAlertRequest {
   EntityId target = 1;
 }
 
+type SetCharacterDistrictRequest {
+  EntityId district_id = 1;
+} 
+
 enum CharacterState {
   DEFAULT = 0;
   FORAGING = 1;
@@ -53,6 +57,7 @@ component Character {
     command Nothing fire(Nothing);
     command Nothing receive_hit(ReceiveHitRequest);
     command Nothing hostile_alert(HostileAlertRequest);  
+    command Nothing set_district(SetCharacterDistrictRequest); 
     event Nothing show_hit; 
     event Nothing show_hurt; 
 

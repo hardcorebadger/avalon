@@ -1,5 +1,5 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using Improbable.Collections;
 using UnityEngine;
 using Improbable;
 using Improbable.Core;
@@ -20,22 +20,28 @@ namespace Assets.Gamelogic.Core
 		[Require] private PlayerOnline.Writer playerOnlineWriter;
 		[Require] private Player.Reader playerReader;
 		[Require] private Position.Reader positionReader;
+		[Require] private EntityAcl.Writer aclWriter;
 
 		[Require]
 		private HeartbeatCounter.Writer HeartbeatCounterWriter;
 
 		private Coroutine heartbeatCoroutine;
 		List<EntityId> characters;
+		List<EntityId> districts;
 
 		// Use this for initialization
 		void OnEnable () {
 			
 			playerReader.HeartbeatTriggered.Add(OnHeartbeat);
 			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatCheckIntervalSecs, CheckHeartbeat));
+			playerOnlineWriter.CommandReceiver.OnPlayerLoginAccess.RegisterResponse (OnPlayerLoginAccess);
 			playerOnlineWriter.CommandReceiver.OnConstruct.RegisterResponse (OnConstruct);
 			playerOnlineWriter.CommandReceiver.OnRegisterCharacter.RegisterResponse (OnRegisterCharacter);
 			playerOnlineWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
+			playerOnlineWriter.CommandReceiver.OnRegisterDistrict.RegisterResponse (OnRegisterDistrict);
+
 			characters = playerOnlineWriter.Data.characters;
+			districts = playerOnlineWriter.Data.districts;
 
 		}
 
@@ -44,7 +50,26 @@ namespace Assets.Gamelogic.Core
 			playerReader.HeartbeatTriggered.Remove(OnHeartbeat);
 			StopCoroutine(heartbeatCoroutine);
 			playerOnlineWriter.CommandReceiver.OnConstruct.DeregisterResponse ();
+			playerOnlineWriter.CommandReceiver.OnRegisterCharacter.DeregisterResponse ();
+			playerOnlineWriter.CommandReceiver.OnDeregisterCharacter.DeregisterResponse ();
+			playerOnlineWriter.CommandReceiver.OnRegisterDistrict.DeregisterResponse ();
 
+		}
+
+		private LoginAccessResponse OnPlayerLoginAccess(LoginAccessRequest r, ICommandCallerInfo callerinfo) {
+
+			var write = new Map<uint, WorkerRequirementSet>();
+			write.Add (EntityAcl.ComponentId, CommonRequirementSets.PhysicsOnly);
+			write.Add (Position.ComponentId, CommonRequirementSets.SpecificClientOnly(r.clientWorkerId));
+			write.Add (Player.ComponentId, CommonRequirementSets.SpecificClientOnly(r.clientWorkerId));
+			write.Add (PlayerOnline.ComponentId, CommonRequirementSets.PhysicsOnly);
+			write.Add (HeartbeatCounter.ComponentId, CommonRequirementSets.PhysicsOnly);
+
+			aclWriter.Send(new EntityAcl.Update()
+				.SetComponentWriteAcl(write)
+			);
+
+			return new LoginAccessResponse();
 		}
 
 		private ConstructionResponse OnConstruct(ConstructionRequest request, ICommandCallerInfo callerinfo) {
@@ -52,7 +77,7 @@ namespace Assets.Gamelogic.Core
 			string entityName = "construction-" + request.buildingName;
 			int ownerId = playerOnlineWriter.Data.playerId;
 
-			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, request.position.ToUnityVector(), ownerId, request.district))
+			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, request.position.ToUnityVector(), ownerId, gameObject.EntityId(), request.district))
 				.OnSuccess (entityId => OnContructionCreated (entityId.CreatedEntityId, request));
 			return new ConstructionResponse(true);
 		}
@@ -82,21 +107,15 @@ namespace Assets.Gamelogic.Core
 			if (heartbeatsRemainingBeforeTimeout == 0)
 			{
 				StopCoroutine(heartbeatCoroutine);
-				DeletePlayerEntity();
+				SpatialOS.WorkerCommands.SendCommand (PlayerCreator.Commands.DisconnectPlayer.Descriptor, new DisconnectPlayerRequest (playerOnlineWriter.Data.playerId), playerReader.Data.creator);
 				return;
 			}
 			SetHeartbeat(heartbeatsRemainingBeforeTimeout - 1);
 		}
 
-
-		private void DeletePlayerEntity()
-		{
-			SpatialOS.WorkerCommands.SendCommand (PlayerCreator.Commands.DisconnectPlayer.Descriptor, new DisconnectPlayerRequest (playerOnlineWriter.Data.playerId, (long)positionReader.Data.coords.x, (long)positionReader.Data.coords.z), playerReader.Data.creator);
-			SpatialOS.Commands.DeleteEntity(HeartbeatCounterWriter, gameObject.EntityId());
-		}
-
 		private Nothing OnRegisterCharacter(CharacterPlayerRegisterRequest r, ICommandCallerInfo _) {
 			characters.Add(r.characterId);
+			Debug.LogWarning ("B");
 
 			playerOnlineWriter.Send (new PlayerOnline.Update ()
 				.SetCharacters(characters)
@@ -113,6 +132,32 @@ namespace Assets.Gamelogic.Core
 			return new Nothing ();
 		}
 
+		private Nothing OnRegisterDistrict(DistrictRegisterRequest r, ICommandCallerInfo _) {
+			Debug.LogWarning ("Yo yo");
+			if (districts.Count == 0) {
+				SpatialOS.Commands.SendCommand (
+					playerOnlineWriter, 
+					District.Commands.RegisterCharacter.Descriptor, 
+					new CharacterRegistrationRequest (characters), 
+					r.districtId
+				);
+				foreach (var c in characters) {
+					SpatialOS.Commands.SendCommand (
+						playerOnlineWriter, 
+						Character.Commands.SetDistrict.Descriptor, 
+						new SetCharacterDistrictRequest (r.districtId), 
+						c
+					);
+				}
+			}
+
+			districts.Add(r.districtId);
+
+			playerOnlineWriter.Send (new PlayerOnline.Update ()
+				.SetDistricts(districts)
+			);
+			return new Nothing ();
+		}
 
 	}
 

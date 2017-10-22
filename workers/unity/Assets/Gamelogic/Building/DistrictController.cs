@@ -21,6 +21,8 @@ namespace Assets.Gamelogic.Core {
 		List<EntityId> characters;
 		int beds;
 		float spawnTimer = -1f;
+		public BuildingController building;
+		public OwnedController owned;
 
 		void OnEnable() {
 			districtWriter.CommandReceiver.OnRegisterBuilding.RegisterResponse (OnRegisterBuilding);
@@ -35,12 +37,17 @@ namespace Assets.Gamelogic.Core {
 			storageMap = districtWriter.Data.storageMap;
 			characters = districtWriter.Data.characterList;
 			beds = districtWriter.Data.beds;
+			building = GetComponent<BuildingController> ();
+			owned = GetComponent<OwnedController> ();
 
 			if (beds == 0) {
 				BuildingController b = GetComponent<BuildingController> ();
 
 				if (b != null) {
 					beds = b.GetBeds();
+					districtWriter.Send (new District.Update ()
+						.SetBeds(beds)
+					);
 				}
 			}
 		}
@@ -51,6 +58,11 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnStorageUpdateHas.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnStorageUpdateOut.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnFindAnyItem.DeregisterResponse ();
+
+			districtWriter.CommandReceiver.OnRegisterCharacter.DeregisterResponse ();
+			districtWriter.CommandReceiver.OnDeregisterCharacter.DeregisterResponse ();
+
+
 		}
 
 		void Update() {
@@ -63,7 +75,9 @@ namespace Assets.Gamelogic.Core {
 					spawnTimer = 2f;
 					//spawn (so weird so that it spawns to begin with isntead of waiting for debug)
 
-					
+					if (characters.Count < beds) {
+						SpatialOS.Commands.CreateEntity(districtWriter, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(new Vector3d(0,0,0), owned.getOwner(), owned.getOwnerObject()));
+					}
 
 				}
 
@@ -140,6 +154,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnRegisterCharacter(CharacterRegistrationRequest r, ICommandCallerInfo _) {
+			Debug.LogWarning ("A");
 			foreach (var e in r.characters) {
 				characters.Add(e);
 			}

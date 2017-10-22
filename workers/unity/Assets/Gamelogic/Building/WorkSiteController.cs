@@ -21,6 +21,7 @@ namespace Assets.Gamelogic.Core {
 		private Improbable.Collections.List<WorkerData> inside = new Improbable.Collections.List<WorkerData>();
 		private Improbable.Collections.List<EntityId> workers = new Improbable.Collections.List<EntityId>();
 
+		private OwnedController owned;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -29,6 +30,9 @@ namespace Assets.Gamelogic.Core {
 			workSiteWriter.CommandReceiver.OnUnEnlist.RegisterResponse (OnUnEnlist);
 			workSiteWriter.CommandReceiver.OnStartWork.RegisterResponse (OnStartWork);
 			workSiteWriter.CommandReceiver.OnFireWorker.RegisterResponse (OnFireWorker);
+
+			owned = GetComponent<OwnedController> ();
+
 		}
 
 		// Update is called once per frame
@@ -95,7 +99,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void Respawn(WorkerData d) {
-			SpatialOS.Commands.CreateEntity(workSiteWriter, EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(door.transform.position,d.playerId))
+			SpatialOS.Commands.CreateEntity(workSiteWriter, EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(door.transform.position,d.playerId, owned.getOwnerObject()))
 				.OnSuccess(entityId => Debug.Log("Created entity with ID: " + entityId))
 				.OnFailure(errorDetails => Debug.Log("Failed to create entity with error: " + errorDetails.ErrorMessage));
 		}
