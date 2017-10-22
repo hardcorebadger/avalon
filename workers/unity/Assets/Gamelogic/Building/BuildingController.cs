@@ -14,6 +14,7 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Building.Writer buildingWriter;
 	
 		private OwnedController owned;
+		public Transform door;
 
 		public float strength;
 
@@ -22,7 +23,8 @@ namespace Assets.Gamelogic.Core {
 			owned = GetComponent<OwnedController> ();
 			buildingWriter.CommandReceiver.OnReceiveDamage.RegisterResponse(OnReceiveDamage);
 			strength = buildingWriter.Data.strength;
-		
+			door = transform.FindChild ("door");
+
 		}
 
 		private void Update() {
@@ -76,13 +78,24 @@ namespace Assets.Gamelogic.Core {
 
 		}
 
+		public int GetBeds() {
+
+			return buildingWriter.Data.beds;
+
+		}
+
 		public void DestroyBuilding() {
 			if (buildingWriter.Data.district.HasValue) {
 				// deregiste the construction site
+				int beds = 0;
+
+				if (gameObject.name.Contains ("building-house-3d")) {
+					beds = 4;
+				}
 				SpatialOS.Commands.SendCommand (
 					buildingWriter, 
 					District.Commands.DeregisterBuilding.Descriptor, 
-					new BuildingDeregistrationRequest (gameObject.EntityId (), 4), 
+					new BuildingDeregistrationRequest (gameObject.EntityId (), beds), 
 					buildingWriter.Data.district.Value
 				).OnSuccess (OnDeregisteredSelf);
 			} else {

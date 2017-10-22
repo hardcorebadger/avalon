@@ -1,6 +1,7 @@
 package improbable.core;
 
 import "improbable/vector3.schema";
+import "improbable/core/Nothing.schema";
 
 type LoginAccessRequest {
   string client_worker_id = 1;
@@ -19,10 +20,28 @@ type ConstructionResponse {
   bool success = 1;
 }
 
+type CharacterPlayerRegisterRequest {
+  EntityId character_id = 1;
+} 
+
+type CharacterPlayerDeregisterRequest {
+  EntityId character_id = 1;
+} 
+
+type DistrictRegisterRequest {
+  EntityId district_id = 1;
+}
+
 component PlayerOnline {
     id = 1006;
     int32 player_id = 1;
+    list<EntityId> characters = 2;
+    list<EntityId> districts = 3;
 
     command ConstructionResponse construct(ConstructionRequest);
     command LoginAccessResponse player_login_access(LoginAccessRequest);
+    command Nothing register_character(CharacterPlayerRegisterRequest); 
+    command Nothing deregister_character(CharacterPlayerDeregisterRequest); 
+    command Nothing register_district(DistrictRegisterRequest); 
+
 }

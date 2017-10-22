@@ -16,10 +16,10 @@ namespace Assets.Gamelogic.Core {
 		[Require] private WorkSite.Writer workSiteWriter;
 		[Require] private Building.Writer buildingWriter;
 
-		public Transform door;
-
 		public Improbable.Collections.List<EntityId> workers = new Improbable.Collections.List<EntityId>();
 
+		private OwnedController owned;
+		private BuildingController building;
 		private InteriorPosition[] interiorPositions;
 
 		// Use this for initialization
@@ -27,8 +27,10 @@ namespace Assets.Gamelogic.Core {
 			workSiteWriter.CommandReceiver.OnEnlist.RegisterResponse (OnEnlist);
 			workSiteWriter.CommandReceiver.OnUnEnlist.RegisterResponse (OnUnEnlist);
 			workSiteWriter.CommandReceiver.OnFireWorker.RegisterResponse (OnFireWorker);
+
+			owned = GetComponent<OwnedController> ();
+			building = GetComponent<BuildingController> ();
 			interiorPositions = GetComponentsInChildren<InteriorPosition> ();
-			door = transform.FindChild ("door");
 		}
 
 		// Update is called once per frame
@@ -49,11 +51,11 @@ namespace Assets.Gamelogic.Core {
 				);
 			}
 			if (full || interiorPositions.Length < workers.Count) {
-				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (door.position.x, door.position.y, door.position.z), full, buildingWriter.Data.district, new Option<Vector3d> ());
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), full, buildingWriter.Data.district, new Option<Vector3d> ());
 			} else {
 				Vector3 v = interiorPositions [workers.Count - 1].transform.position;
 				Option<Vector3d> v3d = new Option<Vector3d> (new Vector3d(v.x,v.y,v.z));
-				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (door.position.x, door.position.y, door.position.z), full, buildingWriter.Data.district, v3d);
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), full, buildingWriter.Data.district, v3d);
 			}
 		}
 
@@ -90,7 +92,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void Respawn(WorkerData d) {
-			SpatialOS.Commands.CreateEntity(workSiteWriter, EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(door.transform.position,d.playerId))
+			SpatialOS.Commands.CreateEntity(workSiteWriter, EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.transform.position,d.playerId, owned.getOwnerObject()))
 				.OnSuccess(entityId => Debug.Log("Created entity with ID: " + entityId))
 				.OnFailure(errorDetails => Debug.Log("Failed to create entity with error: " + errorDetails.ErrorMessage));
 		}

@@ -73,8 +73,8 @@ namespace Assets.Gamelogic.Core
 		}
 
 		private void FirstLogin(string clientWorkerId, int playerId, Vector3 pos) {
-			CreateFamily (playerId, pos);
 			CreatePlayer (clientWorkerId, playerId, pos);
+
 		}
 
 		private void ReturningPlayer(string clientWorkerId, int playerId) {
@@ -97,23 +97,33 @@ namespace Assets.Gamelogic.Core
 			return new DisconnectPlayerResponse();
 		}
 
-		private void CreateFamily(int playerId, Vector3 pos) {
-			ReserveCharacterId (playerId, pos, 0);
+		private IEnumerator CreateFamily(int playerId, EntityId playerObject, Vector3 pos) {
+			yield return new WaitForSeconds (10F);
+			ReserveCharacterId (playerId, playerObject, pos, 0);
 		}
-
-		private void ReserveCharacterId(int playerId, Vector3 pos, int cur) {
-			if (cur >= 10)
+			
+		private void ReserveCharacterId(int playerId,  EntityId playerObject, Vector3 pos, int cur) {
+			if (cur >= 3)
 				return;
 			
 			SpatialOS.Commands.ReserveEntityId(playerCreatorWriter)
-				.OnSuccess(result => CreateCharacterEntity(result.ReservedEntityId, playerId, pos, cur))
+				.OnSuccess(result => CreateCharacterEntity(result.ReservedEntityId, playerId, playerObject, pos, cur))
 				.OnFailure(failure => OnFailedReservation(failure));
 		}
 
-		private void CreateCharacterEntity(EntityId entityId, int playerId, Vector3 pos, int cur) {
-			var playerEntityTemplate = EntityTemplateFactory.CreateCharacterTemplate(pos, playerId);
-			SpatialOS.Commands.CreateEntity(playerCreatorWriter, entityId, playerEntityTemplate)
-				.OnSuccess(response => ReserveCharacterId(playerId,(pos + new Vector3 (Random.Range (-10, 10), 3f, Random.Range (-10, 10))),cur+1))
+		private void CreateCharacterEntity(EntityId entityId, int playerId, EntityId playerObject, Vector3 pos, int cur) {
+
+			//REGISTER NEW ENTITY ID TO PLAYER
+			SpatialOS.Commands.SendCommand (
+				playerCreatorWriter, 
+				PlayerOnline.Commands.RegisterCharacter.Descriptor, 
+				new CharacterPlayerRegisterRequest (entityId), 
+				playerObject
+			);
+
+			var characterEntityTemplate = EntityTemplateFactory.CreateCharacterTemplate(pos, playerId, playerObject);
+			SpatialOS.Commands.CreateEntity(playerCreatorWriter, entityId, characterEntityTemplate)
+				.OnSuccess(response => ReserveCharacterId(playerId, playerObject, (pos + new Vector3 (Random.Range (-10, 10), 3f, Random.Range (-10, 10))),cur+1))
 				.OnFailure(failure => OnFailedEntityCreation(failure, entityId));
 		}
 
@@ -132,18 +142,23 @@ namespace Assets.Gamelogic.Core
 			// create the entity
 			var playerEntityTemplate = EntityTemplateFactory.CreatePlayerTemplate(playerCreatorWriter.EntityId, clientWorkerId, playerId, pos);
 			SpatialOS.Commands.CreateEntity(playerCreatorWriter, entityId, playerEntityTemplate)
-				.OnSuccess(result => OnPlayerEntityCreated(playerId, entityId))
+				.OnSuccess(result => OnPlayerEntityCreated(playerId, entityId, pos))
 				.OnFailure(failure => OnFailedEntityCreation(failure, entityId));
 		}
 
-		private void OnPlayerEntityCreated(int playerId, EntityId entityId) {
+		private void OnPlayerEntityCreated(int playerId, EntityId entityId, Vector3 pos) {
 
 			// add them to the player map
 			players.Add(playerId, new PlayerInfo(entityId, true));
 			playerCreatorWriter.Send(new PlayerCreator.Update()
 				.SetPlayers(players)
 			);
+
+			StartCoroutine(CreateFamily (playerId, entityId, pos));
+
 		}
+
+	
 
 		private void OnFailedReservation(ICommandErrorDetails response) {
 			Debug.LogError("Failed to Reserve EntityId, Aborting");

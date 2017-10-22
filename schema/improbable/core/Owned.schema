@@ -26,6 +26,7 @@ component Owned {
     id = 1010;
     int32 owner = 1;
     OwnedType type = 2;
+    EntityId player = 3;
 
     command OwnResponse set_owner(OwnRequest);
 }

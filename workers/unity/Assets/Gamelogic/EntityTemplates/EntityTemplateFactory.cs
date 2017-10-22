@@ -22,18 +22,18 @@ namespace Assets.Gamelogic.EntityTemplates
 				.Build();
 		}
 
-		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId, Option<EntityId> district) {
+		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject, Option<EntityId> district) {
 			if (name.StartsWith("construction")) {
-				return CreateConstructionTemplate (name, pos, ownerId, district);
+				return CreateConstructionTemplate (name, pos, ownerId, ownerObject, district);
 			} else if (name.StartsWith("building")) {
-				return CreateBuildingTemplate (name, pos, ownerId, district);
+				return CreateBuildingTemplate (name, pos, ownerId, ownerObject, district);
 			}
 			return null;
 		}
 
-		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId) {
+		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject) {
 			if (name == "character") {
-				return CreateCharacterTemplate (pos, ownerId);
+				return CreateCharacterTemplate (pos, ownerId, ownerObject);
 			}
 			return null;
 		}
@@ -73,7 +73,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 
 
-		public static Entity CreateBuildingTemplate(string name, Vector3 pos, int ownerId, Option<EntityId> district) {
+		public static Entity CreateBuildingTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject, Option<EntityId> district) {
 
 			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 100f, new Vector3d (pos.x, pos.z, pos.y));
 
@@ -83,24 +83,24 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (1,3,1, 100F, district), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1, 3, 1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
-					.Build();
+					.Build ();
 			} else if (name == "building-quarry") {
 				return EntityBuilder.Begin ()
 					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (1,2,2, 100F, district), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1, 2, 2, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_MINING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Quarry.Data (), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
-					.Build();
+					.Build ();
 			} else if (name == "building-stockpile") {
 				Improbable.Collections.Map<int,int> initialQuotas = new Improbable.Collections.Map<int,int> ();
 				initialQuotas.Add (0, 10);
@@ -109,55 +109,66 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (1,3,1, 100F, district), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1,3,1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_STORAGE, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Storage.Data (sourcing, initialQuotas), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
-					.Build();
+					.Build ();
 			} else if (name == "building-farm") {
 				return EntityBuilder.Begin ()
 					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (1,2,2, 100F, district), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1,2,2, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_FARMING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Farm.Data (), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 30), CommonRequirementSets.PhysicsOnly)
-					.Build();
+					.Build ();
 			} else if (name == "building-settlement") {
 				Map<EntityId, Vector3d> p = new Map<EntityId, Vector3d> ();
 				Map<int, BuildingList> s = new Map<int, BuildingList> ();
-				p.Add (district.Value, new Vector3d(pos.x,pos.y,pos.z));
+
+				p.Add (district.Value, new Vector3d (pos.x, pos.y, pos.z));
 				return EntityBuilder.Begin ()
 					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (3,4,4, 100F, district), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new District.Data (p, s, 3, new Improbable.Collections.List<EntityId>()), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (3, 4, 4, 100F, district, 3), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new District.Data (p, s, 0, new Improbable.Collections.List<EntityId> ()), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
+					.Build ();
+			} else if (name == "building-house-3d") {
+
+				return EntityBuilder.Begin ()
+					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
+					.AddMetadataComponent (name)
+					.SetPersistence (true)
+					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
+					.AddComponent(new Building.Data(1,1,1, 100F, district, 4), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.Build();
 			}
-			return CreateBasicBuildingTemplate (name, pos, ownerId, district);
+			return CreateBasicBuildingTemplate (name, pos, ownerId, ownerObject, district);
 		}
 
-		public static Entity CreateBasicBuildingTemplate(string name, Vector3 pos, int ownerId, Option<EntityId> district) {
+		public static Entity CreateBasicBuildingTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject, Option<EntityId> district) {
 
 			return EntityBuilder.Begin ()
 				.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent (name)
 				.SetPersistence (true)
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Building.Data(1,1,1, 100F, district), CommonRequirementSets.PhysicsOnly)
-				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Building.Data(1,1,1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 				.Build();
 
 		}
 
-		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId, Option<EntityId> district) {
+		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject, Option<EntityId> district) {
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
 			int tileMargin = 1;
 			int x = 1;
@@ -195,8 +206,8 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, 4), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Construction.Data(req,sourcing), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Building.Data(tileMargin,x,z, 100f, district), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CONSTRUCTION), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Building.Data(tileMargin,x,z, 100f, district, 0), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CONSTRUCTION, ownerObject), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}
 
@@ -243,15 +254,16 @@ namespace Assets.Gamelogic.EntityTemplates
 				.Build();
 		}
 
-		public static Entity CreateCharacterTemplate(Vector3 pos, int playerId) {
+		public static Entity CreateCharacterTemplate(Vector3 pos, int playerId, EntityId playerObject) {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent("character")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1, 0, 100, false), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Owned.Data(playerId, OwnedType.OWNED_CHARACTER), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1, 0, 100, new Option<EntityId>(), false), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Owned.Data(playerId, OwnedType.OWNED_CHARACTER, playerObject), CommonRequirementSets.PhysicsOnly)
+
 				.Build();
 		}
 
@@ -280,7 +292,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Player.Data(creator), CommonRequirementSets.SpecificClientOnly(clientWorkerId))
-				.AddComponent(new PlayerOnline.Data(playerId), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new PlayerOnline.Data(playerId, new List<EntityId>(), new List<EntityId>()), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new HeartbeatCounter.Data(SimulationSettings.TotalHeartbeatsBeforeTimeout),CommonRequirementSets.PhysicsOnly)
 				.Build();
 

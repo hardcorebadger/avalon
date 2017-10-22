@@ -18,8 +18,11 @@ namespace Assets.Gamelogic.Core {
 
 		Map<EntityId, Vector3d> positionMap;
 		Map<int, BuildingList> storageMap;
+		List<EntityId> characters;
 		int beds;
 		float spawnTimer = -1f;
+		public BuildingController building;
+		public OwnedController owned;
 
 		void OnEnable() {
 			districtWriter.CommandReceiver.OnRegisterBuilding.RegisterResponse (OnRegisterBuilding);
@@ -27,9 +30,26 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnStorageUpdateHas.RegisterResponse (OnStorageUpdateHas);
 			districtWriter.CommandReceiver.OnStorageUpdateOut.RegisterResponse (OnStorageUpdateOut);
 			districtWriter.CommandReceiver.OnFindAnyItem.RegisterResponse (OnFindAnyItem);
+			districtWriter.CommandReceiver.OnRegisterCharacter.RegisterResponse (OnRegisterCharacter);
+			districtWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
+
 			positionMap = districtWriter.Data.positionMap;
 			storageMap = districtWriter.Data.storageMap;
+			characters = districtWriter.Data.characterList;
 			beds = districtWriter.Data.beds;
+			building = GetComponent<BuildingController> ();
+			owned = GetComponent<OwnedController> ();
+
+			if (beds == 0) {
+				BuildingController b = GetComponent<BuildingController> ();
+
+				if (b != null) {
+					beds = b.GetBeds();
+					districtWriter.Send (new District.Update ()
+						.SetBeds(beds)
+					);
+				}
+			}
 		}
 
 		void OnDisable() {
@@ -38,6 +58,11 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnStorageUpdateHas.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnStorageUpdateOut.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnFindAnyItem.DeregisterResponse ();
+
+			districtWriter.CommandReceiver.OnRegisterCharacter.DeregisterResponse ();
+			districtWriter.CommandReceiver.OnDeregisterCharacter.DeregisterResponse ();
+
+
 		}
 
 		void Update() {
@@ -46,20 +71,36 @@ namespace Assets.Gamelogic.Core {
 
 				spawnTimer += Time.deltaTime;
 
-				if (spawnTimer < 2F) {
-					spawnTimer = 2f;
-					//spawn (so weird so that it spawns to begin with isntead of waiting for debug)
-
-					
-
+				if (spawnTimer >= 5f) {
+					Debug.LogWarning(characters.Count);
+					if (characters.Count < beds) {
+						SpatialOS.Commands.ReserveEntityId (districtWriter)
+							.OnSuccess (result => SpawnCharacterEntity (result.ReservedEntityId));
+					}
+					spawnTimer = 0F;
 				}
-
-				if (spawnTimer >= 30f)
-					spawnTimer = -1f;
 
 
 			}
 
+		}
+
+		public void SpawnCharacterEntity(EntityId entityId) {
+
+			SpatialOS.Commands
+					.CreateEntity(districtWriter, entityId, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.position, owned.getOwner(), owned.getOwnerObject()))
+					.OnSuccess(result => RegisterSpawnedCharacter(entityId));
+
+		}
+
+		public void RegisterSpawnedCharacter(EntityId characterId) {
+
+			SpatialOS.Commands.SendCommand (districtWriter, PlayerOnline.Commands.RegisterCharacter.Descriptor, new CharacterPlayerRegisterRequest (characterId), owned.getOwnerObject ());
+
+			characters.Add(characterId);
+			districtWriter.Send (new District.Update ()
+				.SetCharacterList(characters)
+			);
 		}
 
 		private Nothing OnRegisterBuilding(BuildingRegistrationRequest r, ICommandCallerInfo _) {
@@ -74,6 +115,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnDeregisterBuilding(BuildingDeregistrationRequest r, ICommandCallerInfo _) {
 			positionMap.Remove (r.buildingId);
+		
 			beds -= r.beds;
 			districtWriter.Send (new District.Update ()
 				.SetPositionMap(positionMap)
@@ -125,6 +167,27 @@ namespace Assets.Gamelogic.Core {
 			// nope.
 			return new ItemFindResponse (-1, new Option<EntityId> (), Vector3d.ZERO);
 		}
+
+		private Nothing OnRegisterCharacter(CharacterRegistrationRequest r, ICommandCallerInfo _) {
+			foreach (var e in r.characters) {
+				characters.Add(e);
+			}
+			districtWriter.Send (new District.Update ()
+				.SetCharacterList(characters)
+			);
+			return new Nothing ();
+		}
+
+		private Nothing OnDeregisterCharacter(CharacterDeregistrationRequest r, ICommandCallerInfo _) {
+			foreach (var e in r.characters) {
+				characters.Remove(e);
+			}
+			districtWriter.Send (new District.Update ()
+				.SetCharacterList(characters)
+			);
+			return new Nothing ();
+		}
+
 
 	}
 

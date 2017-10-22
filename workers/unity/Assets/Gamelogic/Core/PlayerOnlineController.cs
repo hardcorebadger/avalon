@@ -26,6 +26,8 @@ namespace Assets.Gamelogic.Core
 		private HeartbeatCounter.Writer HeartbeatCounterWriter;
 
 		private Coroutine heartbeatCoroutine;
+		List<EntityId> characters;
+		List<EntityId> districts;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -34,6 +36,13 @@ namespace Assets.Gamelogic.Core
 			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatCheckIntervalSecs, CheckHeartbeat));
 			playerOnlineWriter.CommandReceiver.OnPlayerLoginAccess.RegisterResponse (OnPlayerLoginAccess);
 			playerOnlineWriter.CommandReceiver.OnConstruct.RegisterResponse (OnConstruct);
+			playerOnlineWriter.CommandReceiver.OnRegisterCharacter.RegisterResponse (OnRegisterCharacter);
+			playerOnlineWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
+			playerOnlineWriter.CommandReceiver.OnRegisterDistrict.RegisterResponse (OnRegisterDistrict);
+
+			characters = playerOnlineWriter.Data.characters;
+			districts = playerOnlineWriter.Data.districts;
+
 		}
 
 		// Update is called once per frame
@@ -41,6 +50,9 @@ namespace Assets.Gamelogic.Core
 			playerReader.HeartbeatTriggered.Remove(OnHeartbeat);
 			StopCoroutine(heartbeatCoroutine);
 			playerOnlineWriter.CommandReceiver.OnConstruct.DeregisterResponse ();
+			playerOnlineWriter.CommandReceiver.OnRegisterCharacter.DeregisterResponse ();
+			playerOnlineWriter.CommandReceiver.OnDeregisterCharacter.DeregisterResponse ();
+			playerOnlineWriter.CommandReceiver.OnRegisterDistrict.DeregisterResponse ();
 
 		}
 
@@ -65,7 +77,7 @@ namespace Assets.Gamelogic.Core
 			string entityName = "construction-" + request.buildingName;
 			int ownerId = playerOnlineWriter.Data.playerId;
 
-			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, request.position.ToUnityVector(), ownerId, request.district))
+			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, request.position.ToUnityVector(), ownerId, gameObject.EntityId(), request.district))
 				.OnSuccess (entityId => OnContructionCreated (entityId.CreatedEntityId, request));
 			return new ConstructionResponse(true);
 		}
@@ -73,7 +85,7 @@ namespace Assets.Gamelogic.Core
 		public void OnContructionCreated(EntityId id, ConstructionRequest req) {
 			// send add request to req.district with the id created
 			if (req.district.HasValue) {
-				SpatialOS.Commands.SendCommand (playerOnlineWriter, District.Commands.RegisterBuilding.Descriptor, new BuildingRegistrationRequest (id, req.position, 4), req.district.Value);
+				SpatialOS.Commands.SendCommand (playerOnlineWriter, District.Commands.RegisterBuilding.Descriptor, new BuildingRegistrationRequest (id, req.position, 0), req.district.Value);
 			}
 		}
 
@@ -101,6 +113,54 @@ namespace Assets.Gamelogic.Core
 			SetHeartbeat(heartbeatsRemainingBeforeTimeout - 1);
 		}
 
+		private Nothing OnRegisterCharacter(CharacterPlayerRegisterRequest r, ICommandCallerInfo _) {
+			characters.Add(r.characterId);
+			playerOnlineWriter.Send (new PlayerOnline.Update ()
+				.SetCharacters(characters)
+			);
+			return new Nothing ();
+		}
+
+		private Nothing OnDeregisterCharacter(CharacterPlayerDeregisterRequest r, ICommandCallerInfo _) {
+			characters.Remove(r.characterId);
+
+			playerOnlineWriter.Send (new PlayerOnline.Update ()
+				.SetCharacters(characters)
+			);
+			return new Nothing ();
+		}
+
+		private Nothing OnRegisterDistrict(DistrictRegisterRequest r, ICommandCallerInfo _) {
+			if (districts.Count == 0) {
+				StartCoroutine (SendCharactersToDistrict (r));
+				foreach (var c in characters) {
+					SpatialOS.Commands.SendCommand (
+						playerOnlineWriter, 
+						Character.Commands.SetDistrict.Descriptor, 
+						new SetCharacterDistrictRequest (r.districtId), 
+						c
+					);
+				}
+			}
+
+			districts.Add(r.districtId);
+
+			playerOnlineWriter.Send (new PlayerOnline.Update ()
+				.SetDistricts(districts)
+			);
+			return new Nothing ();
+		}
+
+		private IEnumerator SendCharactersToDistrict(DistrictRegisterRequest r) {
+			yield return new WaitForSeconds (5f);
+			SpatialOS.Commands.SendCommand (
+				playerOnlineWriter, 
+				District.Commands.RegisterCharacter.Descriptor, 
+				new CharacterRegistrationRequest (characters), 
+				r.districtId
+			);
+
+		}
 
 	}
 

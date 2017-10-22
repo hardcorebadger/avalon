@@ -14,6 +14,14 @@ type BuildingDeregistrationRequest {
     int32 beds = 2; 
 }
 
+type CharacterRegistrationRequest {
+    list<EntityId> characters = 1;
+}
+
+type CharacterDeregistrationRequest {
+    list<EntityId> characters = 1;
+}
+
 type BuildingList {
     list<EntityId> list = 1;
 }
@@ -41,11 +49,13 @@ component District {
     map<int32, BuildingList> storage_map = 2;
     int32 beds = 3;
     list<EntityId> character_list = 4; 
-
+   
     command Nothing register_building(BuildingRegistrationRequest);
     command Nothing deregister_building(BuildingDeregistrationRequest);
     command Nothing storage_update_has(StorageUpdateRequest);
     command Nothing storage_update_out(StorageUpdateRequest);
     command ItemFindResponse find_any_item(ItemFindRequest);
+    command Nothing register_character(CharacterRegistrationRequest); 
+    command Nothing deregister_character(CharacterDeregistrationRequest); 
 
 }
