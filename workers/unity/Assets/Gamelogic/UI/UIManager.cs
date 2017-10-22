@@ -19,6 +19,7 @@ namespace Assets.Gamelogic.Core {
 		public Dictionary<Type,UIPreviewWidget> previewWidgetsOptions;
 
 		public UIHoverWidget[] hoverWidgetList;
+		public UIHoverWidget hoverTagWidget;
 		public Dictionary<Type,UIHoverWidget> hoverWidgetsOptions;
 
 		public GameObject hoverContainer;
