@@ -9,6 +9,7 @@ namespace Assets.Gamelogic.Core {
 		public HoverState hoverState = HoverState.None;
 		private GameObject hoverContainer;
 		public Vector3 offset;
+		public string hoverLabel;
 
 		public Material hoverMaterial;
 		private Material defaultMaterial;
@@ -38,7 +39,7 @@ namespace Assets.Gamelogic.Core {
 		private void CreateHoverEffects() {
 			SpriteRenderer sr = GetComponent<SpriteRenderer> ();
 			if (sr != null) {
-				sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 0.5f);
+				sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 0.8f);
 			}
 			MeshRenderer mr = GetComponentInChildren<MeshRenderer> ();
 			if (mr != null) {
@@ -64,6 +65,7 @@ namespace Assets.Gamelogic.Core {
 			
 			hoverContainer = Instantiate (UIManager.instance.hoverContainer, UIManager.instance.transform);
 
+			AddWidget (UIManager.instance.hoverTagWidget);
 			foreach (MonoBehaviour m in GetComponents<MonoBehaviour>()) {
 				if (UIManager.instance.hoverWidgetsOptions.ContainsKey (m.GetType()))
 					AddWidget (UIManager.instance.hoverWidgetsOptions [m.GetType()]);
