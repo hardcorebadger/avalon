@@ -40,16 +40,9 @@ namespace Assets.Gamelogic.Core {
 		
 		// Update is called once per frame
 		void Update () {
-			if (Input.GetAxis ("Horizontal") != 0f || Input.GetAxis ("Vertical") != 0f) {
-				SelectionManager.instance.ClearSelected ();
-			}
-			if (SelectionManager.instance.selected.Count > 0) {
-				transform.position = Vector3.Lerp (transform.position, SelectionManager.instance.GetMedianSelectionPosition ()+Vector3.forward*transform.position.z, 0.1f);
-			} else {
-				transform.position += transform.TransformDirection(new Vector3 (Input.GetAxis ("Horizontal")*speed, 0f,  0f));
-				transform.position += new Vector3 (Input.GetAxis ("Vertical") * speed, 0f, Input.GetAxis ("Vertical") * speed);
-				Camera.main.orthographicSize -= Input.GetAxis ("Mouse ScrollWheel") * zoomSpeed;
-			}
+			transform.position += transform.TransformDirection(new Vector3 (Input.GetAxis ("Horizontal")*speed, 0f,  0f));
+			transform.position += new Vector3 (Input.GetAxis ("Vertical") * speed, 0f, Input.GetAxis ("Vertical") * speed);
+			Camera.main.orthographicSize -= Input.GetAxis ("Mouse ScrollWheel") * zoomSpeed;
 		}
 
 		public float pixelToUnits = 40f;
