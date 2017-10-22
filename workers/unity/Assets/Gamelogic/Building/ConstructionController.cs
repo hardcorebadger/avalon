@@ -137,10 +137,15 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnBuildingCreated(EntityId id) {
 			if (!districtBuildingConstruction) {
+				int beds = 0;
+
+				if (gameObject.name.Contains ("house-3d")) {
+					beds = 4;
+				}
 				SpatialOS.Commands.SendCommand (
 					constructionWriter, 
 					District.Commands.RegisterBuilding.Descriptor, 
-					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z), 4), 
+					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z), beds), 
 					buildingWriter.Data.district.Value
 				).OnSuccess (OnBuildingRegistered);
 			} else {

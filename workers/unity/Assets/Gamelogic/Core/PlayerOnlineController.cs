@@ -85,7 +85,7 @@ namespace Assets.Gamelogic.Core
 		public void OnContructionCreated(EntityId id, ConstructionRequest req) {
 			// send add request to req.district with the id created
 			if (req.district.HasValue) {
-				SpatialOS.Commands.SendCommand (playerOnlineWriter, District.Commands.RegisterBuilding.Descriptor, new BuildingRegistrationRequest (id, req.position, 4), req.district.Value);
+				SpatialOS.Commands.SendCommand (playerOnlineWriter, District.Commands.RegisterBuilding.Descriptor, new BuildingRegistrationRequest (id, req.position, 0), req.district.Value);
 			}
 		}
 
@@ -115,8 +115,6 @@ namespace Assets.Gamelogic.Core
 
 		private Nothing OnRegisterCharacter(CharacterPlayerRegisterRequest r, ICommandCallerInfo _) {
 			characters.Add(r.characterId);
-			Debug.LogWarning ("B");
-
 			playerOnlineWriter.Send (new PlayerOnline.Update ()
 				.SetCharacters(characters)
 			);
@@ -133,14 +131,8 @@ namespace Assets.Gamelogic.Core
 		}
 
 		private Nothing OnRegisterDistrict(DistrictRegisterRequest r, ICommandCallerInfo _) {
-			Debug.LogWarning ("Yo yo");
 			if (districts.Count == 0) {
-				SpatialOS.Commands.SendCommand (
-					playerOnlineWriter, 
-					District.Commands.RegisterCharacter.Descriptor, 
-					new CharacterRegistrationRequest (characters), 
-					r.districtId
-				);
+				StartCoroutine (SendCharactersToDistrict (r));
 				foreach (var c in characters) {
 					SpatialOS.Commands.SendCommand (
 						playerOnlineWriter, 
@@ -157,6 +149,17 @@ namespace Assets.Gamelogic.Core
 				.SetDistricts(districts)
 			);
 			return new Nothing ();
+		}
+
+		private IEnumerator SendCharactersToDistrict(DistrictRegisterRequest r) {
+			yield return new WaitForSeconds (5f);
+			SpatialOS.Commands.SendCommand (
+				playerOnlineWriter, 
+				District.Commands.RegisterCharacter.Descriptor, 
+				new CharacterRegistrationRequest (characters), 
+				r.districtId
+			);
+
 		}
 
 	}

@@ -71,22 +71,36 @@ namespace Assets.Gamelogic.Core {
 
 				spawnTimer += Time.deltaTime;
 
-				if (spawnTimer < 2F) {
-					spawnTimer = 2f;
-					//spawn (so weird so that it spawns to begin with isntead of waiting for debug)
-
+				if (spawnTimer >= 5f) {
+					Debug.LogWarning(characters.Count);
 					if (characters.Count < beds) {
-						SpatialOS.Commands.CreateEntity(districtWriter, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.position, owned.getOwner(), owned.getOwnerObject()));
+						SpatialOS.Commands.ReserveEntityId (districtWriter)
+							.OnSuccess (result => SpawnCharacterEntity (result.ReservedEntityId));
 					}
-
+					spawnTimer = 0F;
 				}
-
-				if (spawnTimer >= 30f)
-					spawnTimer = -1f;
 
 
 			}
 
+		}
+
+		public void SpawnCharacterEntity(EntityId entityId) {
+
+			SpatialOS.Commands
+					.CreateEntity(districtWriter, entityId, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.position, owned.getOwner(), owned.getOwnerObject()))
+					.OnSuccess(result => RegisterSpawnedCharacter(entityId));
+
+		}
+
+		public void RegisterSpawnedCharacter(EntityId characterId) {
+
+			SpatialOS.Commands.SendCommand (districtWriter, PlayerOnline.Commands.RegisterCharacter.Descriptor, new CharacterPlayerRegisterRequest (characterId), owned.getOwnerObject ());
+
+			characters.Add(characterId);
+			districtWriter.Send (new District.Update ()
+				.SetCharacterList(characters)
+			);
 		}
 
 		private Nothing OnRegisterBuilding(BuildingRegistrationRequest r, ICommandCallerInfo _) {
@@ -101,6 +115,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnDeregisterBuilding(BuildingDeregistrationRequest r, ICommandCallerInfo _) {
 			positionMap.Remove (r.buildingId);
+		
 			beds -= r.beds;
 			districtWriter.Send (new District.Update ()
 				.SetPositionMap(positionMap)
@@ -154,7 +169,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnRegisterCharacter(CharacterRegistrationRequest r, ICommandCallerInfo _) {
-			Debug.LogWarning ("A");
 			foreach (var e in r.characters) {
 				characters.Add(e);
 			}

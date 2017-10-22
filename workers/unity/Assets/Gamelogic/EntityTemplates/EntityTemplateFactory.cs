@@ -137,7 +137,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (3, 4, 4, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (3, 4, 4, 100F, district, 3), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new District.Data (p, s, 0, new Improbable.Collections.List<EntityId> ()), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.Build ();
