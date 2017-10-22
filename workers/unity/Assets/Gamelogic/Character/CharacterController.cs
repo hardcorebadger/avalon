@@ -34,6 +34,8 @@ namespace Assets.Gamelogic.Core {
 		public Quaternion facing = Quaternion.identity;
 		public Animator anim;
 		public OwnedController owned;
+		public bool indoors = false;
+
 
 		private Action currentAction;
 		private float velocity;
@@ -65,6 +67,7 @@ namespace Assets.Gamelogic.Core {
 			district = characterWriter.Data.district;
 		
 			currentAction = new ActionBlank (this);
+			indoors = characterWriter.Data.isIndoors;
 		}
 
 		private void OnDisable() {
@@ -213,8 +216,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void SetAction(Action a) {
-			if (currentAction != null)
+			if (currentAction != null) {
 				currentAction.OnKill ();
+			}
 			SetVelocity (0f);
 			rigidBody.angularVelocity = Vector3.zero;
 			SetState (CharacterState.DEFAULT);
@@ -315,6 +319,20 @@ namespace Assets.Gamelogic.Core {
 			// finally delete yourself
 
 			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId ());
+		}
+
+		public void SetIndoors(bool b) {
+			indoors = b;
+			characterWriter.Send (new Character.Update ()
+				.SetIsIndoors (indoors)
+			);
+			if (indoors) {
+				GetComponent<Collider> ().enabled = false;
+				GetComponent<Rigidbody> ().isKinematic = true;
+			} else {
+				GetComponent<Collider> ().enabled = true;
+				GetComponent<Rigidbody> ().isKinematic = false;
+			}
 		}
 
 	}

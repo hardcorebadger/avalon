@@ -16,36 +16,33 @@ namespace Assets.Gamelogic.Core {
 		[Require] private WorkSite.Writer workSiteWriter;
 		[Require] private Building.Writer buildingWriter;
 
-		public GameObject door;
-
-		private Improbable.Collections.List<WorkerData> inside = new Improbable.Collections.List<WorkerData>();
-		private Improbable.Collections.List<EntityId> workers = new Improbable.Collections.List<EntityId>();
+		public Improbable.Collections.List<EntityId> workers = new Improbable.Collections.List<EntityId>();
 
 		private OwnedController owned;
+		private BuildingController building;
+		private InteriorPosition[] interiorPositions;
 
 		// Use this for initialization
 		void OnEnable () {
-
 			workSiteWriter.CommandReceiver.OnEnlist.RegisterResponse (OnEnlist);
 			workSiteWriter.CommandReceiver.OnUnEnlist.RegisterResponse (OnUnEnlist);
-			workSiteWriter.CommandReceiver.OnStartWork.RegisterResponse (OnStartWork);
 			workSiteWriter.CommandReceiver.OnFireWorker.RegisterResponse (OnFireWorker);
 
 			owned = GetComponent<OwnedController> ();
-
+			building = GetComponent<BuildingController> ();
+			interiorPositions = GetComponentsInChildren<InteriorPosition> ();
 		}
 
 		// Update is called once per frame
 		void OnDisable () {
 			workSiteWriter.CommandReceiver.OnEnlist.DeregisterResponse ();
 			workSiteWriter.CommandReceiver.OnUnEnlist.DeregisterResponse ();
-			workSiteWriter.CommandReceiver.OnStartWork.DeregisterResponse ();
 			workSiteWriter.CommandReceiver.OnFireWorker.DeregisterResponse (); 
 		}
 
 		private EnlistResponse OnEnlist(EnlistRequest request, ICommandCallerInfo callerinfo) {
 			bool full = false;
-			if (workers.Count + inside.Count >= workSiteWriter.Data.maxWorkers) {
+			if (workers.Count >= workSiteWriter.Data.maxWorkers) {
 				full = true;
 			} else {
 				workers.Add (request.worker);
@@ -53,7 +50,13 @@ namespace Assets.Gamelogic.Core {
 					.SetWorkers (workers)
 				);
 			}
-			return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d(transform.position.x, transform.position.y, transform.position.z), workSiteWriter.Data.interior, full, buildingWriter.Data.district);
+			if (full || interiorPositions.Length < workers.Count) {
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), full, buildingWriter.Data.district, new Option<Vector3d> ());
+			} else {
+				Vector3 v = interiorPositions [workers.Count - 1].transform.position;
+				Option<Vector3d> v3d = new Option<Vector3d> (new Vector3d(v.x,v.y,v.z));
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), full, buildingWriter.Data.district, v3d);
+			}
 		}
 
 		private UnEnlistResponse OnUnEnlist(UnEnlistRequest request, ICommandCallerInfo callerinfo) {
@@ -64,42 +67,32 @@ namespace Assets.Gamelogic.Core {
 			return new UnEnlistResponse ();
 		}
 
-		private StartWorkResponse OnStartWork(StartWorkRequest request, ICommandCallerInfo callerinfo) {
-			bool success = true;
-			if (workers.Contains(request.worker)) {
-				workers.Remove (request.worker);
-				inside.Add (new WorkerData (request.playerId));
-				workSiteWriter.Send (new WorkSite.Update ()
-					.SetInside (inside)
-					.SetWorkers (workers)
-				);
-				SpatialOS.Commands.DeleteEntity(workSiteWriter, request.worker)
-					.OnSuccess(entityId => Debug.Log("Deleted entity: " + entityId))
-					.OnFailure(errorDetails => Debug.Log("Failed to delete entity with error: " + errorDetails.ErrorMessage));
-			} else {
-				success = false;
-			}
-
-			return new StartWorkResponse (success);
-		}
+//		private StartWorkResponse OnStartWork(StartWorkRequest request, ICommandCallerInfo callerinfo) {
+//			bool success = true;
+//			if (workers.Contains(request.worker)) {
+//				workers.Remove (request.worker);
+//				inside.Add (new WorkerData (request.playerId));
+//				workSiteWriter.Send (new WorkSite.Update ()
+//					.SetInside (inside)
+//					.SetWorkers (workers)
+//				);
+//				SpatialOS.Commands.DeleteEntity(workSiteWriter, request.worker)
+//					.OnSuccess(entityId => Debug.Log("Deleted entity: " + entityId))
+//					.OnFailure(errorDetails => Debug.Log("Failed to delete entity with error: " + errorDetails.ErrorMessage));
+//			} else {
+//				success = false;
+//			}
+//
+//			return new StartWorkResponse (success);
+//		}
 
 		private FireWorkerResponse OnFireWorker(FireWorkerRequest request, ICommandCallerInfo callerinfo) {
-			if (workers.Count > 0) {
-				SpatialOS.Commands.SendCommand (workSiteWriter, Character.Commands.Fire.Descriptor, new Nothing (), workers[0]);
-				// they get removed from workers when they send back their unenlist request
-			} else if (inside.Count > 0) {
-				Respawn (inside [0]);
-				inside.RemoveAt (0);
-				workSiteWriter.Send (new WorkSite.Update ()
-					.SetInside (inside)
-				);
-			}
-
+			SpatialOS.Commands.SendCommand (workSiteWriter, Character.Commands.Fire.Descriptor, new Nothing (), workers[workers.Count-1]);
 			return new FireWorkerResponse (true);
 		}
 
 		private void Respawn(WorkerData d) {
-			SpatialOS.Commands.CreateEntity(workSiteWriter, EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(door.transform.position,d.playerId, owned.getOwnerObject()))
+			SpatialOS.Commands.CreateEntity(workSiteWriter, EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.transform.position,d.playerId, owned.getOwnerObject()))
 				.OnSuccess(entityId => Debug.Log("Created entity with ID: " + entityId))
 				.OnFailure(errorDetails => Debug.Log("Failed to create entity with error: " + errorDetails.ErrorMessage));
 		}

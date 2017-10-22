@@ -15,23 +15,33 @@ using Improbable.Collections;
 
 namespace Assets.Gamelogic.Core {
 
-	public class ActionMiner : Action {
+	public class ActionWorkInterior : Action {
 
 		private int state = 0;
-		private EntityId target;
 		private bool failed = false;
 		private bool success = false;
-		private Action subAction = null;
-		private Vector3 hqPosition;
 
-		public ActionMiner(CharacterController o, EntityId t, Vector3 pos) : base(o)	{
+		EntityId target;
+		Vector3 interiorPositon;
+		Vector3 doorPosition;
+
+		public ActionWorkInterior(CharacterController o, EntityId t, Vector3 ip, Vector3 dp) : base(o)	{
 			target = t;
-			hqPosition = pos;
+			interiorPositon = ip;
+			doorPosition = dp;
 		}
 
-
-		// Use this for initialization
 		public override ActionCode Update () {
+			switch (state) {
+			case 0:
+				owner.transform.position = interiorPositon;
+				state++;
+				owner.SetIndoors (true);
+				break;
+			default:
+				break;
+			}
+
 			if (success)
 				return ActionCode.Success;
 			else if (failed)
@@ -39,7 +49,12 @@ namespace Assets.Gamelogic.Core {
 			else
 				return ActionCode.Perpetual;
 		}
-		
+
+		public override void OnKill () {
+			owner.transform.position = doorPosition;
+			owner.SetIndoors (false);
+		}
+
 
 	}
 

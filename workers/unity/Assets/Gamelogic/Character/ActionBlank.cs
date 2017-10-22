@@ -25,6 +25,7 @@ namespace Assets.Gamelogic.Core {
 			else
 				return ActionCode.Perpetual;
 		}
+
 	}
 
 }

@@ -25,6 +25,7 @@ namespace Assets.Gamelogic.Core {
 		private Vector3 downPos;
 		private bool boxSelecting = false;
 		private bool radiusSelecting = false;
+		private bool wasControllingMouseDown = false;
 
 		public List<CharacterVisualizer> selected;
 		private List<CharacterVisualizer> currentDragSelection;
@@ -39,41 +40,49 @@ namespace Assets.Gamelogic.Core {
 
 		void Update() {
 
-			if (EventSystem.current.IsPointerOverGameObject () && !boxSelecting)
+			if (EventSystem.current.IsPointerOverGameObject () && !boxSelecting) {
+				wasControllingMouseDown = false;
 				return;
+			}
 
-			if (BuildingManager.isBuilding)
+			if (BuildingManager.isBuilding) {
+				wasControllingMouseDown = false;
 				return;
+			}
 
 			RaycastHit hit = GetHit();
 			if (hit.collider != null && hit.collider.GetComponent<Hoverable> () != null) {
 				if (hit.collider.GetComponent<Hoverable> () != currentHover) {
 					if (currentHover != null && !selected.Contains(currentHover.GetComponent<CharacterVisualizer>()))
-						currentHover.SetHovered (false);
+						currentHover.SetHovered (Hoverable.HoverState.None);
+					else if (currentHover != null && selected.Contains(currentHover.GetComponent<CharacterVisualizer>()))
+						currentHover.SetHovered (Hoverable.HoverState.Selected);
 					CharacterVisualizer c = hit.collider.GetComponent<CharacterVisualizer> ();
 					ConstructionVisualizer cons = hit.collider.GetComponent<ConstructionVisualizer> ();
 
 					if (c != null) {
 						if (c.CanControl ()) {
-							hit.collider.GetComponent<Hoverable> ().SetHovered (true);
+							hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
 							currentHover = hit.collider.GetComponent<Hoverable> ();
-
 						}
 					} else if (cons != null) {
 						if (cons.CanControl ()) {
-							hit.collider.GetComponent<Hoverable> ().SetHovered (true);
+							hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
 							currentHover = hit.collider.GetComponent<Hoverable> ();
 						}
 					
 					} else {
 						
-						hit.collider.GetComponent<Hoverable> ().SetHovered (true);
+						hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
 						currentHover = hit.collider.GetComponent<Hoverable> ();
 
 					}
 				}
 			} else if (currentHover != null && !selected.Contains(currentHover.GetComponent<CharacterVisualizer>())) {
-				currentHover.SetHovered (false);
+				currentHover.SetHovered (Hoverable.HoverState.None);
+				currentHover = null;
+			} else if (currentHover != null && selected.Contains(currentHover.GetComponent<CharacterVisualizer>())) {
+				currentHover.SetHovered (Hoverable.HoverState.Selected);
 				currentHover = null;
 			}
 
@@ -89,13 +98,15 @@ namespace Assets.Gamelogic.Core {
 			}
 
 			if (Input.GetMouseButtonDown (0)) {
+				wasControllingMouseDown = true;
 				downPos = Input.mousePosition;
 			}
 
 			if (Input.GetMouseButton (0)) {
 				// If left button down for certain time /// Drag
-				if (!hasTriggered && Vector3.Distance(downPos,Input.mousePosition) > dragTriggerDistance) {
+				if (!hasTriggered && Vector3.Distance(downPos,Input.mousePosition) > dragTriggerDistance && wasControllingMouseDown) {
 					StartBoxSelect ();
+					Debug.Log ("start");
 					hasTriggered = true;
 				}
 			}
@@ -296,7 +307,7 @@ namespace Assets.Gamelogic.Core {
 			dragSelector.sizeDelta = new Vector2 (width/scaleFactor, height/scaleFactor);
 
 			foreach (CharacterVisualizer s in currentDragSelection) {
-				s.GetComponent<Hoverable> ().SetHovered (false);
+				s.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.None);
 			}
 			currentDragSelection.Clear ();
 
@@ -314,13 +325,13 @@ namespace Assets.Gamelogic.Core {
 			foreach (RaycastHit c in hits) {
 				CharacterVisualizer s = c.collider.GetComponent<CharacterVisualizer> ();
 				if (s && s.CanControl()) {
-					s.GetComponent<Hoverable> ().SetHovered (false);
+					s.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.None);
 					currentDragSelection.Add (s);
 				}
 
 				ConstructionVisualizer cons = c.collider.GetComponent<ConstructionVisualizer> ();
 				if (cons && cons.CanControl()) {
-					cons.GetComponent<Hoverable> ().SetHovered (false);
+					cons.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.None);
 				}
 
 				//ifinitely adding stuff here for hoverables???
@@ -343,27 +354,27 @@ namespace Assets.Gamelogic.Core {
 		public void SetSelected(CharacterVisualizer s) {
 			ClearSelected ();
 			if (s.CanControl ()) {
-				s.GetComponent<Hoverable>().SetHovered (true);
+				s.GetComponent<Hoverable>().SetHovered (Hoverable.HoverState.Selected);
 				selected.Add (s);
 			}
 		}
 
 		public void AddSelected(CharacterVisualizer s) {
 			if (s.CanControl ()) {
-				s.GetComponent<Hoverable>().SetHovered (true);
+				s.GetComponent<Hoverable>().SetHovered (Hoverable.HoverState.Selected);
 				selected.Add (s);
 			}
 		}
 
 		public void RemoveSelected(CharacterVisualizer s) {
-			s.GetComponent<Hoverable>().SetHovered (false);
+			s.GetComponent<Hoverable>().SetHovered (Hoverable.HoverState.None);
 			selected.Remove (s);
 		}
 
 		public void ClearSelected() {
 			foreach (CharacterVisualizer s in selected) {
 				if (s != null)
-					s.GetComponent<Hoverable>().SetHovered (false);
+					s.GetComponent<Hoverable>().SetHovered (Hoverable.HoverState.None);
 				else
 					selected.Remove (s);
 			}

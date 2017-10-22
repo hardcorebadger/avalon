@@ -76,7 +76,7 @@ namespace Assets.Gamelogic.Core {
 					//spawn (so weird so that it spawns to begin with isntead of waiting for debug)
 
 					if (characters.Count < beds) {
-						SpatialOS.Commands.CreateEntity(districtWriter, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(new Vector3d(0,0,0), owned.getOwner(), owned.getOwnerObject()));
+						SpatialOS.Commands.CreateEntity(districtWriter, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.position, owned.getOwner(), owned.getOwnerObject()));
 					}
 
 				}

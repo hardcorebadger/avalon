@@ -25,6 +25,7 @@ namespace Assets.Gamelogic.Core {
 
 		private WorkType workType;
 		private Vector3 buildingPosition;
+		private Vector3 interiorPositon;
 
 		public ActionWork(CharacterController o, EntityId t) : base(o)	{
 			target = t;
@@ -60,15 +61,11 @@ namespace Assets.Gamelogic.Core {
 						state = 4;
 						break;
 					case WorkType.WORK_MINING: 
-						SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.StartWork.Descriptor, new StartWorkRequest (owner.gameObject.EntityId(), owner.characterWriter.Data.playerId), target)
-							.OnSuccess (response => OnStartWorkResult (response))
-							.OnFailure (response => OnRequestFailed ());
+						subAction = new ActionWorkInterior (owner, target, interiorPositon, buildingPosition);
 						state = 4;
 						break;
 					case WorkType.WORK_FARMING: 
-						SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.StartWork.Descriptor, new StartWorkRequest (owner.gameObject.EntityId(), owner.characterWriter.Data.playerId), target)
-							.OnSuccess (response => OnStartWorkResult (response))
-							.OnFailure (response => OnRequestFailed ());
+						subAction = new ActionWorkInterior (owner, target,interiorPositon, buildingPosition);
 						state = 4;
 						break;
 					case WorkType.WORK_STORAGE:
@@ -95,6 +92,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override void OnKill() {
+			if (subAction != null)
+				subAction.OnKill ();
 			SpatialOS.Commands.SendCommand (owner.characterWriter, WorkSite.Commands.UnEnlist.Descriptor, new UnEnlistRequest (owner.gameObject.EntityId()), target);
 		}
 
@@ -107,18 +106,10 @@ namespace Assets.Gamelogic.Core {
 				workType = response.workType;
 				buildingPosition = response.position.ToUnityVector ();
 				district = response.district;
+				if (response.interiorPosition.HasValue)
+					interiorPositon = response.interiorPosition.Value.ToUnityVector ();
 				state = 2;
 			}
-		}
-
-		private void OnStartWorkResult(StartWorkResponse response) {
-
-			if (response.success) {
-
-				//we were taken
-
-			}
-
 		}
 
 		private void OnRequestFailed() {

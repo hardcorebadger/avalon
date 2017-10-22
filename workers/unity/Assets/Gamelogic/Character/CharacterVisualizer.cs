@@ -102,6 +102,16 @@ namespace Assets.Gamelogic.Core {
 					itemSprite.enabled = true;
 				}
 			}
+			if (update.isIndoors.HasValue) {
+				if (update.isIndoors.Value) {
+					GetComponent<Collider> ().enabled = false;
+					GetComponent<Rigidbody> ().isKinematic = true;
+				} else {
+					GetComponent<Collider> ().enabled = true;
+					GetComponent<Rigidbody> ().isKinematic = false;
+				}
+			}
+
 		}
 
 		private void OnShowHit(Nothing n) {
