@@ -102,7 +102,7 @@ namespace Assets.Gamelogic.Core
 		}
 
 		private void ReserveCharacterId(int playerId, Vector3 pos, int cur) {
-			if (cur >= 3)
+			if (cur >= 10)
 				return;
 			
 			SpatialOS.Commands.ReserveEntityId(playerCreatorWriter)

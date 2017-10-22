@@ -182,6 +182,8 @@ namespace Assets.Gamelogic.EntityTemplates
 				req.Add (0, new ConstructionRequirement (0, 3));
 				x = 4;
 				z = 4;
+			} else if (name == "construction-road") {
+				req.Add (0, new ConstructionRequirement (0, 1));
 			}
 
 			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 100f, new Vector3d (pos.x, pos.z, pos.y));

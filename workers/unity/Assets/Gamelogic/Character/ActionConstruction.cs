@@ -34,6 +34,7 @@ namespace Assets.Gamelogic.Core {
 		public override ActionCode Update () {
 			switch (state) {
 			case 0:
+				// get construction data
 				var entityQuery = Query.HasEntityId (target).ReturnComponents (Construction.ComponentId);
 				SpatialOS.WorkerCommands.SendQuery (entityQuery)
 					.OnSuccess (OnSuccessfulEntityQuery)
@@ -42,13 +43,20 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 1:
 				// waiting on query
+				// if you already sourced resources and you still dont have a viable item, quit
+				// if you have a viable item, put it in
+				// if you dont have a viable item, skip the next action (it happens in action build init)
 				break;
 			case 2:
 				// query is back, try to just drop resources into it
 				ActionCode c = subAction.Update ();
 				if (c == ActionCode.Failure || c == ActionCode.Success) {
-					state = 3;
-					subAction = new ActionResourceGetDistrict (owner, district, ParseConstructionRequirements());
+					if (((ActionBuild)subAction).constructionComplete)
+						success = true;
+					else {
+						state = 3;
+						subAction = new ActionResourceGetDistrict (owner, district, ParseConstructionRequirements ());
+					}
 				}
 				break;
 			case 3:
@@ -62,6 +70,13 @@ namespace Assets.Gamelogic.Core {
 				}
 				// and then restart
 				break;
+			case 4:
+				// construction is finished, just walk back to the building
+				c = subAction.Update ();
+				if (c == ActionCode.Failure || c == ActionCode.Success) {
+					success = true;
+				}
+				break;
 			}
 
 			if (success)
@@ -74,11 +89,18 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnSuccessfulEntityQuery(EntityQueryResult queryResult) {
 			Map<EntityId, Entity> resultMap = queryResult.Entities;
-			if (resultMap.Count < 1)
+			if (resultMap.Count < 1) {
+				state = 4;
 				return;
+			}
 			Entity e = resultMap.First.Value.Value;
 			Improbable.Collections.Option<IComponentData<Construction>> c = e.Get<Construction>();
 			constructionData = c.Value.Get().Value;
+
+			if (ParseConstructionRequirements ().Count == 0) {
+				subAction = new ActionSeek (owner, target, hqPosition);
+				state = 4;
+			}
 
 			if (!owner.HasApplicableItem (constructionData) && didSource)
 				success = true;
@@ -88,7 +110,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void OnFailedEntityQuery(ICommandErrorDetails _) {
-			failed = true;
+			state = 4;
 		}
 
 		private List<int> ParseConstructionRequirements() {

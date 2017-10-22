@@ -41,22 +41,22 @@ namespace Assets.Gamelogic.Core {
 			constructionWriter.CommandReceiver.OnGiveMultiple.DeregisterResponse();
 		}
 
-		private GiveResponse OnGive(ItemStack itemStack, ICommandCallerInfo callerinfo) {
+		private ConstructionGiveResponse OnGive(ItemStack itemStack, ICommandCallerInfo callerinfo) {
 			bool f = Insert (itemStack.id, itemStack.amount);
-			CheckConstructionProgress ();
-			return new GiveResponse (f);
+			bool c = CheckConstructionProgress ();
+			return new ConstructionGiveResponse (f, c);
 		}
 
-		private GiveResponse OnGiveMultiple(ItemStackList itemStackList, ICommandCallerInfo callerinfo) {
+		private ConstructionGiveResponse OnGiveMultiple(ItemStackList itemStackList, ICommandCallerInfo callerinfo) {
 			foreach (int id in itemStackList.inventory.Keys) {
 				if (!requirements.ContainsKey (id))
-					return new GiveResponse (false);
+					return new ConstructionGiveResponse (false, false);
 			}
 			foreach (int id in itemStackList.inventory.Keys) {
 				Insert (id, itemStackList.inventory [id]);
 			}
-			CheckConstructionProgress ();
-			return new GiveResponse (true);
+			bool c = CheckConstructionProgress ();
+			return new ConstructionGiveResponse (true, c);
 		}
 
 		private void UnwrapComponentRequirements() {
@@ -114,14 +114,15 @@ namespace Assets.Gamelogic.Core {
 			return req.amount;
 		}
 
-		private void CheckConstructionProgress() {
+		private bool CheckConstructionProgress() {
 			foreach (int key in requirements.Keys) {
 				Requirement val = requirements[key];
 				if (val.amount < val.required)
-					return;
+					return false;
 			}
 			SpatialOS.Commands.ReserveEntityId (constructionWriter)
 				.OnSuccess (result => OnReserveEntityId (result.ReservedEntityId));
+			return true;
 			
 		}
 
