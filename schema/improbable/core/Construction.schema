@@ -8,12 +8,17 @@ type ConstructionRequirement {
     int32 required = 2;
 }
 
+type ConstructionGiveResponse {
+    bool success = 1;
+    bool construction_complete = 2;
+}
+
 component Construction {
     id = 1007;
     
     map<int32, ConstructionRequirement> requirements = 1;
     SourcingOption work_sourcing = 2;
 
-    command GiveResponse give(ItemStack);
-    command GiveResponse give_multiple(ItemStackList);
+    command ConstructionGiveResponse give(ItemStack);
+    command ConstructionGiveResponse give_multiple(ItemStackList);
 }

@@ -25,6 +25,7 @@ namespace Assets.Gamelogic.Core {
 		private Dictionary<int,int> overlap;
 		public ActionSeek seek;
 		private float time = 0;
+		public bool constructionComplete = false;
 
 		public ActionBuild(CharacterController o, EntityId t, ConstructionData cdata, Vector3 pos) : base(o)	{
 			target = t;
@@ -97,10 +98,12 @@ namespace Assets.Gamelogic.Core {
 			failed = true;
 		}
 
-		public void OnGiveResult(GiveResponse response) {
+		public void OnGiveResult(ConstructionGiveResponse response) {
 			if (response.success) {
 				owner.DropItem ();
 				succeeded = true;
+				if (response.constructionComplete)
+					constructionComplete = true;
 			} else {
 				Debug.LogWarning ("Construction Rejected Give");
 				failed = true;

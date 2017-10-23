@@ -101,7 +101,7 @@ namespace Assets.Gamelogic.Core
 			yield return new WaitForSeconds (10F);
 			ReserveCharacterId (playerId, playerObject, pos, 0);
 		}
-
+			
 		private void ReserveCharacterId(int playerId,  EntityId playerObject, Vector3 pos, int cur) {
 			if (cur >= 3)
 				return;

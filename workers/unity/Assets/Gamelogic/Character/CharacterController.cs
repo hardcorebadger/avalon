@@ -44,6 +44,7 @@ namespace Assets.Gamelogic.Core {
 		public float health;
 		public float hunger;
 		public Option<EntityId> district;
+		private EntityId currentlyHitting;
 
 		private void OnEnable() {
 			anim = GetComponent<Animator> ();
@@ -297,6 +298,7 @@ namespace Assets.Gamelogic.Core {
 		public void OnDealHit() {
 			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
 				currentAction.OnDealHit ();
+				SpatialOS.Commands.SendCommand (characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest (characterWriter.EntityId, characterWriter.Data.playerId), currentlyHitting);
 			}
 		}
 
@@ -347,6 +349,14 @@ namespace Assets.Gamelogic.Core {
 				GetComponent<Collider> ().enabled = true;
 				GetComponent<Rigidbody> ().isKinematic = false;
 			}
+		}
+
+		public void HitCharacter(EntityId other) {
+			currentlyHitting = other;
+			anim.SetTrigger ("attack");
+			characterWriter.Send (new Character.Update ()
+				.AddShowHit(new Nothing())
+			);
 		}
 
 	}
