@@ -42,6 +42,7 @@ namespace Assets.Gamelogic.Core {
 		public CharacterState state;
 		private int itemInHand = -1;
 		public float health;
+		public float hunger;
 		public Option<EntityId> district;
 
 		private void OnEnable() {
@@ -61,6 +62,7 @@ namespace Assets.Gamelogic.Core {
 			state = characterWriter.Data.state;
 			itemInHand = characterWriter.Data.itemInHand;
 			health = characterWriter.Data.health;
+			hunger = characterWriter.Data.hunger; 
 			StartCoroutine ("UpdateTransform");
 
 			rigidBody = GetComponent<Rigidbody> ();
@@ -100,7 +102,8 @@ namespace Assets.Gamelogic.Core {
 
 			if (currentAction == null) 
 				currentAction = new ActionBlank (this);
-			
+
+
 			ActionCode code = currentAction.Update ();
 			if (code == ActionCode.Success || code == ActionCode.Failure)
 				currentAction = new ActionBlank (this);
@@ -251,11 +254,22 @@ namespace Assets.Gamelogic.Core {
 			return false;
 		}
 
+		public void Eat(float amount) {
+			hunger -= amount;
+			characterWriter.Send (new Character.Update ()
+				.SetHunger (hunger)
+			);
+		}
+
 		public void DropItem() {
 			itemInHand = -1;
 			characterWriter.Send (new Character.Update ()
 				.SetItemInHand (itemInHand)
 			);
+		}
+
+		public int GetItemInHand() {
+			return itemInHand;
 		}
 
 		public bool EmptyHanded() {
