@@ -63,6 +63,8 @@ namespace Assets.Gamelogic.Core {
 				seek.target = targetObject.transform.position;
 				if (AIAction.OnSuccess(seek.Update()))
 					state++;
+
+				break;
 			case 2:
 				// attack
 				if (wait == null)
@@ -76,10 +78,8 @@ namespace Assets.Gamelogic.Core {
 			case 3:
 				// deal the hit
 				seek.Update ();
-				agent.anim.SetTrigger ("attack");
-				agent.characterWriter.Send (new Character.Update ()
-					.AddShowHit(new Nothing())
-				);
+				agent.Hit (targetId);
+
 				state++;
 				break;
 			case 4: 
@@ -87,8 +87,10 @@ namespace Assets.Gamelogic.Core {
 				seek.Update ();
 				break;
 			case 5:
+				
 				// loop and change wait time
 				state = 2;
+				SpatialOS.Commands.SendCommand (agent.characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest (agent.characterWriter.EntityId, agent.characterWriter.Data.playerId), targetId);
 				waitDuration = Random.Range (1.0f, 2.0f);
 				break;
 			}

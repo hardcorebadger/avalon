@@ -298,7 +298,6 @@ namespace Assets.Gamelogic.Core {
 		public void OnDealHit() {
 			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
 				currentAction.OnDealHit ();
-				SpatialOS.Commands.SendCommand (characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest (characterWriter.EntityId, characterWriter.Data.playerId), currentlyHitting);
 			}
 		}
 
@@ -351,7 +350,7 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		public void HitCharacter(EntityId other) {
+		public void Hit(EntityId other) {
 			currentlyHitting = other;
 			anim.SetTrigger ("attack");
 			characterWriter.Send (new Character.Update ()
