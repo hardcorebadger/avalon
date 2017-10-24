@@ -51,6 +51,7 @@ component Character {
     float health = 6;    
     option<EntityId> district = 7;
     bool is_indoors = 8; 
+    float hunger = 9; 
 
     command Nothing position_target(PositionTargetRequest);
     command Nothing entity_target(EntityTargetRequest);

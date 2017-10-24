@@ -42,6 +42,7 @@ namespace Assets.Gamelogic.Core {
 		public CharacterState state;
 		private int itemInHand = -1;
 		public float health;
+		public float hunger;
 		public Option<EntityId> district;
 		private EntityId currentlyHitting;
 
@@ -62,6 +63,7 @@ namespace Assets.Gamelogic.Core {
 			state = characterWriter.Data.state;
 			itemInHand = characterWriter.Data.itemInHand;
 			health = characterWriter.Data.health;
+			hunger = characterWriter.Data.hunger; 
 			StartCoroutine ("UpdateTransform");
 
 			rigidBody = GetComponent<Rigidbody> ();
@@ -101,7 +103,8 @@ namespace Assets.Gamelogic.Core {
 
 			if (currentAction == null) 
 				currentAction = new ActionBlank (this);
-			
+
+
 			ActionCode code = currentAction.Update ();
 			if (code == ActionCode.Success || code == ActionCode.Failure)
 				currentAction = new ActionBlank (this);
@@ -252,6 +255,13 @@ namespace Assets.Gamelogic.Core {
 			return false;
 		}
 
+		public void Eat(float amount) {
+			hunger -= amount;
+			characterWriter.Send (new Character.Update ()
+				.SetHunger (hunger)
+			);
+		}
+
 		public void DropItem() {
 			itemInHand = -1;
 			characterWriter.Send (new Character.Update ()
@@ -259,12 +269,12 @@ namespace Assets.Gamelogic.Core {
 			);
 		}
 
-		public bool EmptyHanded() {
-			return (itemInHand == -1);
-		}
-
 		public int GetItemInHand() {
 			return itemInHand;
+		}
+
+		public bool EmptyHanded() {
+			return (itemInHand == -1);
 		}
 
 		public bool SetInHandItem(int id) {
@@ -288,7 +298,6 @@ namespace Assets.Gamelogic.Core {
 		public void OnDealHit() {
 			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
 				currentAction.OnDealHit ();
-				SpatialOS.Commands.SendCommand (characterWriter, Character.Commands.ReceiveHit.Descriptor, new ReceiveHitRequest (characterWriter.EntityId, characterWriter.Data.playerId), currentlyHitting);
 			}
 		}
 
@@ -341,7 +350,7 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		public void HitCharacter(EntityId other) {
+		public void Hit(EntityId other) {
 			currentlyHitting = other;
 			anim.SetTrigger ("attack");
 			characterWriter.Send (new Character.Update ()

@@ -28,7 +28,7 @@ namespace Assets.Gamelogic.Core {
 		void Update() {
 
 			if (timer < 0f) {
-				inventoryController.Insert (1, GetComponent<WorkSiteController>().workers.Count);
+				inventoryController.Insert (2, GetComponent<WorkSiteController>().workers.Count);
 				timer = 0f + Time.deltaTime;
 
 			} else {
