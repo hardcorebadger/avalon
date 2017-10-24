@@ -25,6 +25,7 @@ namespace Assets.Gamelogic.Core {
 		private List<EntityId> localTrees;
 		private int currentLogs = 0;
 		private bool treeDensitySatisfied = false;
+		private bool notAcceptingItems = false;
 
 		void OnEnable () {
 			foresterWriter.CommandReceiver.OnGetJob.RegisterResponse (OnGetJob);

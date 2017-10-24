@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Improbable.Core;
 
 namespace Assets.Gamelogic.Core {
 
@@ -15,7 +16,7 @@ namespace Assets.Gamelogic.Core {
 			// add max weight
 			foreach (int id in construction.requirements.Keys) {
 				GameObject line = Instantiate (linePrefab, content.transform);
-				ConstructionController.Requirement r = construction.requirements [id];
+				ConstructionRequirement r = construction.requirements [id];
 				line.GetComponent<UIConstructionLine> ().SetInfo (
 					Item.GetName (id),
 					r.amount,

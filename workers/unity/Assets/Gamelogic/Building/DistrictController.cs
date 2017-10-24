@@ -18,6 +18,7 @@ namespace Assets.Gamelogic.Core {
 
 		Map<EntityId, Vector3d> positionMap;
 		Map<int, BuildingList> storageMap;
+		Map<int, BuildingList> storageAvailabilityMap;
 		List<EntityId> characters;
 		int beds;
 		float spawnTimer = -1f;
@@ -29,12 +30,15 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnDeregisterBuilding.RegisterResponse (OnDeregisterBuilding);
 			districtWriter.CommandReceiver.OnStorageUpdateHas.RegisterResponse (OnStorageUpdateHas);
 			districtWriter.CommandReceiver.OnStorageUpdateOut.RegisterResponse (OnStorageUpdateOut);
+			districtWriter.CommandReceiver.OnStorageUpdateAccepting.RegisterResponse (OnStorageUpdateAccepting);
+			districtWriter.CommandReceiver.OnStorageUpdateNotAccepting.RegisterResponse (OnStorageUpdateNotAccepting);
 			districtWriter.CommandReceiver.OnFindAnyItem.RegisterResponse (OnFindAnyItem);
 			districtWriter.CommandReceiver.OnRegisterCharacter.RegisterResponse (OnRegisterCharacter);
 			districtWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
 
 			positionMap = districtWriter.Data.positionMap;
 			storageMap = districtWriter.Data.storageMap;
+			storageAvailabilityMap = districtWriter.Data.storageAvailabilityMap;
 			characters = districtWriter.Data.characterList;
 			beds = districtWriter.Data.beds;
 			building = GetComponent<BuildingController> ();
@@ -57,6 +61,8 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnDeregisterBuilding.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnStorageUpdateHas.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnStorageUpdateOut.DeregisterResponse ();
+			districtWriter.CommandReceiver.OnStorageUpdateAccepting.DeregisterResponse ();
+			districtWriter.CommandReceiver.OnStorageUpdateNotAccepting.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnFindAnyItem.DeregisterResponse ();
 
 			districtWriter.CommandReceiver.OnRegisterCharacter.DeregisterResponse ();
@@ -105,6 +111,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnRegisterBuilding(BuildingRegistrationRequest r, ICommandCallerInfo _) {
 			positionMap.Add (r.buildingId, r.position);
+			AddBuildingToStorageMaps (r.buildingId, r.acceptingItems);
 			beds += r.beds;
 			districtWriter.Send (new District.Update ()
 				.SetPositionMap(positionMap)
@@ -115,7 +122,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnDeregisterBuilding(BuildingDeregistrationRequest r, ICommandCallerInfo _) {
 			positionMap.Remove (r.buildingId);
-		
+			RemoveBuildingFromStorageMaps (r.buildingId);
 			beds -= r.beds;
 			districtWriter.Send (new District.Update ()
 				.SetPositionMap(positionMap)
@@ -148,6 +155,34 @@ namespace Assets.Gamelogic.Core {
 				storageMap [r.item] = l;
 			districtWriter.Send (new District.Update ()
 				.SetStorageMap (storageMap)
+			);
+			return new Nothing ();
+		}
+
+		private Nothing OnStorageUpdateAccepting(StorageUpdateRequest r, ICommandCallerInfo _) {
+			BuildingList l;
+			if (!storageAvailabilityMap.TryGetValue (r.item, out l))
+				l = new BuildingList(new List<EntityId>());
+			l.list.Add (r.building);
+			storageAvailabilityMap [r.item] = l;
+			districtWriter.Send (new District.Update ()
+				.SetStorageAvailabilityMap (storageAvailabilityMap)
+			);
+			return new Nothing ();
+		}
+
+		private Nothing OnStorageUpdateNotAccepting(StorageUpdateRequest r, ICommandCallerInfo _) {
+			BuildingList l;
+			// shouldnt happen
+			if (!storageAvailabilityMap.TryGetValue (r.item, out l))
+				return new Nothing ();
+			l.list.Remove (r.building);
+			if (l.list.Count < 1)
+				storageAvailabilityMap.Remove (r.item);
+			else
+				storageAvailabilityMap [r.item] = l;
+			districtWriter.Send (new District.Update ()
+				.SetStorageAvailabilityMap (storageAvailabilityMap)
 			);
 			return new Nothing ();
 		}
@@ -186,6 +221,48 @@ namespace Assets.Gamelogic.Core {
 				.SetCharacterList(characters)
 			);
 			return new Nothing ();
+		}
+
+		private void AddBuildingToStorageMaps(EntityId id, List<int> accepting) {
+			foreach (int i in accepting) {
+				BuildingList l;
+				if (!storageAvailabilityMap.TryGetValue (i, out l))
+					l = new BuildingList(new List<EntityId>());
+				l.list.Add (id);
+				storageAvailabilityMap [i] = l;
+			}
+			districtWriter.Send (new District.Update ()
+				.SetStorageAvailabilityMap (storageAvailabilityMap)
+			);
+		}
+
+		private void RemoveBuildingFromStorageMaps(EntityId id) {
+			foreach (int item in storageMap.Keys) {
+				BuildingList l;
+				// shouldnt happen
+				if (!storageMap.TryGetValue (item, out l))
+					continue;
+				l.list.Remove (id);
+				if (l.list.Count < 1)
+					storageMap.Remove (item);
+				else
+					storageMap [item] = l;
+			}
+			foreach (int item in storageAvailabilityMap.Keys) {
+				BuildingList l;
+				// shouldnt happen
+				if (!storageAvailabilityMap.TryGetValue (item, out l))
+					continue;
+				l.list.Remove (id);
+				if (l.list.Count < 1)
+					storageAvailabilityMap.Remove (item);
+				else
+					storageAvailabilityMap [item] = l;
+			}
+			districtWriter.Send (new District.Update ()
+				.SetStorageMap (storageMap)
+				.SetStorageAvailabilityMap (storageAvailabilityMap)
+			);
 		}
 
 

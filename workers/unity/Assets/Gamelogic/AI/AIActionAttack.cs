@@ -61,8 +61,9 @@ namespace Assets.Gamelogic.Core {
 				if (seek == null)
 					seek = new AIActionGoTo (agent, targetId, targetObject.transform.position);
 				seek.target = targetObject.transform.position;
-				if (AIAction.OnSuccess(seek.Update()))
+				if (AIAction.OnSuccess (seek.Update ()))
 					state++;
+				break;
 			case 2:
 				// attack
 				if (wait == null)
@@ -76,10 +77,7 @@ namespace Assets.Gamelogic.Core {
 			case 3:
 				// deal the hit
 				seek.Update ();
-				agent.anim.SetTrigger ("attack");
-				agent.characterWriter.Send (new Character.Update ()
-					.AddShowHit(new Nothing())
-				);
+				agent.HitCharacter (targetId);
 				state++;
 				break;
 			case 4: 

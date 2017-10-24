@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Improbable.Collections;
 using UnityEngine;
 using Improbable;
 using Improbable.Core;
@@ -18,7 +17,7 @@ namespace Assets.Gamelogic.Core {
 
 		public string buildingToSpawn;
 
-		private Dictionary<int,Requirement> requirements;
+		private Map<int,ConstructionRequirement> requirements;
 		private OwnedController owned;
 
 		public bool districtBuildingConstruction;
@@ -29,8 +28,7 @@ namespace Assets.Gamelogic.Core {
 			constructionWriter.CommandReceiver.OnGive.RegisterResponse(OnGive);
 			constructionWriter.CommandReceiver.OnGiveMultiple.RegisterResponse(OnGiveMultiple);
 
-			requirements = new Dictionary<int,Requirement> ();
-			UnwrapComponentRequirements ();
+			requirements = constructionWriter.Data.requirements;
 
 			owned = GetComponent<OwnedController> ();
 
@@ -59,31 +57,15 @@ namespace Assets.Gamelogic.Core {
 			return new ConstructionGiveResponse (true, c);
 		}
 
-		private void UnwrapComponentRequirements() {
-			foreach (int key in constructionWriter.Data.requirements.Keys) {
-				ConstructionRequirement val = constructionWriter.Data.requirements[key];
-				requirements.Add (key, new Requirement(val.amount, val.required));
-			}
-		}
-
-		private Improbable.Collections.Map<int,ConstructionRequirement> WrapComponentRequirements() {
-			Improbable.Collections.Map<int,ConstructionRequirement> wrapped = new Improbable.Collections.Map<int,ConstructionRequirement> ();
-			foreach (int key in requirements.Keys) {
-				Requirement val = requirements[key];
-				wrapped.Add (key, new ConstructionRequirement(val.amount, val.required));
-			}
-			return wrapped;
-		}
-
 		private void SendRequirementsUpdate() {
 			constructionWriter.Send (new Construction.Update ()
-				.SetRequirements (WrapComponentRequirements())
+				.SetRequirements (requirements)
 			);
 		}
 
 		public void Log() {
 			foreach (int key in requirements.Keys) {
-				Requirement val = requirements[key];
+				ConstructionRequirement val = requirements[key];
 				Debug.Log(Item.GetName (key) + ": " + val.amount + " / " + val.required);
 			}
 		}
@@ -92,7 +74,7 @@ namespace Assets.Gamelogic.Core {
 			if (!requirements.ContainsKey (id))
 				return false;
 
-			Requirement r = requirements [id];
+			ConstructionRequirement r = requirements [id];
 			r.amount += amount;
 			requirements [id] = r;
 			if (r.amount > r.required)
@@ -109,14 +91,14 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public int Count(int i) {
-			Requirement req;
+			ConstructionRequirement req;
 			requirements.TryGetValue (i, out req);
 			return req.amount;
 		}
 
 		private bool CheckConstructionProgress() {
 			foreach (int key in requirements.Keys) {
-				Requirement val = requirements[key];
+				ConstructionRequirement val = requirements[key];
 				if (val.amount < val.required)
 					return false;
 			}
@@ -139,6 +121,7 @@ namespace Assets.Gamelogic.Core {
 		private void OnBuildingCreated(EntityId id) {
 			if (!districtBuildingConstruction) {
 				int beds = 0;
+				List<int> acceptingItems = new List<int> ();
 
 				if (gameObject.name.Contains ("house-3d")) {
 					beds = 4;
@@ -146,7 +129,7 @@ namespace Assets.Gamelogic.Core {
 				SpatialOS.Commands.SendCommand (
 					constructionWriter, 
 					District.Commands.RegisterBuilding.Descriptor, 
-					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z), beds), 
+					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z), beds, acceptingItems), 
 					buildingWriter.Data.district.Value
 				).OnSuccess (OnBuildingRegistered);
 			} else {
@@ -162,14 +145,6 @@ namespace Assets.Gamelogic.Core {
 			GetComponent<BuildingController> ().DestroyBuilding ();
 		}
 
-		public struct Requirement {
-			public int amount;
-			public int required;
-			public Requirement(int a, int r) {
-				amount = a;
-				required = r;
-			}
-		}
 	}
 		
 }

@@ -130,7 +130,7 @@ namespace Assets.Gamelogic.EntityTemplates
 			} else if (name == "building-settlement") {
 				Map<EntityId, Vector3d> p = new Map<EntityId, Vector3d> ();
 				Map<int, BuildingList> s = new Map<int, BuildingList> ();
-
+				Map<int, BuildingList> sa = new Map<int, BuildingList> ();
 				p.Add (district.Value, new Vector3d (pos.x, pos.y, pos.z));
 				return EntityBuilder.Begin ()
 					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
@@ -138,7 +138,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
 					.AddComponent (new Building.Data (3, 4, 4, 100F, district, 3), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new District.Data (p, s, 0, new Improbable.Collections.List<EntityId> ()), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new District.Data (p, s, sa, 0, new Improbable.Collections.List<EntityId> ()), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-house-3d") {

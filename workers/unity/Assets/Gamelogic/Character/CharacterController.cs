@@ -263,6 +263,10 @@ namespace Assets.Gamelogic.Core {
 			return (itemInHand == -1);
 		}
 
+		public int GetItemInHand() {
+			return itemInHand;
+		}
+
 		public bool SetInHandItem(int id) {
 			if (itemInHand != -1)
 				return false;

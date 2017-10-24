@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Improbable.Collections;
 using UnityEngine;
 using Improbable;
 using Improbable.Core;
@@ -16,7 +15,7 @@ namespace Assets.Gamelogic.Core
 		[Require] private Construction.Reader constructionReader;
 
 		private OwnedVisualizer owned;
-		public Dictionary<int,ConstructionController.Requirement> requirements;
+		public Map<int,ConstructionRequirement> requirements;
 		private System.Collections.Generic.List<OnUIChange> listeners;
 
 		public float completion = 0.0f;
@@ -28,8 +27,7 @@ namespace Assets.Gamelogic.Core
 				return;
 			}
 			owned = GetComponent<OwnedVisualizer> ();
-			requirements = new Dictionary<int,ConstructionController.Requirement> ();
-			UnwrapComponentRequirements ();
+			requirements = constructionReader.Data.requirements;
 			constructionReader.ComponentUpdated.Add (OnConstructionUpdated);
 			listeners = new System.Collections.Generic.List<OnUIChange> ();
 
@@ -42,8 +40,7 @@ namespace Assets.Gamelogic.Core
 
 		private void OnConstructionUpdated(Construction.Update update) {
 			if (update.requirements.HasValue) {
-				requirements.Clear ();
-				UnwrapComponentRequirements ();
+				requirements = update.requirements.Value;
 				int total = requirements.Count;
 				float percentage = 0;
 				foreach(var item in requirements) {
@@ -56,16 +53,9 @@ namespace Assets.Gamelogic.Core
 			}
 		} 
 
-		private void UnwrapComponentRequirements() {
-			foreach (int key in constructionReader.Data.requirements.Keys) {
-				ConstructionRequirement val = constructionReader.Data.requirements[key];
-				requirements.Add (key, new ConstructionController.Requirement(val.amount, val.required));
-			}
-		}
-
 		public void Log() {
 			foreach (int key in requirements.Keys) {
-				ConstructionController.Requirement val = requirements[key];
+				ConstructionRequirement val = requirements[key];
 				Debug.Log(Item.GetName (key) + ": " + val.amount + " / " + val.required);
 			}
 		}

@@ -17,6 +17,7 @@ namespace Assets.Gamelogic.Core {
 		public Transform door;
 
 		public float strength;
+		public Option<EntityId> district;
 
 		private void OnEnable() {
 	
@@ -24,7 +25,7 @@ namespace Assets.Gamelogic.Core {
 			buildingWriter.CommandReceiver.OnReceiveDamage.RegisterResponse(OnReceiveDamage);
 			strength = buildingWriter.Data.strength;
 			door = transform.FindChild ("door");
-
+			district = buildingWriter.Data.district;
 		}
 
 		private void Update() {
