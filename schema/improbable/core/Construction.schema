@@ -1,24 +1,28 @@
 package improbable.core;
 
-import "improbable/core/Inventory.schema";
-import "improbable/core/SourcingOption.schema";
+import "improbable/core/Nothing.schema";
 
 type ConstructionRequirement {
     int32 amount = 1;
     int32 required = 2;
+    int32 requested = 3;
 }
 
-type ConstructionGiveResponse {
-    bool success = 1;
-    bool construction_complete = 2;
+type ConstructionJobAssignment {
+    option<int32> to_get = 1;
 }
+
+type ConstructionJobResult {
+    ConstructionJobAssignment assignment = 1;
+    int32 response = 2;
+}
+
 
 component Construction {
     id = 1007;
     
     map<int32, ConstructionRequirement> requirements = 1;
-    SourcingOption work_sourcing = 2;
-
-    command ConstructionGiveResponse give(ItemStack);
-    command ConstructionGiveResponse give_multiple(ItemStackList);
+    
+    command ConstructionJobAssignment get_job(Nothing);
+    command Nothing complete_job(ConstructionJobResult);
 }

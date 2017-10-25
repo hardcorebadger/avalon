@@ -18,8 +18,9 @@ namespace Assets.Gamelogic.Core {
 			switch (state) {
 			case 0:
 				time += Time.deltaTime;
-				if (time > duration)
+				if (time > duration) {
 					return 200;
+				}
 				break;
 			}
 			return 100;

@@ -21,12 +21,14 @@ namespace Assets.Gamelogic.Core {
 		private OwnedController owned;
 
 		public bool districtBuildingConstruction;
+		private bool shouldStall = false;
+		private int stallCounter = 0;
 
 		// Use this for initialization
 		void OnEnable () {
 
-			constructionWriter.CommandReceiver.OnGive.RegisterResponse(OnGive);
-			constructionWriter.CommandReceiver.OnGiveMultiple.RegisterResponse(OnGiveMultiple);
+			constructionWriter.CommandReceiver.OnGetJob.RegisterResponse(OnGetJob);
+			constructionWriter.CommandReceiver.OnCompleteJob.RegisterResponse(OnCompleteJob);
 
 			requirements = constructionWriter.Data.requirements;
 
@@ -35,26 +37,53 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void OnDisable() {
-			constructionWriter.CommandReceiver.OnGive.DeregisterResponse();
-			constructionWriter.CommandReceiver.OnGiveMultiple.DeregisterResponse();
+			constructionWriter.CommandReceiver.OnGetJob.DeregisterResponse();
+			constructionWriter.CommandReceiver.OnCompleteJob.DeregisterResponse();
 		}
 
-		private ConstructionGiveResponse OnGive(ItemStack itemStack, ICommandCallerInfo callerinfo) {
-			bool f = Insert (itemStack.id, itemStack.amount);
-			bool c = CheckConstructionProgress ();
-			return new ConstructionGiveResponse (f, c);
+		private ConstructionJobAssignment OnGetJob(Nothing _ , ICommandCallerInfo __) {
+			// basically, if workers are sending back user errors, tell them to wait a bit
+			if (shouldStall) {
+				stallCounter++;
+				if (stallCounter <= GetComponent<WorkSiteController> ().workers.Count)
+					return new ConstructionJobAssignment (new Option<int> ());
+				else {
+					shouldStall = false;
+					stallCounter = 0;
+				}
+			}
+			foreach (int item in requirements.Keys) {
+				ConstructionRequirement req = requirements [item];
+				// if we need more still
+				if (req.amount < req.required) {
+					// if we haven't assigned it all yet
+					if (req.requested < req.required - req.amount) {
+						req.requested++;
+						requirements [item] = req;
+						return new ConstructionJobAssignment (new Option<int>(item));
+					}
+				}
+			}
+			SendRequirementsUpdate ();
+			return new ConstructionJobAssignment (new Option<int>());
 		}
 
-		private ConstructionGiveResponse OnGiveMultiple(ItemStackList itemStackList, ICommandCallerInfo callerinfo) {
-			foreach (int id in itemStackList.inventory.Keys) {
-				if (!requirements.ContainsKey (id))
-					return new ConstructionGiveResponse (false, false);
+		private Nothing OnCompleteJob(ConstructionJobResult result, ICommandCallerInfo _) {
+			if (!result.assignment.toGet.HasValue)
+				return new Nothing ();
+			ConstructionRequirement req = requirements [result.assignment.toGet.Value];
+			req.requested -= 1;
+			if (AIAction.OnSuccess (result.response))
+				req.amount += 1;
+			else if (AIAction.OnUserError(result.response)) {
+				shouldStall = true;
 			}
-			foreach (int id in itemStackList.inventory.Keys) {
-				Insert (id, itemStackList.inventory [id]);
-			}
-			bool c = CheckConstructionProgress ();
-			return new ConstructionGiveResponse (true, c);
+			requirements [result.assignment.toGet.Value] = req;
+
+			if (!CheckConstructionProgress ())
+				SendRequirementsUpdate ();
+			
+			return new Nothing ();
 		}
 
 		private void SendRequirementsUpdate() {
@@ -68,32 +97,6 @@ namespace Assets.Gamelogic.Core {
 				ConstructionRequirement val = requirements[key];
 				Debug.Log(Item.GetName (key) + ": " + val.amount + " / " + val.required);
 			}
-		}
-
-		public bool Insert(int id, int amount) {
-			if (!requirements.ContainsKey (id))
-				return false;
-
-			ConstructionRequirement r = requirements [id];
-			r.amount += amount;
-			requirements [id] = r;
-			if (r.amount > r.required)
-				Debug.LogWarning ("construction overfilling - item loss will occur");
-
-			Log ();
-			SendRequirementsUpdate ();
-			return true;
-		}
-
-		private void Clear() {
-			requirements.Clear ();
-			SendRequirementsUpdate ();
-		}
-
-		public int Count(int i) {
-			ConstructionRequirement req;
-			requirements.TryGetValue (i, out req);
-			return req.amount;
 		}
 
 		private bool CheckConstructionProgress() {

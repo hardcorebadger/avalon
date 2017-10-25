@@ -36,14 +36,14 @@ namespace Assets.Gamelogic.Core {
 
 		public AIActionGoTo(CharacterController o, Vector3 pos) : base(o)	{
 			target = pos;
-			state = 1;
+			state = 2;
 		}
 
 		public AIActionGoTo(CharacterController o, EntityId eid, Vector3 pos) : base(o)	{
 			target = pos;
 			targetId = eid;
 			hasTargetEntity = true;
-			state = 1;
+			state = 2;
 		}
 
 		public AIActionGoTo(CharacterController o, EntityId eid) : base(o)	{

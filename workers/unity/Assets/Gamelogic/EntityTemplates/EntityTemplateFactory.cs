@@ -174,38 +174,36 @@ namespace Assets.Gamelogic.EntityTemplates
 			int x = 1;
 			int z = 1;
 			if (name == "construction-house-3d") {
-				req.Add (0, new ConstructionRequirement (0, 3));
+				req.Add (0, new ConstructionRequirement (0, 3, 0));
 			} else if (name == "construction-forester") {
-				req.Add (0, new ConstructionRequirement (0, 3));
+				req.Add (0, new ConstructionRequirement (0, 3, 0));
 				x = 3;
 			} else if (name == "construction-quarry") {
-				req.Add (0, new ConstructionRequirement (0, 3));
+				req.Add (0, new ConstructionRequirement (0, 3, 0));
 				x = 2;
 				z = 2;
 			} else if (name == "construction-farm") {
-				req.Add (0, new ConstructionRequirement (0, 3));
+				req.Add (0, new ConstructionRequirement (0, 3, 0));
 				x = 2;
 				z = 2;
 			} else if (name == "construction-stockpile") {
-				req.Add (0, new ConstructionRequirement (0, 3));
+				req.Add (0, new ConstructionRequirement (0, 3, 0));
 				x = 3;
 			} else if (name == "construction-settlement") {
-				req.Add (0, new ConstructionRequirement (0, 3));
+				req.Add (0, new ConstructionRequirement (0, 3, 0));
 				x = 4;
 				z = 4;
 			} else if (name == "construction-road") {
-				req.Add (0, new ConstructionRequirement (0, 1));
+				req.Add (0, new ConstructionRequirement (0, 1, 0));
 			}
-
-			SourcingOption sourcing = new SourcingOption (true, new List<EntityId> (), 100f, new Vector3d (pos.x, pos.z, pos.y));
-
+				
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent(name)
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, 4), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Construction.Data(req,sourcing), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Construction.Data(req), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Building.Data(tileMargin,x,z, 100f, district, 0), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CONSTRUCTION, ownerObject), CommonRequirementSets.PhysicsOnly)
 				.Build();

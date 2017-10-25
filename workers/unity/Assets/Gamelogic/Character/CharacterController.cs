@@ -69,6 +69,8 @@ namespace Assets.Gamelogic.Core {
 			district = characterWriter.Data.district;
 		
 			indoors = characterWriter.Data.isIndoors;
+
+			actionQueue = new ActionQueue ();
 		}
 
 		private void OnDisable() {
@@ -127,9 +129,9 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "gather") 
-				QueueActionImmediate (new AIActionGather (this, request.target));
-//			else if (request.command == "work")
-//				QueueActionImmediate (new ActionWork (this, request.target));
+				QueueActionImmediate (new AITaskGoAndGather (this, request.target));
+			else if (request.command == "work")
+				QueueActionImmediate (new AIActionWork (this, request.target));
 			else if (request.command == "attack")
 				QueueActionImmediate (new AIActionAttack (this, request.target));
 			else if (request.command == "damage")

@@ -23,19 +23,19 @@ namespace Assets.Gamelogic.Core {
 		// agent is empty handed
 
 		// end condition //
-		// agent has 1 of the list's item types in its hand (200)
+		// agent has 1 of the list's item types in its hand (200's)
 
 		// reponse codes //
 		// 201 = no items were asked for (no item is in hand)
-		// 202 = no applicable items could be found (no item is in hand)
-		// 203 = agent had an applicable item in hand
-		// 401 = agent had item in hand (that item is in their hand)
+		// 202 = agent had an applicable item in hand
+		// 401 = agent had inapplicable item in hand (that item is in their hand)
+		// 402 = no applicable items could be found (no item is in hand)
 		// 501 = district request failed (no item in hand)
 		// 502 = storage take request failed (no item in hand)
 		// 503 = storage denied the take request (no item in hand)
 
 		private List<int> toGet;
-		private EntityId districtId;
+		private Option<EntityId> districtId;
 		private Option<EntityId> asker;
 		private ItemFindResponse findResponse;
 		private TakeResponse takeResponse;
@@ -43,13 +43,13 @@ namespace Assets.Gamelogic.Core {
 		private EntityId storageId;
 		private AIActionGoTo seek;
 
-		public AIActionGetItem(CharacterController o, List<int> tg, EntityId d) : base(o) {
+		public AIActionGetItem(CharacterController o, List<int> tg, Option<EntityId> d) : base(o) {
 			toGet = tg;
 			districtId = d;
 			asker = new Option<EntityId>();
 		}
 
-		public AIActionGetItem(CharacterController o, List<int> tg, EntityId d, EntityId a) : base(o) {
+		public AIActionGetItem(CharacterController o, List<int> tg, Option<EntityId> d, EntityId a) : base(o) {
 			toGet = tg;
 			districtId = d;
 			asker = new Option<EntityId>(a);
@@ -68,15 +68,17 @@ namespace Assets.Gamelogic.Core {
 					return 201;
 				if (!agent.EmptyHanded ()) {
 					if (toGet.Contains (agent.GetItemInHand ()))
-						return 203;
+						return 202;
 					else
 						return 401;
 				}
+				if (!districtId.HasValue)
+					return 402;
 				state++;
 				break;
 			case 1:
 				// ask district for a place to get this stuff
-				SpatialOS.Commands.SendCommand (agent.characterWriter, District.Commands.FindAnyItem.Descriptor, new ItemFindRequest (toGet, asker), districtId)
+				SpatialOS.Commands.SendCommand (agent.characterWriter, District.Commands.FindAnyItem.Descriptor, new ItemFindRequest (toGet, asker), districtId.Value)
 					.OnSuccess (response => OnFindResult (response))
 					.OnFailure (response => OnFindRequestFailed ());
 				state++;
@@ -87,7 +89,7 @@ namespace Assets.Gamelogic.Core {
 			case 3:
 				// process reponse
 				if (!findResponse.storage.HasValue) {
-					return 202;
+					return 402;
 				} else {
 					gettingId = findResponse.id;
 					storageId = findResponse.storage.Value;

@@ -42,7 +42,7 @@ namespace Assets.Gamelogic.Core {
 		public static bool OnServerError(int responseCode) {
 			return responseCode >= 500 && responseCode < 600;
 		}
-
+			
 	}
 
 }

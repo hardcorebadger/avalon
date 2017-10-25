@@ -13,7 +13,7 @@ namespace Assets.Gamelogic.Core {
 
 	public class WorkSiteController : MonoBehaviour {
 
-		[Require] private WorkSite.Writer workSiteWriter;
+		[Require] public WorkSite.Writer workSiteWriter;
 		[Require] private Building.Writer buildingWriter;
 
 		public Improbable.Collections.List<EntityId> workers = new Improbable.Collections.List<EntityId>();

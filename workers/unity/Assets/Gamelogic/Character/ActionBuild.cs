@@ -71,9 +71,9 @@ namespace Assets.Gamelogic.Core {
 					stage = 4;
 			} else if (stage == 4) {
 				owner.SetState (CharacterState.DEFAULT);
-				SpatialOS.Commands.SendCommand (owner.characterWriter, Construction.Commands.Give.Descriptor, new ItemStack(owner.characterWriter.Data.itemInHand,1), target)
-					.OnSuccess(response => OnGiveResult(response))
-					.OnFailure(response => OnRequestFailed());
+//				SpatialOS.Commands.SendCommand (owner.characterWriter, Construction.Commands.Give.Descriptor, new ItemStack(owner.characterWriter.Data.itemInHand,1), target)
+//					.OnSuccess(response => OnGiveResult(response))
+//					.OnFailure(response => OnRequestFailed());
 				stage = 5;
 			}
 
@@ -97,18 +97,18 @@ namespace Assets.Gamelogic.Core {
 		private void OnFailedEntityQuery(ICommandErrorDetails _) {
 			failed = true;
 		}
-
-		public void OnGiveResult(ConstructionGiveResponse response) {
-			if (response.success) {
-				owner.DropItem ();
-				succeeded = true;
-				if (response.constructionComplete)
-					constructionComplete = true;
-			} else {
-				Debug.LogWarning ("Construction Rejected Give");
-				failed = true;
-			}
-		}
+//
+//		public void OnGiveResult(ConstructionGiveResponse response) {
+//			if (response.success) {
+//				owner.DropItem ();
+//				succeeded = true;
+//				if (response.constructionComplete)
+//					constructionComplete = true;
+//			} else {
+//				Debug.LogWarning ("Construction Rejected Give");
+//				failed = true;
+//			}
+//		}
 
 		public void OnRequestFailed() {
 			failed = true;
