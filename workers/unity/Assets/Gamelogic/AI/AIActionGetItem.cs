@@ -28,6 +28,7 @@ namespace Assets.Gamelogic.Core {
 		// reponse codes //
 		// 201 = no items were asked for (no item is in hand)
 		// 202 = no applicable items could be found (no item is in hand)
+		// 203 = agent had an applicable item in hand
 		// 401 = agent had item in hand (that item is in their hand)
 		// 501 = district request failed (no item in hand)
 		// 502 = storage take request failed (no item in hand)
@@ -65,8 +66,12 @@ namespace Assets.Gamelogic.Core {
 				// do some prelim checks
 				if (toGet.Count < 1)
 					return 201;
-				if (!agent.EmptyHanded ())
-					return 401;
+				if (!agent.EmptyHanded ()) {
+					if (toGet.Contains (agent.GetItemInHand ()))
+						return 203;
+					else
+						return 401;
+				}
 				state++;
 				break;
 			case 1:

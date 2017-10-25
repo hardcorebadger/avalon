@@ -11,7 +11,7 @@ using Improbable.Worker.Query;
 using Improbable.Worker;
 using Improbable.Entity;
 using Improbable.Unity.Core.EntityQueries;
-using Improbable.Collections;
+
 
 namespace Assets.Gamelogic.Core {
 
@@ -37,14 +37,14 @@ namespace Assets.Gamelogic.Core {
 		public bool indoors = false;
 
 
-		private Action currentAction;
+		private ActionQueue actionQueue;
+		private AIAction currentAction;
 		private float velocity;
 		public CharacterState state;
 		private int itemInHand = -1;
 		public float health;
 		public float hunger;
-		public Option<EntityId> district;
-		private EntityId currentlyHitting;
+		public Improbable.Collections.Option<EntityId> district;
 
 		private void OnEnable() {
 			anim = GetComponent<Animator> ();
@@ -52,7 +52,6 @@ namespace Assets.Gamelogic.Core {
 
 			characterWriter.CommandReceiver.OnPositionTarget.RegisterResponse(OnPositionTarget);
 			characterWriter.CommandReceiver.OnEntityTarget.RegisterResponse(OnEntityTarget);
-			characterWriter.CommandReceiver.OnRadiusTarget.RegisterResponse(OnRadiusTarget);
 
 			characterWriter.CommandReceiver.OnFire.RegisterResponse(OnFire);
 			characterWriter.CommandReceiver.OnReceiveHit.RegisterResponse(OnReceiveHit);
@@ -69,14 +68,12 @@ namespace Assets.Gamelogic.Core {
 			rigidBody = GetComponent<Rigidbody> ();
 			district = characterWriter.Data.district;
 		
-			currentAction = new ActionBlank (this);
 			indoors = characterWriter.Data.isIndoors;
 		}
 
 		private void OnDisable() {
 			characterWriter.CommandReceiver.OnPositionTarget.DeregisterResponse();
 			characterWriter.CommandReceiver.OnEntityTarget.DeregisterResponse();
-			characterWriter.CommandReceiver.OnRadiusTarget.DeregisterResponse();
 
 			characterWriter.CommandReceiver.OnFire.DeregisterResponse();
 			characterWriter.CommandReceiver.OnReceiveHit.DeregisterResponse();
@@ -95,76 +92,69 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void Update() {
-			// if the controlling action completes, stop doing it
-
-			if (health <= 0F) {
+			if (health <= 0F)
 				DestroyCharacter ();
+
+			UpdateAI ();
+		}
+
+		private void UpdateAI() {
+			if (currentAction == null)
+				return;
+			
+			if (AIAction.OnTermination (currentAction.Update ()))
+				currentAction = actionQueue.Dequeue();
+		}
+
+		public void QueueAction(int priority, AIAction a) {
+			actionQueue.Enqueue (priority, a);
+		}
+
+		public void QueueActionImmediate(AIAction a) {
+			if (currentAction != null) {
+				currentAction.OnKill ();
+				currentAction = a;
+			} else {
+				currentAction = a;
 			}
-
-			if (currentAction == null) 
-				currentAction = new ActionBlank (this);
-
-
-			ActionCode code = currentAction.Update ();
-			if (code == ActionCode.Success || code == ActionCode.Failure)
-				currentAction = new ActionBlank (this);
 		}
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "goto")
-				SetAction (new ActionSeek (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.y, (float)request.targetPosition.z)));
+				QueueActionImmediate (new AIActionGoTo (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.y, (float)request.targetPosition.z)));
 			return new Nothing ();
 		}
 
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "gather") 
-				SetAction (new ActionGather (this, request.target));
-			else if (request.command == "work")
-				SetAction (new ActionWork (this, request.target));
+				QueueActionImmediate (new AIActionGather (this, request.target));
+//			else if (request.command == "work")
+//				QueueActionImmediate (new ActionWork (this, request.target));
 			else if (request.command == "attack")
-				SetAction (new ActionAttack (this, request.target));
+				QueueActionImmediate (new AIActionAttack (this, request.target));
 			else if (request.command == "damage")
-				SetAction (new ActionDamage (this, request.target));
-			return new Nothing ();
-		}
-
-		private Nothing OnRadiusTarget(RadiusTargetRequest request, ICommandCallerInfo callerinfo) {
-//			if (request.command == "gather") {
-//				var query = Query.And (Query.HasComponent (Gatherable.ComponentId), Query.InSphere (request.targetPosition.x, request.targetPosition.y, request.targetPosition.z, request.size)).ReturnOnlyEntityIds ();
-//				SpatialOS.Commands.SendQuery(characterWriter, query)
-//					.OnSuccess(result => {
-//						if (result.EntityCount < 1) {
-//							return;
-//						}
-//						Improbable.Collections.Map<EntityId, Entity> resultMap = result.Entities;
-//						EntityId[] ids = new EntityId[resultMap.Count];
-//						int index = 0;
-//						foreach (EntityId i in resultMap.Keys) {
-//							ids[index] = i;
-//							index++;
-//						}
-//						SetAction(new ActionDistributedGather(this, request.groupInfo.groupId, request.groupInfo.groupSize, ids));
-//					})
-//					.OnFailure(errorDetails => Debug.Log("Query failed with error: " + errorDetails));
-//			}
+				QueueActionImmediate (new AIActionDamage (this, request.target));
 			return new Nothing ();
 		}
 
 		private Nothing OnFire(Nothing request, ICommandCallerInfo callerinfo) {
-			SetAction (new ActionBlank (this));
+			actionQueue.CancelAllJobActions ();
+			if (currentAction is AIActionJob)
+				currentAction.OnKill ();
+			currentAction = actionQueue.Dequeue ();
 			return new Nothing ();
 		}
 
 		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
 
-//			Debug.LogWarning ("Received Hit!");
+			Debug.LogWarning ("Received Hit!");
 			health -= Random.Range(3.0f, 6.0f);
 			characterWriter.Send (new Character.Update ()
 				.SetHealth (health)
 				.AddShowHurt(new Nothing())
 			);
-			if (!(currentAction is ActionAttack) && !(currentAction is ActionDamage)) {
-				currentAction = new ActionAttack (this, request.source);
+			if (!(currentAction is AIActionAttack) && !(currentAction is AIActionDamage)) {
+				QueueActionImmediate (new AIActionAttack (this, request.source));
 			}
 			Collider[] cols = Physics.OverlapSphere (transform.position, 50);
 			System.Collections.Generic.List<CharacterController> enemies = new System.Collections.Generic.List<CharacterController>();
@@ -201,8 +191,8 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnHostileAlert(HostileAlertRequest request, ICommandCallerInfo callerinfo) {
 
-			if (!(currentAction is ActionAttack) && !(currentAction is ActionDamage)) {
-				currentAction = new ActionAttack (this, request.target);
+			if (!(currentAction is AIActionAttack) && !(currentAction is AIActionDamage)) {
+				QueueActionImmediate(new AIActionAttack (this, request.target));
 			}
 
 			return new Nothing ();
@@ -217,16 +207,6 @@ namespace Assets.Gamelogic.Core {
 
 
 			return new Nothing ();
-		}
-
-		public void SetAction(Action a) {
-			if (currentAction != null) {
-				currentAction.OnKill ();
-			}
-			SetVelocity (0f);
-			rigidBody.angularVelocity = Vector3.zero;
-			SetState (CharacterState.DEFAULT);
-			currentAction = a;
 		}
 
 		public void SetState(CharacterState s) {
@@ -296,9 +276,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void OnDealHit() {
-			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
-				currentAction.OnDealHit ();
-			}
+//			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
+////				currentAction.OnDealHit ();
+//			}
 		}
 
 		public void DestroyCharacter() {
@@ -351,7 +331,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void Hit(EntityId other) {
-			currentlyHitting = other;
 			anim.SetTrigger ("attack");
 			characterWriter.Send (new Character.Update ()
 				.AddShowHit(new Nothing())
