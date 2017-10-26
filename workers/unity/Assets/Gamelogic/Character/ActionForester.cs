@@ -42,7 +42,7 @@ namespace Assets.Gamelogic.Core {
 		public override ActionCode Update () {
 			switch (branch) {
 			case 0:
-				GetJob ();
+//				GetJob ();
 				break;
 			case 1:
 				Chop ();
@@ -62,31 +62,31 @@ namespace Assets.Gamelogic.Core {
 		// GET JOB
 
 		// assumes empty hand and at work site
-		private void GetJob() {
-			switch (state) {
-			case 0:
-				// ask for a job
-				SpatialOS.Commands.SendCommand (owner.characterWriter, Forester.Commands.GetJob.Descriptor, new Nothing (), target)
-					.OnSuccess (response => OnJobResult (response))
-					.OnFailure (response => OnRequestFailed ());
-				state = 1;
-				break;
-			case 1:
-				// waiting for response - see callback
-				break;
-			}
-		}
-
-		private void OnJobResult (ForesterJobResponse response) {
-			// either we get a tree entity id or if not we plant a tree
-			if (response.tree.HasValue) {
-				subAction = new ActionGather (owner, response.tree.Value);
-				SetBranch (1);
-			} else {
-				subAction = new ActionSeek (owner, GetRandomTreePosition ());
-				SetBranch (2);
-			}
-		}
+//		private void GetJob() {
+//			switch (state) {
+//			case 0:
+//				// ask for a job
+//				SpatialOS.Commands.SendCommand (owner.characterWriter, Forester.Commands.GetJob.Descriptor, new Nothing (), target)
+//					.OnSuccess (response => OnJobResult (response))
+//					.OnFailure (response => OnRequestFailed ());
+//				state = 1;
+//				break;
+//			case 1:
+//				// waiting for response - see callback
+//				break;
+//			}
+//		}
+//
+//		private void OnJobResult (ForesterJobResponse response) {
+//			// either we get a tree entity id or if not we plant a tree
+//			if (response.tree.HasValue) {
+//				subAction = new ActionGather (owner, response.tree.Value);
+//				SetBranch (1);
+//			} else {
+//				subAction = new ActionSeek (owner, GetRandomTreePosition ());
+//				SetBranch (2);
+//			}
+//		}
 
 		// CHOP
 

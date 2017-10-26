@@ -29,6 +29,7 @@ namespace Assets.Gamelogic.Core {
 
 		void OnEnable () {
 			foresterWriter.CommandReceiver.OnGetJob.RegisterResponse (OnGetJob);
+			foresterWriter.CommandReceiver.OnCompleteJob.RegisterResponse (OnCompleteJob);
 			inventoryReader.ComponentUpdated.Add (OnInventoryUpdate);
 			RefreshLocalTrees ();
 			currentLogs = InventoryController.GetTotal (inventoryReader.Data);
@@ -76,15 +77,22 @@ namespace Assets.Gamelogic.Core {
 			Debug.LogWarning ("forester failed refresh, this may cause performance issues, but i'm gunna go ahead and retry...");
 		}
 
-		private ForesterJobResponse OnGetJob(Nothing n, ICommandCallerInfo callerinfo) {
+		private ForesterJobAssignment OnGetJob(Nothing n, ICommandCallerInfo _) {
 			// basically "if you need to replant or the thing is full so be proactive why dont ya"
-			if ((localTrees.Count < minTrees || currentLogs >= inventoryReader.Data.max)/* && !treeDensitySatisfied //need a way to make the workers go idle for this */) {
-				return new ForesterJobResponse (new Improbable.Collections.Option<EntityId> ());
+			if (localTrees.Count < minTrees || currentLogs >= inventoryReader.Data.max) {
+				if (!treeDensitySatisfied)
+					return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> (GetNewTreePlantPosition()));
+				else
+					return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> ());
 			} else {
 				EntityId id = localTrees [0];
 				localTrees.RemoveAt (0);
-				return new ForesterJobResponse (new Improbable.Collections.Option<EntityId>(id));
+				return new ForesterJobAssignment (new Option<EntityId>(id), new Option<Vector3d> ());
 			}
+		}
+
+		private Nothing OnCompleteJob(ForesterJobResult r, ICommandCallerInfo _) {
+			return new Nothing ();
 		}
 
 		private void OnInventoryUpdate(Inventory.Update u) {
@@ -96,6 +104,18 @@ namespace Assets.Gamelogic.Core {
 				}
 				currentLogs = u.inventory.Value[0];
 			}
+		}
+
+		private Vector3d GetNewTreePlantPosition() {
+			Vector3 v = transform.position + new Vector3 (DonutRandom(), 0, DonutRandom());
+			return new Vector3d (v.x, v.y, v.z);
+		}
+
+		private float DonutRandom() {
+			float f = Random.Range (7f, 100f);
+			if (Random.Range(0,2) == 0)
+				f *= -1;
+			return f;
 		}
 
 	}

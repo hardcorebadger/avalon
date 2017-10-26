@@ -21,8 +21,6 @@ namespace Assets.Gamelogic.Core {
 		private OwnedController owned;
 
 		public bool districtBuildingConstruction;
-		private bool shouldStall = false;
-		private int stallCounter = 0;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -42,16 +40,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private ConstructionJobAssignment OnGetJob(Nothing _ , ICommandCallerInfo __) {
-			// basically, if workers are sending back user errors, tell them to wait a bit
-			if (shouldStall) {
-				stallCounter++;
-				if (stallCounter <= GetComponent<WorkSiteController> ().workers.Count)
-					return new ConstructionJobAssignment (new Option<int> ());
-				else {
-					shouldStall = false;
-					stallCounter = 0;
-				}
-			}
+			Debug.LogWarning ("job request  ");
 			foreach (int item in requirements.Keys) {
 				ConstructionRequirement req = requirements [item];
 				// if we need more still
@@ -65,25 +54,32 @@ namespace Assets.Gamelogic.Core {
 				}
 			}
 			SendRequirementsUpdate ();
+			Debug.LogWarning ("this is happening");
 			return new ConstructionJobAssignment (new Option<int>());
 		}
-
-		private Nothing OnCompleteJob(ConstructionJobResult result, ICommandCallerInfo _) {
+			
+		private TaskResponse OnCompleteJob(ConstructionJobResult result, ICommandCallerInfo _) {
+			Debug.LogWarning ("job complete");
 			if (!result.assignment.toGet.HasValue)
-				return new Nothing ();
+				return new TaskResponse (100);
+			
 			ConstructionRequirement req = requirements [result.assignment.toGet.Value];
 			req.requested -= 1;
+
 			if (AIAction.OnSuccess (result.response))
 				req.amount += 1;
-			else if (AIAction.OnUserError(result.response)) {
-				shouldStall = true;
-			}
+
 			requirements [result.assignment.toGet.Value] = req;
 
-			if (!CheckConstructionProgress ())
-				SendRequirementsUpdate ();
+			if (result.response == 403 /* district has no applicable items */ || 
+				result.response == 402 || result.response == 401 /* no district or non-applicable item in hand, tell them to fuck off */)
+				return new TaskResponse (400);
 			
-			return new Nothing ();
+			if (!CheckConstructionProgress ()) {
+				SendRequirementsUpdate ();
+				return new TaskResponse (100);
+			} else
+				return new TaskResponse (200);
 		}
 
 		private void SendRequirementsUpdate() {

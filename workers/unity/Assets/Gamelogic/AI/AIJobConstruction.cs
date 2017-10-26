@@ -29,6 +29,7 @@ namespace Assets.Gamelogic.Core {
 		// 502 = job completion request failed
 
 		private ConstructionJobAssignment assignment;
+		private TaskResponse taskResponse;
 		private AIAction task;
 		private int taskResult = 100;
 
@@ -36,7 +37,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override int Update(){
-
+			
 			if (shouldRespond != 100) {
 				return shouldRespond;
 			}
@@ -79,18 +80,27 @@ namespace Assets.Gamelogic.Core {
 				if (assignment.toGet.HasValue)
 					agent.DropItem ();
 				// requeue this job
-				agent.QueueAction (10, new AIJobConstruction (agent, workSite, workSitePosition, district));
+				if (taskResponse.response == 100) { /* there's no district and no applicable in hand item */
+					agent.QueueAction (10, new AIJobConstruction (agent, workSite, workSitePosition, district));
+					Debug.LogWarning ("construction job requeuing");
+				} else if (taskResponse.response == 400)
+					Debug.LogWarning ("construction job quitting due to issue");
+				else if (taskResponse.response == 200)
+					Debug.LogWarning ("construction job quitting due to completion");
 				// terminate
 				return 200;
 			}
 			return 100;
 		}
 
-		private void OnJobCompletionResponse(Nothing n) {
+		private void OnJobCompletionResponse(TaskResponse n) {
+			Debug.LogWarning ("tak response:  " + n.response);
 			state++;
+			taskResponse = n;
 		}
 
 		private void OnJobResponse(ConstructionJobAssignment a) {
+			Debug.LogWarning ("job response");
 			assignment = a;
 			state++;
 		}

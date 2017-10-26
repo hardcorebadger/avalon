@@ -1,13 +1,21 @@
 package improbable.core;
 
 import "improbable/core/Nothing.schema";
+import "improbable/vector3.schema";
 
-type ForesterJobResponse {
-    option<EntityId> tree = 1;
+type ForesterJobAssignment{
+    option<EntityId> chop = 1;
+    option<Vector3d> plant = 2;
+}
+
+type ForesterJobResult {
+    ForesterJobAssignment assignment = 1;
+    int32 result = 2;
 }
 
 component Forester {
     id = 1014;
 
-    command ForesterJobResponse get_job(Nothing);
+    command ForesterJobAssignment get_job(Nothing);
+    command Nothing complete_job(ForesterJobResult);
 }

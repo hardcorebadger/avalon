@@ -29,7 +29,8 @@ namespace Assets.Gamelogic.Core {
 		// 201 = no items were asked for (no item is in hand)
 		// 202 = agent had an applicable item in hand
 		// 401 = agent had inapplicable item in hand (that item is in their hand)
-		// 402 = no applicable items could be found (no item is in hand)
+		// 402 = no applicable items could be found (no district) (no item is in hand)
+		// 403 = no applicable items could be found (in district) (no item is in hand)
 		// 501 = district request failed (no item in hand)
 		// 502 = storage take request failed (no item in hand)
 		// 503 = storage denied the take request (no item in hand)
@@ -89,7 +90,7 @@ namespace Assets.Gamelogic.Core {
 			case 3:
 				// process reponse
 				if (!findResponse.storage.HasValue) {
-					return 402;
+					return 403;
 				} else {
 					gettingId = findResponse.id;
 					storageId = findResponse.storage.Value;

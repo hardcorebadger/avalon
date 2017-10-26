@@ -23,6 +23,12 @@ namespace Assets.Gamelogic.Core {
 			}
 			return 100;
 		}
+
+		// task response codes
+		// 100 = keep working (requeue)
+		// 200 = quit, it's all good
+		// 400 = quit, it is your fault
+		// 500 = quit, it's work site's fault
 	}
 
 }

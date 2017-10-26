@@ -36,7 +36,7 @@ namespace Assets.Gamelogic.Core {
 		private EnlistResponse enlistResponse;
 
 		public AIActionWork(CharacterController o, EntityId t) : base(o) {
-			target = t;Debug.LogWarning ("init");
+			target = t;
 		}
 
 		public override int Update(){
@@ -75,7 +75,7 @@ namespace Assets.Gamelogic.Core {
 					agent.QueueAction (10, new AIJobConstruction (agent, target, enlistResponse.position.ToUnityVector (), enlistResponse.district));
 					break;
 				case WorkType.WORK_LOGGING:
-					
+					agent.QueueAction (10, new AIJobForester (agent, target, enlistResponse.position.ToUnityVector (), enlistResponse.district));
 					break;
 				case WorkType.WORK_MINING: 
 					

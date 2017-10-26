@@ -1,6 +1,7 @@
 package improbable.core;
 
 import "improbable/core/Nothing.schema";
+import "improbable/core/Task.schema";
 
 type ConstructionRequirement {
     int32 amount = 1;
@@ -17,12 +18,11 @@ type ConstructionJobResult {
     int32 response = 2;
 }
 
-
 component Construction {
     id = 1007;
     
     map<int32, ConstructionRequirement> requirements = 1;
     
     command ConstructionJobAssignment get_job(Nothing);
-    command Nothing complete_job(ConstructionJobResult);
+    command TaskResponse complete_job(ConstructionJobResult);
 }

@@ -24,6 +24,8 @@ namespace Assets.Gamelogic.Core {
 				return null;
 			AIAction a = priorityQueue.First ().Value [0];
 			priorityQueue.First ().Value.RemoveAt (0);
+			if (priorityQueue.First ().Value.Count < 1)
+				priorityQueue.Remove (priorityQueue.First ().Key);
 			return a;
 		}
 
