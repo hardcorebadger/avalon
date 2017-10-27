@@ -7,5 +7,6 @@ component Farm {
     id = 1016;
 
     command Nothing change_workers(WorkerChangeRequest);
+    command Nothing complete_farm_job(Nothing);
 
 }

@@ -10,5 +10,5 @@ component Quarry {
     id = 1015;
 
     command Nothing change_workers(WorkerChangeRequest);
-
+    command Nothing complete_quarry_job(Nothing);
 }

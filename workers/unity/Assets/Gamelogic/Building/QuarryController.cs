@@ -17,25 +17,22 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private Quarry.Writer quarryWriter;
 
-		public float quarryStoneGenerationRate = 5f;
-		private float timer = -1f;
 		private InventoryController inventoryController;
 
 		void OnEnable () {
+			quarryWriter.CommandReceiver.OnCompleteQuarryJob.RegisterResponse (OnCompleteJob);
 			inventoryController = GetComponent<InventoryController> ();
 		}
 
 		void Update() {
 
-			if (timer < 0f) {
-				inventoryController.Insert (1, GetComponent<WorkSiteController>().workers.Count);
-				timer = 0f + Time.deltaTime;
+		}
 
-			} else {
-				timer += Time.deltaTime;
-				if (timer >= quarryStoneGenerationRate)
-					timer = -1f;
-			}
+		private Nothing OnCompleteJob(Nothing n, ICommandCallerInfo _) {
+
+			inventoryController.Insert (1, 1);
+
+			return new Nothing ();
 		}
 
 	}

@@ -78,10 +78,10 @@ namespace Assets.Gamelogic.Core {
 					agent.QueueAction (10, new AIJobForester (agent, target, enlistResponse.position.ToUnityVector (), enlistResponse.district));
 					break;
 				case WorkType.WORK_MINING: 
-					
+					agent.QueueAction (10, new AIJobQuarry (agent, target, enlistResponse.position.ToUnityVector (), enlistResponse.district, enlistResponse.interiorPosition.Value.ToUnityVector(), enlistResponse.position.ToUnityVector()));
 					break;
 				case WorkType.WORK_FARMING: 
-
+					agent.QueueAction (10, new AIJobFarm (agent, target, enlistResponse.position.ToUnityVector (), enlistResponse.district, enlistResponse.interiorPosition.Value.ToUnityVector(), enlistResponse.position.ToUnityVector()));
 					break;
 				case WorkType.WORK_STORAGE:
 					
