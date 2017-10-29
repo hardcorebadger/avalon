@@ -77,7 +77,6 @@ namespace Assets.Gamelogic.Core {
 				//eat food. 
 				agent.DropItem ();
 				agent.Eat (30f);
-
 				//tells agent it is not eating anymore
 				agent.CancelEat ();
 				return 200;

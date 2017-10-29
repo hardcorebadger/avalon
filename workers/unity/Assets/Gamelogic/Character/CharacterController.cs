@@ -130,7 +130,10 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void QueueAction(int priority, AIAction a) {
-			actionQueue.Enqueue (priority, a);
+			if (currentAction == null)
+				currentAction = a;
+			else
+				actionQueue.Enqueue (priority, a);
 		}
 
 		public void QueueActionImmediate(AIAction a) {
