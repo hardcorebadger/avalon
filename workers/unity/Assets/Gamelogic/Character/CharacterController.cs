@@ -48,6 +48,8 @@ namespace Assets.Gamelogic.Core {
 
 		private float hungerTimer = 0f;
 		private bool eatQueued = false;
+		private float eatWait = 0f;
+		private bool eatCancelled = false;
 
 		private void OnEnable() {
 			anim = GetComponent<Animator> ();
@@ -97,22 +99,42 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void Update() {
+			
 			if (health <= 0F)
 				DestroyCharacter ();
 
-			if (hunger >= 60f && !eatQueued) {
+			if (hunger >= 60f && !eatQueued && !eatCancelled) {
 				Debug.LogWarning ("EAT QUEUED: " + characterWriter.EntityId);
 
 				QueueAction(1, new AIActionEat(this));
 				eatQueued = true;
+			} 
+
+			if (eatCancelled && !eatQueued && hunger >= 60f) {
+				//on cancel, wait. 
+
+				eatWait += Time.deltaTime;
+
+				if (eatWait >= 10f) {
+					Debug.LogWarning ("CANCELELD EAT REQUEUED: " + characterWriter.EntityId);
+
+					eatWait = 0f;
+					QueueAction(1, new AIActionEat(this));
+					eatQueued = true;
+					eatCancelled = false;
+				}
+
+
 			}
+
+
 
 			hungerTimer += Time.deltaTime;
 
 			if (hungerTimer >= 5f) {
-
+				Debug.LogWarning ("EAT STATE: " + eatQueued + " " + eatCancelled + " " + hunger + " " + characterWriter.EntityId);
 				hungerTimer = 0f;
-				hunger += 5f;
+				hunger += 10f;
 				if (hunger >= 100f)
 					hunger = 100f;
 				characterWriter.Send (new Character.Update ().SetHunger (hunger));
@@ -266,6 +288,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void Eat(float amount) {
+			Debug.LogWarning ("EAT: " + characterWriter.EntityId);
+
+
 			hunger -= amount;
 			if (hunger <= 0)
 				hunger = 0;
@@ -273,11 +298,17 @@ namespace Assets.Gamelogic.Core {
 			characterWriter.Send (new Character.Update ()
 				.SetHunger (hunger)
 			);
+
+			eatCancelled = false;
+			eatQueued = false;
 				
 		}
 
 		public void CancelEat() {
 			eatQueued = false;
+			eatCancelled = true;
+			Debug.LogWarning ("CANCELELD EAT: " + characterWriter.EntityId);
+
 		}
 
 		public void DropItem() {

@@ -93,7 +93,7 @@ namespace Assets.Gamelogic.Core {
 		public void SpawnCharacterEntity(EntityId entityId) {
 
 			SpatialOS.Commands
-					.CreateEntity(districtWriter, entityId, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.position, owned.getOwner(), owned.getOwnerObject()))
+				.CreateEntity(districtWriter, entityId, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.position, owned.getOwner(), owned.getOwnerObject(), new Option<EntityId>(districtWriter.EntityId)))
 					.OnSuccess(result => RegisterSpawnedCharacter(entityId));
 
 		}

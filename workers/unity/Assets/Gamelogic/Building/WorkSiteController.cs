@@ -100,12 +100,6 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		private void Respawn(WorkerData d) {
-			SpatialOS.Commands.CreateEntity(workSiteWriter, EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.transform.position,d.playerId, owned.getOwnerObject()))
-				.OnSuccess(entityId => Debug.Log("Created entity with ID: " + entityId))
-				.OnFailure(errorDetails => Debug.Log("Failed to create entity with error: " + errorDetails.ErrorMessage));
-		}
-
 	}
 
 }

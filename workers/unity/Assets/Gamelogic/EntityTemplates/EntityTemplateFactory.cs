@@ -27,16 +27,11 @@ namespace Assets.Gamelogic.EntityTemplates
 				return CreateConstructionTemplate (name, pos, ownerId, ownerObject, district);
 			} else if (name.StartsWith("building")) {
 				return CreateBuildingTemplate (name, pos, ownerId, ownerObject, district);
+			} else if (name == "character") {
+				return CreateCharacterTemplate (pos, ownerId, ownerObject, district);
 			}
 			return null;
-		}
-
-		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject) {
-			if (name == "character") {
-				return CreateCharacterTemplate (pos, ownerId, ownerObject);
-			}
-			return null;
-		}
+		} 
 
 		public static Entity CreateEntityTemplate(string name, Vector3 pos) {
 			if (name == "pine") {
@@ -252,14 +247,14 @@ namespace Assets.Gamelogic.EntityTemplates
 				.Build();
 		}
 
-		public static Entity CreateCharacterTemplate(Vector3 pos, int playerId, EntityId playerObject) {
+		public static Entity CreateCharacterTemplate(Vector3 pos, int playerId, EntityId playerObject, Option<EntityId> district) {
 			return EntityBuilder.Begin()
 				.AddPositionComponent(pos, CommonRequirementSets.PhysicsOnly)
 				.AddMetadataComponent("character")
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1, 0, 100, new Option<EntityId>(), false, 0f), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1, 0, 100, district, false, 0f), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(playerId, OwnedType.OWNED_CHARACTER, playerObject), CommonRequirementSets.PhysicsOnly)
 
 				.Build();

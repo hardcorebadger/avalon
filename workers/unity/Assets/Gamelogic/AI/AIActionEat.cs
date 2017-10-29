@@ -40,7 +40,6 @@ namespace Assets.Gamelogic.Core {
 		public override int Update() {
 			if (shouldRespond != 100) {
 				agent.CancelEat ();
-				Debug.LogWarning ("EAT CANCELLED: " + shouldRespond);
 				return shouldRespond;
 			}
 
@@ -56,11 +55,7 @@ namespace Assets.Gamelogic.Core {
 					// has food item!
 					getItem = null;
 					state++;
-				} else if (AIAction.OnUserError (responseCode)) {
-
-					shouldRespond = 401;
-				} else if (AIAction.OnServerError (responseCode)) {
-
+				} else if (AIAction.OnTermination(responseCode)) {
 					shouldRespond = 401;
 				}
 				break;
@@ -68,22 +63,31 @@ namespace Assets.Gamelogic.Core {
 				//has food
 				if (wait == null)
 					wait = new AIActionWait (agent, 2f);
-				if (AIAction.OnSuccess (wait.Update ())) {
+
+				int waitCode = wait.Update ();
+
+				if (AIAction.OnSuccess (waitCode)) {
 					wait = null;
 					state++;
+				} else if (AIAction.OnTermination (waitCode)) {
+					state++;
+					wait = null;
 				}
+
 				break;
 			case 2: 
 				//eat food. 
 				agent.DropItem ();
-				agent.Eat (30f);
-				//tells agent it is not eating anymore
-				agent.CancelEat ();
+				agent.Eat (50f);
 				return 200;
 				break;
 			}
 
 			return 100;
+		}
+
+		public override void OnKill () {
+			agent.CancelEat ();
 		}
 
 	}
