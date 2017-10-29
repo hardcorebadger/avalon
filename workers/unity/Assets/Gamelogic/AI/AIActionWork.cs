@@ -60,8 +60,10 @@ namespace Assets.Gamelogic.Core {
 				// make sure we are good to enlist
 				if (enlistResponse.full)
 					return 401;
-				else
+				else {
+					agent.SetJobWorkSite (target);
 					state++;
+				}
 				break;
 			case 3:
 				if (seek == null)

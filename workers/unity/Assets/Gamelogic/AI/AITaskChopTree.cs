@@ -20,6 +20,7 @@ namespace Assets.Gamelogic.Core {
 		// 401 = assignment didn't ask to chop
 		// 402 = chop had a user error
 		// 403 = give had a user error
+		// 404 = failed to find entity
 		// 501 = chop had a server error
 		// 502 = give had a server error
 
@@ -47,9 +48,13 @@ namespace Assets.Gamelogic.Core {
 				// walk to tree
 				if (seek == null)
 					seek = new AIActionGoTo (agent, assignment.chop.Value);
-				if (AIAction.OnSuccess (seek.Update ())) {
+				int r = seek.Update ();
+				if (AIAction.OnTermination (r)) {
 					seek = null;
-					state++;
+					if (AIAction.OnSuccess (r))
+						state++;
+					else
+						return 404;
 				}
 				break;
 			case 2:
@@ -70,9 +75,9 @@ namespace Assets.Gamelogic.Core {
 				// put log into the inventory
 				if (give == null)
 					give = new AIActionGive (agent, job.workSite);
-				int r = give.Update ();
-				if (AIAction.OnTermination (r)) {
-					return GetResponse(chopResult, r);
+				int a = give.Update ();
+				if (AIAction.OnTermination (a)) {
+					return GetResponse(chopResult, a);
 				}
 				break;
 			}
@@ -89,6 +94,10 @@ namespace Assets.Gamelogic.Core {
 			if (AIAction.OnUserError (give))
 				return 403;
 			return 200;
+		}
+
+		public override void OnKill () {
+			
 		}
 	}
 

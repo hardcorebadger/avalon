@@ -81,9 +81,11 @@ namespace Assets.Gamelogic.Core {
 			// basically "if you need to replant or the thing is full so be proactive why dont ya"
 			if (localTrees.Count < minTrees || currentLogs >= inventoryReader.Data.max) {
 				if (!treeDensitySatisfied)
-					return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> (GetNewTreePlantPosition()));
-				else
+					return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> (GetNewTreePlantPosition ()));
+				else {
+					Debug.LogWarning (localTrees.Count + " " + minTrees + " " + maxTrees + " " + treeDensitySatisfied);
 					return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> ());
+				}
 			} else {
 				EntityId id = localTrees [0];
 				localTrees.RemoveAt (0);

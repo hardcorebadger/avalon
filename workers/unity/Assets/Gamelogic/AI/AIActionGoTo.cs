@@ -53,6 +53,9 @@ namespace Assets.Gamelogic.Core {
 			
 		public override int Update () {
 
+			if (shouldRespond != 100)
+				return shouldRespond;
+
 			// you are querying for position data
 			if (state < 2)
 				return QueryUpdate ();

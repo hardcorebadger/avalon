@@ -82,11 +82,10 @@ namespace Assets.Gamelogic.Core {
 				// requeue this job
 				if (taskResponse.response == 100) { /* there's no district and no applicable in hand item */
 					agent.QueueAction (10, new AIJobConstruction (agent, workSite, workSitePosition, district));
-					Debug.LogWarning ("construction job requeuing");
-				} else if (taskResponse.response == 400)
-					Debug.LogWarning ("construction job quitting due to issue");
-				else if (taskResponse.response == 200)
-					Debug.LogWarning ("construction job quitting due to completion");
+				} else if (taskResponse.response == 400)  /* issue */
+					agent.QuitJob ();
+				else if (taskResponse.response == 200) /* complete */
+					agent.QuitJob ();
 				// terminate
 				return 200;
 			}
@@ -94,13 +93,11 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void OnJobCompletionResponse(TaskResponse n) {
-			Debug.LogWarning ("tak response:  " + n.response);
 			state++;
 			taskResponse = n;
 		}
 
 		private void OnJobResponse(ConstructionJobAssignment a) {
-			Debug.LogWarning ("job response");
 			assignment = a;
 			state++;
 		}
@@ -112,6 +109,18 @@ namespace Assets.Gamelogic.Core {
 		private void OnJobCompletionRequestFailed() {
 			shouldRespond = 502;
 		}
+
+		public override void OnKill () {
+			if (state == 2 /* the task is being done */) {
+				task.OnKill ();
+				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.CompleteJob.Descriptor, new ConstructionJobResult (assignment, 420), workSite);
+			} else if (state > 2) {
+				if (assignment.toGet.HasValue)
+					agent.DropItem ();
+			}
+			agent.QueueAction (10, new AIJobConstruction (agent, workSite, workSitePosition, district));
+		}
+
 
 	}
 
