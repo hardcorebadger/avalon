@@ -93,6 +93,7 @@ namespace Assets.Gamelogic.Core {
 		public override void OnKill () {
 			agent.transform.position = doorPosition;
 			agent.SetIndoors (false);
+			agent.QueueAction (10, new AIJobQuarry (agent, workSite, workSitePosition, district, interiorPositon, doorPosition));
 		}
 
 	}

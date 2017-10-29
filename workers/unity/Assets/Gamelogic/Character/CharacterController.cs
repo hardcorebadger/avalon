@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Improbable.Collections;
 using UnityEngine;
 using Improbable;
 using Improbable.Core;
@@ -35,6 +34,7 @@ namespace Assets.Gamelogic.Core {
 		public Animator anim;
 		public OwnedController owned;
 		public bool indoors = false;
+		private Option<EntityId> jobWorkSite;
 
 
 		private ActionQueue actionQueue;
@@ -44,7 +44,7 @@ namespace Assets.Gamelogic.Core {
 		private int itemInHand = -1;
 		public float health;
 		public float hunger;
-		public Improbable.Collections.Option<EntityId> district;
+		public Option<EntityId> district;
 
 		private float hungerTimer = 0f;
 		private bool eatQueued = false;
@@ -87,7 +87,7 @@ namespace Assets.Gamelogic.Core {
 
 		}
 
-		IEnumerator UpdateTransform() {
+		System.Collections.IEnumerator UpdateTransform() {
 			while (true) {
 				yield return new WaitForSeconds (0.1f);
 				positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
@@ -134,6 +134,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void QueueActionImmediate(AIAction a) {
+			actionQueue.CancelAllJobActions ();
 			if (currentAction != null) {
 				currentAction.OnKill ();
 				currentAction = a;
@@ -149,10 +150,12 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
-			if (request.command == "gather") 
+			if (request.command == "gather")
 				QueueActionImmediate (new AITaskGoAndGather (this, request.target));
-			else if (request.command == "work")
+			else if (request.command == "work") {
+				QuitJob ();
 				QueueActionImmediate (new AIActionWork (this, request.target));
+			}
 			else if (request.command == "attack")
 				QueueActionImmediate (new AIActionAttack (this, request.target));
 			else if (request.command == "damage")
@@ -161,9 +164,10 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnFire(Nothing request, ICommandCallerInfo callerinfo) {
-			actionQueue.CancelAllJobActions ();
-			if (currentAction is AIActionJob)
+			if (currentAction is AIActionJob) {
 				currentAction.OnKill ();
+			}
+			actionQueue.CancelAllJobActions ();
 			currentAction = actionQueue.Dequeue ();
 			return new Nothing ();
 		}
@@ -368,6 +372,20 @@ namespace Assets.Gamelogic.Core {
 			);
 		}
 
+		public void SetJobWorkSite(EntityId i) {
+			jobWorkSite = new Option<EntityId>(i);
+		}
+
+		public void QuitJob() {
+			if (currentAction is AIActionJob)
+				currentAction.OnKill ();
+			actionQueue.CancelAllJobActions ();
+			currentAction = actionQueue.Dequeue();
+			if (jobWorkSite.HasValue) {
+				SpatialOS.Commands.SendCommand (characterWriter, WorkSite.Commands.UnEnlist.Descriptor, new UnEnlistRequest (gameObject.EntityId()), jobWorkSite.Value);
+				jobWorkSite = new Option<EntityId>();
+			}
+		}
 	}
 
 }

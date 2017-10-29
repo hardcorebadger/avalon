@@ -40,7 +40,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private ConstructionJobAssignment OnGetJob(Nothing _ , ICommandCallerInfo __) {
-			Debug.LogWarning ("job request  ");
 			foreach (int item in requirements.Keys) {
 				ConstructionRequirement req = requirements [item];
 				// if we need more still
@@ -54,12 +53,10 @@ namespace Assets.Gamelogic.Core {
 				}
 			}
 			SendRequirementsUpdate ();
-			Debug.LogWarning ("this is happening");
 			return new ConstructionJobAssignment (new Option<int>());
 		}
 			
 		private TaskResponse OnCompleteJob(ConstructionJobResult result, ICommandCallerInfo _) {
-			Debug.LogWarning ("job complete");
 			if (!result.assignment.toGet.HasValue)
 				return new TaskResponse (100);
 			

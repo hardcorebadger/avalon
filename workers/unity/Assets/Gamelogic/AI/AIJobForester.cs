@@ -52,12 +52,13 @@ namespace Assets.Gamelogic.Core {
 			case 2:
 				// execute get job
 				if (task == null) {
-					if (assignment.chop.HasValue)
+					if (assignment.chop.HasValue) {
 						task = new AITaskChopTree (agent, assignment, this);
-					else if (assignment.plant.HasValue)
+					} else if (assignment.plant.HasValue) {
 						task = new AITaskPlantTree (agent, assignment, this);
-					else
+					} else {
 						task = new AIActionWait (agent, 60f);
+					}
 				}
 				taskResult = task.Update ();
 				if (AIAction.OnTermination (taskResult))
@@ -97,6 +98,14 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnJobCompletionRequestFailed() {
 			shouldRespond = 502;
+		}
+
+		public override void OnKill () {
+			if (state == 2 /* the task is being done */) {
+				task.OnKill ();
+				SpatialOS.Commands.SendCommand (agent.characterWriter, Forester.Commands.CompleteJob.Descriptor, new ForesterJobResult (assignment, 420), workSite);
+			}
+			agent.QueueAction (10, new AIJobForester (agent, workSite, workSitePosition, district));
 		}
 	}
 
