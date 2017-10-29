@@ -15,6 +15,19 @@ namespace Assets.Gamelogic.Core {
 
 	public class AIJobQuarry : AIActionJob {
 
+		// description //
+		// agent goes inside from door and on timer mines stone
+
+		// assumptions //
+		// agent is at the building door
+
+		// end condition //
+		// agent has created one stone, still inside
+
+		// reponse codes //
+		// 502 = quarry refused to create stone for some reason (possibly full)
+
+
 		private AIActionWait wait;
 		private float waitDuration = 3f;
 		Vector3 interiorPositon;

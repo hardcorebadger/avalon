@@ -15,6 +15,19 @@ namespace Assets.Gamelogic.Core {
 
 	public class AIJobFarm : AIActionJob {
 
+		// description //
+		// agent goes inside from door and on timer farms grain
+
+		// assumptions //
+		// agent is at the building door
+
+		// end condition //
+		// agent has created one grain, still inside
+
+		// reponse codes //
+		// 502 = farm refused to create grain for some reason (possibly full)
+
+
 		private AIActionWait wait;
 		private float waitDuration = 3f;
 		Vector3 interiorPositon;

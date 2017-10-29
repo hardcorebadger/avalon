@@ -46,6 +46,9 @@ namespace Assets.Gamelogic.Core {
 		public float hunger;
 		public Improbable.Collections.Option<EntityId> district;
 
+		private float hungerTimer = 0f;
+		private bool eatQueued = false;
+
 		private void OnEnable() {
 			anim = GetComponent<Animator> ();
 			owned = GetComponent<OwnedController> ();
@@ -96,6 +99,24 @@ namespace Assets.Gamelogic.Core {
 		private void Update() {
 			if (health <= 0F)
 				DestroyCharacter ();
+
+			if (hunger >= 60f && !eatQueued) {
+				Debug.LogWarning ("EAT QUEUED: " + characterWriter.EntityId);
+
+				QueueAction(1, new AIActionEat(this));
+				eatQueued = true;
+			}
+
+			hungerTimer += Time.deltaTime;
+
+			if (hungerTimer >= 5f) {
+
+				hungerTimer = 0f;
+				hunger += 5f;
+				if (hunger >= 100f)
+					hunger = 100f;
+				characterWriter.Send (new Character.Update ().SetHunger (hunger));
+			}
 
 			UpdateAI ();
 		}
@@ -239,9 +260,17 @@ namespace Assets.Gamelogic.Core {
 
 		public void Eat(float amount) {
 			hunger -= amount;
+			if (hunger <= 0)
+				hunger = 0;
+			
 			characterWriter.Send (new Character.Update ()
 				.SetHunger (hunger)
 			);
+				
+		}
+
+		public void CancelEat() {
+			eatQueued = false;
 		}
 
 		public void DropItem() {
