@@ -23,13 +23,13 @@ namespace Assets.Gamelogic.Core {
 		public void OnEnable() {
 			instance = this;
 			options = new Dictionary<string, ConstructionInfo> ();
-			options.Add ("house-3d", new ConstructionInfo(1,1, true));
-			options.Add ("forester", new ConstructionInfo(3,1, true));
-			options.Add ("quarry", new ConstructionInfo(2,2, true));
-			options.Add ("farm", new ConstructionInfo(2,2, true));
-			options.Add ("stockpile", new ConstructionInfo(3,1, true));
-			options.Add ("settlement", new ConstructionInfo(4,4, false));
-			options.Add ("road", new ConstructionInfo(1,1, true));
+			options.Add ("house-3d", new ConstructionInfo(1,1, true, true));
+			options.Add ("forester", new ConstructionInfo(3,1, true, true));
+			options.Add ("quarry", new ConstructionInfo(2,2, true, true));
+			options.Add ("farm", new ConstructionInfo(2,2, true, true));
+			options.Add ("stockpile", new ConstructionInfo(3,1, true, true));
+			options.Add ("settlement", new ConstructionInfo(4,4, false, false));
+			options.Add ("road", new ConstructionInfo(1,1, true, true));
 
 		}
 
@@ -45,17 +45,33 @@ namespace Assets.Gamelogic.Core {
 			o.GetComponent<ConstructionGhost> ().SetInfo (options [option]);
 		}
 
+		public static void RefreshBuilding() {
+			ClearTiles ();
+			instance.StartCoroutine (RefreshBuildingHelper());
+		}
+
+		private static IEnumerator RefreshBuildingHelper() {
+			yield return null;
+			CreateTiles ();
+		}
+
 		public static void StopBuilding() {
 			isBuilding = false;
 			ClearTiles ();
 		}
 
 		public static void Construct(Vector3 pos, EntityId id) {
-			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost, new Improbable.Collections.Option<EntityId>(id)), PlayerController.instance.gameObject.EntityId());
+			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost, new Improbable.Collections.Option<EntityId>(id)), PlayerController.instance.gameObject.EntityId())
+				.OnSuccess(result => OnConstructionSuccess());
 		}
 
 		public static void Construct(Vector3 pos) {
 			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost, new Improbable.Collections.Option<EntityId>()), PlayerController.instance.gameObject.EntityId());
+		}
+
+		private static void OnConstructionSuccess() {
+			if (isBuilding)
+				RefreshBuilding ();
 		}
 
 		private List<string> GetOptionsList() {
@@ -70,7 +86,6 @@ namespace Assets.Gamelogic.Core {
 			BuildingVisualizer[] buildings = FindObjectsOfType<BuildingVisualizer> ();
 			foreach (BuildingVisualizer building in buildings) {
 				if (!building.district.HasValue) {
-					Debug.Log ("this");
 					continue;
 				}
 				for (int z = -1 * building.tileMargin; z < building.zWidth + building.tileMargin; z++) {
@@ -95,10 +110,12 @@ namespace Assets.Gamelogic.Core {
 		public struct ConstructionInfo {
 			public int xWidth, zWidth;
 			public bool requiresDistrict;
-			public ConstructionInfo(int x, int z, bool d) {
+			public bool multiPlacement;
+			public ConstructionInfo(int x, int z, bool d, bool m) {
 				xWidth = x;
 				zWidth = z;
 				requiresDistrict = d;
+				multiPlacement = m;
 			}
 		}
 

@@ -15,6 +15,7 @@ namespace Assets.Gamelogic.Core {
 		public bool requiresDistrict;
 
 		private EntityId district;
+		private bool multiPlacementEnabled;
 
 		// Use this for initialization
 
@@ -24,6 +25,7 @@ namespace Assets.Gamelogic.Core {
 			requiresDistrict = info.requiresDistrict;
 			transform.GetChild(0).localScale = new Vector3(xWidth*8,1f,zWidth*8);
 			transform.GetChild(0).localPosition = new Vector3((xWidth-1)*4,0f,(zWidth-1)*4);
+			multiPlacementEnabled = info.multiPlacement;
 		}
 
 		void Update() {
@@ -67,6 +69,13 @@ namespace Assets.Gamelogic.Core {
 					else
 						BuildingManager.Construct (transform.position);
 				}
+				if (!multiPlacementEnabled) {
+					Destroy (gameObject);
+					BuildingManager.StopBuilding ();
+				}
+			}
+
+			if (Input.GetKeyDown (KeyCode.Escape)) {
 				Destroy (gameObject);
 				BuildingManager.StopBuilding ();
 			}
