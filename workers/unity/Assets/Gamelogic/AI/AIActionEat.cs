@@ -39,7 +39,7 @@ namespace Assets.Gamelogic.Core {
 
 		public override int Update() {
 			if (shouldRespond != 100) {
-				agent.CancelEat ();
+				agent.EatFailed ();
 				return shouldRespond;
 			}
 
@@ -52,36 +52,21 @@ namespace Assets.Gamelogic.Core {
 				}
 				int responseCode = getItem.Update ();
 				if (AIAction.OnSuccess (responseCode)) {
-
 					// has food item!
 					getItem = null;
 					state++;
-				} else if (AIAction.OnTermination(responseCode)) {
-
+				} else if (AIAction.OnTermination(responseCode))
 					shouldRespond = 401;
-				}
 				break;
 			case 1:
 				//has food
 				if (wait == null)
 					wait = new AIActionWait (agent, 2f);
-
-				int waitCode = wait.Update ();
-
-				if (AIAction.OnSuccess (waitCode)) {
-
-					wait = null;
+				if (AIAction.OnTermination (wait.Update ())) 
 					state++;
-				} else if (AIAction.OnTermination (waitCode)) {
-
-					state++;
-					wait = null;
-				}
-
 				break;
 			case 2: 
 				//eat food. 
-
 				agent.DropItem ();
 				agent.Eat (50f);
 				return 200;
@@ -92,7 +77,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override void OnKill () {
-			agent.CancelEat ();
+			// this wasn't a faiure, it was a kill, so just do a normal requeue
+			agent.QueueAction (1, new AIActionEat (agent));
 		}
 
 	}

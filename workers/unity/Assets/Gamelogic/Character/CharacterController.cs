@@ -46,10 +46,8 @@ namespace Assets.Gamelogic.Core {
 		public float hunger;
 		public Option<EntityId> district;
 
-		private float hungerTimer = 0f;
-		private bool eatQueued = false;
-		private float eatWait = 0f;
-		private bool eatCancelled = false;
+		private bool tryingToEat;
+		private int debugTestCounter = 0;
 
 		private void OnEnable() {
 			anim = GetComponent<Animator> ();
@@ -68,7 +66,8 @@ namespace Assets.Gamelogic.Core {
 			itemInHand = characterWriter.Data.itemInHand;
 			health = characterWriter.Data.health;
 			hunger = characterWriter.Data.hunger; 
-			StartCoroutine ("UpdateTransform");
+			StartCoroutine (UpdateTransform());
+			StartCoroutine (UpdateVitals ());
 
 			rigidBody = GetComponent<Rigidbody> ();
 			district = characterWriter.Data.district;
@@ -104,47 +103,36 @@ namespace Assets.Gamelogic.Core {
 			UpdateAI ();
 		}
 
-		private void UpdateVitals() {
+		private System.Collections.IEnumerator UpdateVitals() {
+			while (enabled) {
+				yield return new WaitForSeconds (5f);
+				if (health <= 0F)
+					DestroyCharacter ();
 
-			if (health <= 0F)
-				DestroyCharacter ();
-
-			if (hunger >= 60f && !eatQueued && !eatCancelled) {
-
-				QueueAction(1, new AIActionEat(this));
-				eatQueued = true;
-			} 
-
-			if (eatCancelled && !eatQueued && hunger >= 60f) {
-				//on cancel, wait. 
-
-				eatWait += Time.deltaTime;
-
-				if (eatWait >= 10f) {
-
-					eatWait = 0f;
-					QueueAction(1, new AIActionEat(this));
-					eatQueued = true;
-					eatCancelled = false;
+				if (hunger >= 60f && !tryingToEat) {
+					Debug.LogWarning ("initiate eating " + gameObject.EntityId());
+					debugTestCounter++;
+					StartCoroutine (DebugTest (debugTestCounter));
+					tryingToEat = true;
+					QueueAction (1, new AIActionEat (this));
 				}
 
-
-			}
-
-			if (eatQueued && currentAction == null && actionQueue.IsEmpty ()) {
-				eatQueued = false;
-			}
-
-			hungerTimer += Time.deltaTime;
-
-			if (hungerTimer >= 5f) {
-				hungerTimer = 0f;
 				hunger += 10f;
 				if (hunger >= 100f)
 					hunger = 100f;
+				
 				characterWriter.Send (new Character.Update ().SetHunger (hunger));
 			}
+		}
 
+		private System.Collections.IEnumerator DebugTest(int count) {
+			yield return new WaitForSeconds (120f);
+			if (count == debugTestCounter) {
+				if (currentAction != null)
+					Debug.LogWarning ("FUCKED: " + gameObject.EntityId () + "=> {curAction = eat}:" + (currentAction is AIActionEat) + "; {tryingToEat}:" + tryingToEat + "; {hunger}:" + hunger + ";");
+				else
+					Debug.LogWarning ("FUCKED: " + gameObject.EntityId () + "=> {curAction}:null; {tryingToEat}:" + tryingToEat + "; {hunger}:" + hunger + ";");
+			}
 		}
 
 		private void UpdateAI() {
@@ -153,6 +141,20 @@ namespace Assets.Gamelogic.Core {
 			
 			if (AIAction.OnTermination (currentAction.Update ()))
 				currentAction = actionQueue.Dequeue();
+		}
+
+		public void EatFailed() {
+			debugTestCounter++;
+			Debug.LogWarning ("failed eating " + gameObject.EntityId());
+			// trying to eat still, try again in a minute
+			StartCoroutine (EatRequeue ());
+		}
+
+		private System.Collections.IEnumerator EatRequeue() {
+			yield return new WaitForSeconds (60f);
+			debugTestCounter++;
+			Debug.LogWarning ("requeueing eating " + gameObject.EntityId());
+			QueueAction (1, new AIActionEat (this));
 		}
 
 		public void QueueAction(int priority, AIAction a) {
@@ -292,8 +294,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void Eat(float amount) {
-
-
+			debugTestCounter++;
+			Debug.LogWarning ("terminate eating " + gameObject.EntityId());
 			hunger -= amount;
 			if (hunger <= 0)
 				hunger = 0;
@@ -302,16 +304,9 @@ namespace Assets.Gamelogic.Core {
 				.SetHunger (hunger)
 			);
 
-			eatCancelled = false;
-			eatQueued = false;
-				
+			tryingToEat = false;
 		}
 
-		public void CancelEat() {
-			eatQueued = false;
-			eatCancelled = true;
-
-		}
 
 		public void DropItem() {
 			itemInHand = -1;
@@ -413,10 +408,15 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void QuitJob() {
-			if (currentAction is AIActionJob)
+			
+			if (currentAction is AIActionJob) {
 				currentAction.OnKill ();
-			actionQueue.CancelAllJobActions ();
-			currentAction = actionQueue.Dequeue();
+				actionQueue.CancelAllJobActions ();
+				currentAction = actionQueue.Dequeue ();
+			} else {
+				actionQueue.CancelAllJobActions ();
+			}
+
 			if (jobWorkSite.HasValue) {
 				SpatialOS.Commands.SendCommand (characterWriter, WorkSite.Commands.UnEnlist.Descriptor, new UnEnlistRequest (gameObject.EntityId()), jobWorkSite.Value);
 				jobWorkSite = new Option<EntityId>();
