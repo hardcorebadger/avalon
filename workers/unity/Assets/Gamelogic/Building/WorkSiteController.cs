@@ -90,10 +90,6 @@ namespace Assets.Gamelogic.Core {
 
 			if (workers.Count >= 1) {
 				SpatialOS.Commands.SendCommand (workSiteWriter, Character.Commands.Fire.Descriptor, new Nothing (), workers [workers.Count - 1]);
-				workers.RemoveAll (x => x.Id == workers [workers.Count - 1].Id);
-				workSiteWriter.Send (new WorkSite.Update ()
-					.SetWorkers (workers)
-				);
 				return new FireWorkerResponse (true);
 			} else {
 				return new FireWorkerResponse (false);

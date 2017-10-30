@@ -61,7 +61,7 @@ namespace Assets.Gamelogic.Core {
 				if (enlistResponse.full)
 					return 401;
 				else {
-					agent.SetJobWorkSite (target);
+					agent.SetWorkSite (target);
 					state++;
 				}
 				break;
