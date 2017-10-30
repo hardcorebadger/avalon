@@ -34,6 +34,7 @@ namespace Assets.Gamelogic.Core {
 		public Animator anim;
 		public OwnedController owned;
 		public bool indoors = false;
+		public Option<Vector3> doorPosition;
 		private Option<EntityId> jobWorkSite;
 
 
@@ -125,8 +126,14 @@ namespace Assets.Gamelogic.Core {
 			if (currentAction == null)
 				return;
 			
-			if (AIAction.OnTermination (currentAction.Update ()))
-				currentAction = actionQueue.Dequeue();
+			if (AIAction.OnTermination (currentAction.Update ())) {
+				AIAction newAction = actionQueue.Dequeue ();
+				if (indoors && !(newAction is AIActionJob)) {
+					SetIndoors (false, new Option<Vector3>());
+				}
+				currentAction = actionQueue.Dequeue ();
+
+			}
 		}
 
 		public void EatFailed() {
@@ -142,12 +149,13 @@ namespace Assets.Gamelogic.Core {
 		public void QueueAction(int priority, AIAction a) {
 			if (currentAction == null)
 				currentAction = a;
-			else
+			else 
 				actionQueue.Enqueue (priority, a);
 		}
 
 		public void QueueActionImmediate(AIAction a) {
 			actionQueue.CancelAllJobActions ();
+
 			if (currentAction != null) {
 				currentAction.OnKill ();
 				currentAction = a;
@@ -361,17 +369,19 @@ namespace Assets.Gamelogic.Core {
 			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId ());
 		}
 
-		public void SetIndoors(bool b) {
+		public void SetIndoors(bool b, Option<Vector3> door) {
 			indoors = b;
 			characterWriter.Send (new Character.Update ()
 				.SetIsIndoors (indoors)
 			);
 			if (indoors) {
+				doorPosition = door;
 				GetComponent<Collider> ().enabled = false;
 				GetComponent<Rigidbody> ().isKinematic = true;
 			} else {
 				GetComponent<Collider> ().enabled = true;
 				GetComponent<Rigidbody> ().isKinematic = false;
+				transform.position = doorPosition.Value;
 			}
 		}
 

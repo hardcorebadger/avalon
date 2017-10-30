@@ -7,7 +7,7 @@ namespace Assets.Gamelogic.Core {
 
 	public class AIJobStockpile : AIActionJob {
 
-		public AIJobStockpile(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d) : base(o, w, p, d) {
+		public AIJobStockpile(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d) : base(o, w, p, d, new Option<Vector3>()) {
 		}
 
 		public override int Update(){

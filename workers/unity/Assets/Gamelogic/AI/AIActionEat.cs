@@ -32,6 +32,8 @@ namespace Assets.Gamelogic.Core {
 		public AIActionGetItem getItem;
 		public AIActionWait wait;
 
+		private float grainFoodAmount = 50f;
+
 		public AIActionEat(CharacterController o) : base(o) {
 
 
@@ -68,7 +70,7 @@ namespace Assets.Gamelogic.Core {
 			case 2: 
 				//eat food. 
 				agent.DropItem ();
-				agent.Eat (50f);
+				agent.Eat (grainFoodAmount);
 				return 200;
 				break;
 			}
@@ -78,6 +80,12 @@ namespace Assets.Gamelogic.Core {
 
 		public override void OnKill () {
 			// this wasn't a faiure, it was a kill, so just do a normal requeue
+			if (agent.GetItemInHand () == 2) { 
+				//got the food already!
+				agent.DropItem ();
+				agent.Eat (grainFoodAmount);
+
+			}
 			agent.QueueAction (1, new AIActionEat (agent));
 		}
 

@@ -31,11 +31,9 @@ namespace Assets.Gamelogic.Core {
 		private AIActionWait wait;
 		private float waitDuration = 3f;
 		Vector3 interiorPositon;
-		Vector3 doorPosition;
 
-		public AIJobFarm(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d) {
+		public AIJobFarm(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d, new Option<Vector3>(dp)) {
 			interiorPositon = ip;
-			doorPosition = dp;
 		}
 
 		public override int Update(){
@@ -48,7 +46,7 @@ namespace Assets.Gamelogic.Core {
 
 				if (!agent.indoors) {
 					agent.transform.position = interiorPositon;
-					agent.SetIndoors (true);
+					agent.SetIndoors (true, doorPosition);
 				}
 				state++;
 
@@ -74,7 +72,7 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 4:
 				// requeue this job
-				agent.QueueAction (10, new AIJobFarm (agent, workSite, workSitePosition, district, interiorPositon, doorPosition));
+				agent.QueueAction (10, new AIJobFarm (agent, workSite, workSitePosition, district, interiorPositon, doorPosition.Value));
 				// terminate
 				return 200;
 			}
@@ -91,9 +89,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override void OnKill () {
-			agent.transform.position = doorPosition;
-			agent.SetIndoors (false);
-			agent.QueueAction (10, new AIJobFarm (agent, workSite, workSitePosition, district, interiorPositon, doorPosition));
+			agent.SetIndoors (false, doorPosition);
+			agent.QueueAction (10, new AIJobFarm (agent, workSite, workSitePosition, district, interiorPositon, doorPosition.Value));
 		}
 
 	}
