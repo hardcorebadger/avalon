@@ -52,10 +52,12 @@ namespace Assets.Gamelogic.Core {
 				}
 				int responseCode = getItem.Update ();
 				if (AIAction.OnSuccess (responseCode)) {
+
 					// has food item!
 					getItem = null;
 					state++;
 				} else if (AIAction.OnTermination(responseCode)) {
+
 					shouldRespond = 401;
 				}
 				break;
@@ -67,9 +69,11 @@ namespace Assets.Gamelogic.Core {
 				int waitCode = wait.Update ();
 
 				if (AIAction.OnSuccess (waitCode)) {
+
 					wait = null;
 					state++;
 				} else if (AIAction.OnTermination (waitCode)) {
+
 					state++;
 					wait = null;
 				}
@@ -77,6 +81,7 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 2: 
 				//eat food. 
+
 				agent.DropItem ();
 				agent.Eat (50f);
 				return 200;

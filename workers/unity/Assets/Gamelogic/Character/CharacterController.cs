@@ -100,11 +100,16 @@ namespace Assets.Gamelogic.Core {
 
 		private void Update() {
 			
+			UpdateVitals ();
+			UpdateAI ();
+		}
+
+		private void UpdateVitals() {
+
 			if (health <= 0F)
 				DestroyCharacter ();
 
 			if (hunger >= 60f && !eatQueued && !eatCancelled) {
-				Debug.LogWarning ("EAT QUEUED: " + characterWriter.EntityId);
 
 				QueueAction(1, new AIActionEat(this));
 				eatQueued = true;
@@ -116,7 +121,6 @@ namespace Assets.Gamelogic.Core {
 				eatWait += Time.deltaTime;
 
 				if (eatWait >= 10f) {
-					Debug.LogWarning ("CANCELELD EAT REQUEUED: " + characterWriter.EntityId);
 
 					eatWait = 0f;
 					QueueAction(1, new AIActionEat(this));
@@ -127,12 +131,13 @@ namespace Assets.Gamelogic.Core {
 
 			}
 
-
+			if (eatQueued && currentAction == null && actionQueue.IsEmpty ()) {
+				eatQueued = false;
+			}
 
 			hungerTimer += Time.deltaTime;
 
 			if (hungerTimer >= 5f) {
-				Debug.LogWarning ("EAT STATE: " + eatQueued + " " + eatCancelled + " " + hunger + " " + characterWriter.EntityId);
 				hungerTimer = 0f;
 				hunger += 10f;
 				if (hunger >= 100f)
@@ -140,7 +145,6 @@ namespace Assets.Gamelogic.Core {
 				characterWriter.Send (new Character.Update ().SetHunger (hunger));
 			}
 
-			UpdateAI ();
 		}
 
 		private void UpdateAI() {
@@ -288,7 +292,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void Eat(float amount) {
-			Debug.LogWarning ("EAT: " + characterWriter.EntityId);
 
 
 			hunger -= amount;
@@ -307,7 +310,6 @@ namespace Assets.Gamelogic.Core {
 		public void CancelEat() {
 			eatQueued = false;
 			eatCancelled = true;
-			Debug.LogWarning ("CANCELELD EAT: " + characterWriter.EntityId);
 
 		}
 
