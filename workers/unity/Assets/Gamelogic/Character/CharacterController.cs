@@ -47,7 +47,6 @@ namespace Assets.Gamelogic.Core {
 		public Option<EntityId> district;
 
 		private bool tryingToEat;
-		private int debugTestCounter = 0;
 
 		private void OnEnable() {
 			anim = GetComponent<Animator> ();
@@ -110,9 +109,6 @@ namespace Assets.Gamelogic.Core {
 					DestroyCharacter ();
 
 				if (hunger >= 60f && !tryingToEat) {
-					Debug.LogWarning ("initiate eating " + gameObject.EntityId());
-					debugTestCounter++;
-					StartCoroutine (DebugTest (debugTestCounter));
 					tryingToEat = true;
 					QueueAction (1, new AIActionEat (this));
 				}
@@ -125,16 +121,6 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		private System.Collections.IEnumerator DebugTest(int count) {
-			yield return new WaitForSeconds (120f);
-			if (count == debugTestCounter) {
-				if (currentAction != null)
-					Debug.LogWarning ("FUCKED: " + gameObject.EntityId () + "=> {curAction = eat}:" + (currentAction is AIActionEat) + "; {tryingToEat}:" + tryingToEat + "; {hunger}:" + hunger + ";");
-				else
-					Debug.LogWarning ("FUCKED: " + gameObject.EntityId () + "=> {curAction}:null; {tryingToEat}:" + tryingToEat + "; {hunger}:" + hunger + ";");
-			}
-		}
-
 		private void UpdateAI() {
 			if (currentAction == null)
 				return;
@@ -144,16 +130,12 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void EatFailed() {
-			debugTestCounter++;
-			Debug.LogWarning ("failed eating " + gameObject.EntityId());
 			// trying to eat still, try again in a minute
 			StartCoroutine (EatRequeue ());
 		}
 
 		private System.Collections.IEnumerator EatRequeue() {
 			yield return new WaitForSeconds (60f);
-			debugTestCounter++;
-			Debug.LogWarning ("requeueing eating " + gameObject.EntityId());
 			QueueAction (1, new AIActionEat (this));
 		}
 
@@ -205,7 +187,6 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
 
-			Debug.LogWarning ("Received Hit!");
 			health -= Random.Range(3.0f, 6.0f);
 			characterWriter.Send (new Character.Update ()
 				.SetHealth (health)
@@ -294,8 +275,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void Eat(float amount) {
-			debugTestCounter++;
-			Debug.LogWarning ("terminate eating " + gameObject.EntityId());
 			hunger -= amount;
 			if (hunger <= 0)
 				hunger = 0;
