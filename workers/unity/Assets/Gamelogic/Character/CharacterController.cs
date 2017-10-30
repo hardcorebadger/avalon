@@ -1,4 +1,5 @@
 ﻿using Improbable.Collections;
+using System.Collections;
 using UnityEngine;
 using Improbable;
 using Improbable.Core;
@@ -34,7 +35,7 @@ namespace Assets.Gamelogic.Core {
 		public Animator anim;
 		public OwnedController owned;
 		public bool indoors = false;
-		private Option<EntityId> jobWorkSite;
+		private Option<EntityId> workSite;
 
 
 		private ActionQueue actionQueue;
@@ -47,6 +48,8 @@ namespace Assets.Gamelogic.Core {
 		public Option<EntityId> district;
 
 		private bool tryingToEat;
+
+		// Initializers //
 
 		private void OnEnable() {
 			anim = GetComponent<Animator> ();
@@ -87,14 +90,7 @@ namespace Assets.Gamelogic.Core {
 
 		}
 
-		System.Collections.IEnumerator UpdateTransform() {
-			while (true) {
-				yield return new WaitForSeconds (0.1f);
-				positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
-				rotationWriter.Send (new Rotation.Update ().SetRotation(facing.eulerAngles.y));
-				characterWriter.Send (new Character.Update ().SetVelocity (velocity));
-			}
-		}
+		// Updates //
 
 		private void Update() {
 			
@@ -102,7 +98,15 @@ namespace Assets.Gamelogic.Core {
 			UpdateAI ();
 		}
 
-		private System.Collections.IEnumerator UpdateVitals() {
+		private void UpdateAI() {
+			if (currentAction == null)
+				return;
+
+			if (AIAction.OnTermination (currentAction.Update ()))
+				currentAction = actionQueue.Dequeue();
+		}
+
+		private IEnumerator UpdateVitals() {
 			while (enabled) {
 				yield return new WaitForSeconds (5f);
 				if (health <= 0F)
@@ -121,23 +125,16 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		private void UpdateAI() {
-			if (currentAction == null)
-				return;
-			
-			if (AIAction.OnTermination (currentAction.Update ()))
-				currentAction = actionQueue.Dequeue();
+		private IEnumerator UpdateTransform() {
+			while (true) {
+				yield return new WaitForSeconds (0.1f);
+				positionWriter.Send (new Position.Update ().SetCoords (transform.position.ToCoordinates ()));
+				rotationWriter.Send (new Rotation.Update ().SetRotation(facing.eulerAngles.y));
+				characterWriter.Send (new Character.Update ().SetVelocity (velocity));
+			}
 		}
 
-		public void EatFailed() {
-			// trying to eat still, try again in a minute
-			StartCoroutine (EatRequeue ());
-		}
-
-		private System.Collections.IEnumerator EatRequeue() {
-			yield return new WaitForSeconds (60f);
-			QueueAction (1, new AIActionEat (this));
-		}
+		// Action Queuing //
 
 		public void QueueAction(int priority, AIAction a) {
 			if (currentAction == null)
@@ -155,6 +152,8 @@ namespace Assets.Gamelogic.Core {
 				currentAction = a;
 			}
 		}
+
+		// Spatial Hooks //
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "goto")
@@ -177,11 +176,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnFire(Nothing request, ICommandCallerInfo callerinfo) {
-			if (currentAction is AIActionJob) {
-				currentAction.OnKill ();
-			}
-			actionQueue.CancelAllJobActions ();
-			currentAction = actionQueue.Dequeue ();
+			QuitJob ();
 			return new Nothing ();
 		}
 
@@ -248,6 +243,25 @@ namespace Assets.Gamelogic.Core {
 			return new Nothing ();
 		}
 
+		private void OnDeregisteredSelfDistrict(Nothing n) {
+
+			SpatialOS.Commands.SendCommand (
+				characterWriter, 
+				PlayerOnline.Commands.DeregisterCharacter.Descriptor, 
+				new CharacterPlayerDeregisterRequest (gameObject.EntityId()), 
+				owned.getOwnerObject()
+			).OnSuccess (OnDeregisteredSelf);
+
+		}
+
+		private void OnDeregisteredSelf(Nothing n) {
+			// finally delete yourself
+
+			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId ());
+		}
+
+		// Public Interface Functions //
+
 		public void SetState(CharacterState s) {
 			state = s;
 			characterWriter.Send (new Character.Update ()
@@ -286,6 +300,15 @@ namespace Assets.Gamelogic.Core {
 			tryingToEat = false;
 		}
 
+		public void EatFailed() {
+			// trying to eat still, try again in a minute
+			StartCoroutine (EatRequeue ());
+		}
+
+		private IEnumerator EatRequeue() {
+			yield return new WaitForSeconds (60f);
+			QueueAction (1, new AIActionEat (this));
+		}
 
 		public void DropItem() {
 			itemInHand = -1;
@@ -321,9 +344,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void OnDealHit() {
-//			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
-////				currentAction.OnDealHit ();
-//			}
+			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
+				currentAction.OnDealHit ();
+			}
 		}
 
 		public void DestroyCharacter() {
@@ -342,23 +365,6 @@ namespace Assets.Gamelogic.Core {
 				// settlement construction is not registered, so no deregistration
 				OnDeregisteredSelfDistrict (new Nothing ());
 			}
-		}
-
-		private void OnDeregisteredSelfDistrict(Nothing n) {
-
-			SpatialOS.Commands.SendCommand (
-				characterWriter, 
-				PlayerOnline.Commands.DeregisterCharacter.Descriptor, 
-				new CharacterPlayerDeregisterRequest (gameObject.EntityId()), 
-				owned.getOwnerObject()
-			).OnSuccess (OnDeregisteredSelf);
-
-		}
-
-		private void OnDeregisteredSelf(Nothing n) {
-			// finally delete yourself
-
-			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId ());
 		}
 
 		public void SetIndoors(bool b) {
@@ -382,8 +388,18 @@ namespace Assets.Gamelogic.Core {
 			);
 		}
 
-		public void SetJobWorkSite(EntityId i) {
-			jobWorkSite = new Option<EntityId>(i);
+		public void SetWorkSite(EntityId i) {
+			workSite = new Option<EntityId>(i);
+			characterWriter.Send (new Character.Update ()
+				.SetWorkSite(workSite)
+			);
+		}
+
+		public void ClearWorkSite() {
+			workSite = new Option<EntityId>();
+			characterWriter.Send (new Character.Update ()
+				.SetWorkSite(workSite)
+			);
 		}
 
 		public void QuitJob() {
@@ -396,9 +412,9 @@ namespace Assets.Gamelogic.Core {
 				actionQueue.CancelAllJobActions ();
 			}
 
-			if (jobWorkSite.HasValue) {
-				SpatialOS.Commands.SendCommand (characterWriter, WorkSite.Commands.UnEnlist.Descriptor, new UnEnlistRequest (gameObject.EntityId()), jobWorkSite.Value);
-				jobWorkSite = new Option<EntityId>();
+			if (workSite.HasValue) {
+				SpatialOS.Commands.SendCommand (characterWriter, WorkSite.Commands.UnEnlist.Descriptor, new UnEnlistRequest (gameObject.EntityId()), workSite.Value);
+				ClearWorkSite ();
 			}
 		}
 	}

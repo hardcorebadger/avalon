@@ -254,7 +254,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new Rotation.Data(0f), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1, 0, 100, district, false, 0f), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Character.Data(playerId, CharacterState.DEFAULT, 0, -1, 0, 100, district, new Option<EntityId>(), false, 0f), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(playerId, OwnedType.OWNED_CHARACTER, playerObject), CommonRequirementSets.PhysicsOnly)
 
 				.Build();

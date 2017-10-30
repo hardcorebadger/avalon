@@ -50,8 +50,9 @@ component Character {
     int32 debug_metadata = 5;
     float health = 6;    
     option<EntityId> district = 7;
-    bool is_indoors = 8; 
-    float hunger = 9; 
+    option<EntityId> work_site = 8;
+    bool is_indoors = 9; 
+    float hunger = 10; 
 
     command Nothing position_target(PositionTargetRequest);
     command Nothing entity_target(EntityTargetRequest);
