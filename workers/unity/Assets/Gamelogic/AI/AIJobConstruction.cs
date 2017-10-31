@@ -33,7 +33,7 @@ namespace Assets.Gamelogic.Core {
 		private AIAction task;
 		private int taskResult = 100;
 
-		public AIJobConstruction(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d) : base(o,w, p, d) {
+		public AIJobConstruction(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d) : base(o,w, p, d,"construction") {
 		}
 
 		public override int Update(){
@@ -58,8 +58,11 @@ namespace Assets.Gamelogic.Core {
 				if (task == null) {
 					if (assignment.toGet.HasValue)
 						task = new AITaskConstructionGet (agent, assignment, this);
-					else
-						task = new AIActionWait (agent, 60f);
+					else {
+						agent.QuitJob (false);
+						agent.QueueAction (10, new AIActionFindConstructionJob (agent, workSite));
+						return 200;
+					}
 				}
 				taskResult = task.Update ();
 				if (AIAction.OnTermination (taskResult))
@@ -76,16 +79,22 @@ namespace Assets.Gamelogic.Core {
 				// waiting
 				break;
 			case 5:
+				Debug.LogWarning (taskResponse.response);
 				// drop item because construction took it
 				if (assignment.toGet.HasValue)
 					agent.DropItem ();
-				// requeue this job
-				if (taskResponse.response == 100) { /* there's no district and no applicable in hand item */
+	
+				if (taskResponse.response == 100) { /* keep working */
+					// requeue this job
 					agent.QueueAction (10, new AIJobConstruction (agent, workSite, workSitePosition, district));
-				} else if (taskResponse.response == 400)  /* issue */
-					agent.QuitJob ();
-				else if (taskResponse.response == 200) /* complete */
-					agent.QuitJob ();
+				} else if (taskResponse.response == 400) {  /* issue */
+					// quit this job
+					agent.QuitJob (false);
+				} else if (taskResponse.response == 200) { /* you are done */
+					// find another job
+					agent.QuitJob (false);
+					agent.QueueAction (10, new AIActionFindConstructionJob (agent, workSite));
+				}
 				// terminate
 				return 200;
 			}
@@ -104,6 +113,8 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnJobRequestFailed() {
 			shouldRespond = 501;
+			// it doesnt exist (anymore)
+			agent.QueueAction (10, new AIActionFindConstructionJob (agent, workSite));
 		}
 
 		private void OnJobCompletionRequestFailed() {

@@ -20,7 +20,7 @@ namespace Assets.Gamelogic.Core {
 		public Vector3 workSitePosition;
 		public Option<EntityId> district;
 
-		public AIActionJob(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d) : base(o) {
+		public AIActionJob(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, string n) : base(o,n) {
 			workSite = w;
 			workSitePosition = p;
 			district = d;

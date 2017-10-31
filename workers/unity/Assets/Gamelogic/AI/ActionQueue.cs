@@ -7,7 +7,7 @@ namespace Assets.Gamelogic.Core {
 
 	public class ActionQueue {
 
-		SortedDictionary<int, List<AIAction>> priorityQueue;
+		private SortedDictionary<int, List<AIAction>> priorityQueue;
 
 		public ActionQueue() {
 			priorityQueue = new SortedDictionary<int, List<AIAction>> ();

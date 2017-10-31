@@ -32,7 +32,7 @@ namespace Assets.Gamelogic.Core {
 		public AIActionGetItem getItem;
 		public AIActionWait wait;
 
-		public AIActionEat(CharacterController o) : base(o) {
+		public AIActionEat(CharacterController o) : base(o,"eat") {
 
 
 		}

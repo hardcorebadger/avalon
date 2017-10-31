@@ -6,6 +6,7 @@ using Improbable.Entity.Component;
 using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
+using System.Linq;
 
 namespace Assets.Gamelogic.Core {
 
@@ -19,7 +20,9 @@ namespace Assets.Gamelogic.Core {
 		Map<EntityId, Vector3d> positionMap;
 		Map<int, BuildingList> storageMap;
 		Map<int, BuildingList> storageAvailabilityMap;
+		List<EntityId> constructionList;
 		List<EntityId> characters;
+
 		int beds;
 		float spawnTimer = -1f;
 		public BuildingController building;
@@ -33,6 +36,7 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnStorageUpdateAccepting.RegisterResponse (OnStorageUpdateAccepting);
 			districtWriter.CommandReceiver.OnStorageUpdateNotAccepting.RegisterResponse (OnStorageUpdateNotAccepting);
 			districtWriter.CommandReceiver.OnFindAnyItem.RegisterResponse (OnFindAnyItem);
+			districtWriter.CommandReceiver.OnFindConstructionSite.RegisterResponse (OnFindConstructionSite);
 			districtWriter.CommandReceiver.OnRegisterCharacter.RegisterResponse (OnRegisterCharacter);
 			districtWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
 
@@ -41,6 +45,7 @@ namespace Assets.Gamelogic.Core {
 			storageAvailabilityMap = districtWriter.Data.storageAvailabilityMap;
 			characters = districtWriter.Data.characterList;
 			beds = districtWriter.Data.beds;
+			constructionList = districtWriter.Data.constructionList;
 			building = GetComponent<BuildingController> ();
 			owned = GetComponent<OwnedController> ();
 
@@ -64,7 +69,7 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnStorageUpdateAccepting.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnStorageUpdateNotAccepting.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnFindAnyItem.DeregisterResponse ();
-
+			districtWriter.CommandReceiver.OnFindConstructionSite.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnRegisterCharacter.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnDeregisterCharacter.DeregisterResponse ();
 
@@ -111,10 +116,13 @@ namespace Assets.Gamelogic.Core {
 		private Nothing OnRegisterBuilding(BuildingRegistrationRequest r, ICommandCallerInfo _) {
 			positionMap.Add (r.buildingId, r.position);
 			AddBuildingToStorageMaps (r.buildingId, r.acceptingItems);
+			if (r.construction)
+				constructionList.Add (r.buildingId);
 			beds += r.beds;
 			districtWriter.Send (new District.Update ()
 				.SetPositionMap(positionMap)
 				.SetBeds(beds)
+				.SetConstructionList(constructionList)
 			);
 			return new Nothing ();
 		}
@@ -122,10 +130,13 @@ namespace Assets.Gamelogic.Core {
 		private Nothing OnDeregisterBuilding(BuildingDeregistrationRequest r, ICommandCallerInfo _) {
 			positionMap.Remove (r.buildingId);
 			RemoveBuildingFromStorageMaps (r.buildingId);
+			if (constructionList.Contains (r.buildingId))
+				constructionList.Remove (r.buildingId);
 			beds -= r.beds;
 			districtWriter.Send (new District.Update ()
 				.SetPositionMap(positionMap)
 				.SetBeds(beds)
+				.SetConstructionList(constructionList)
 			);
 			return new Nothing ();
 		}
@@ -220,6 +231,14 @@ namespace Assets.Gamelogic.Core {
 				.SetCharacterList(characters)
 			);
 			return new Nothing ();
+		}
+
+		private BuildingQueryResponse OnFindConstructionSite(FindConstructionRequest r, ICommandCallerInfo __) {
+			foreach (EntityId id in constructionList) {
+				if (id.Id != r.prev.Id)
+					return new BuildingQueryResponse (new Option<EntityId>(id));
+			}
+			return new BuildingQueryResponse (new Option<EntityId>());
 		}
 
 		private void AddBuildingToStorageMaps(EntityId id, List<int> accepting) {

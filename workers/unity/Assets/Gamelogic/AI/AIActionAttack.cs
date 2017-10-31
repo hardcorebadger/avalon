@@ -37,7 +37,7 @@ namespace Assets.Gamelogic.Core {
 		private AIActionWait wait;
 		private float waitDuration = 3f;
 
-		public AIActionAttack(CharacterController o, EntityId i) : base(o) {
+		public AIActionAttack(CharacterController o, EntityId i) : base(o,"attack") {
 			targetId = i;
 		}
 

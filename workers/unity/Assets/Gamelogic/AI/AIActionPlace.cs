@@ -35,7 +35,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Entity entityToPlace;
 
-		public AIActionPlace(CharacterController o, Entity e) : base(o) {
+		public AIActionPlace(CharacterController o, Entity e) : base(o,"place") {
 			entityToPlace = e;
 		}
 

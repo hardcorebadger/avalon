@@ -34,7 +34,7 @@ namespace Assets.Gamelogic.Core {
 		private EntityId toGive;
 		private GiveResponse giveResponse;
 
-		public AIActionGive(CharacterController o, EntityId g) : base(o) {
+		public AIActionGive(CharacterController o, EntityId g) : base(o,"give") {
 			toGive = g;
 		}
 

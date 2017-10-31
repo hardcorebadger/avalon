@@ -33,7 +33,7 @@ namespace Assets.Gamelogic.Core {
 		Vector3 interiorPositon;
 		Vector3 doorPosition;
 
-		public AIJobFarm(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d) {
+		public AIJobFarm(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d,"farm") {
 			interiorPositon = ip;
 			doorPosition = dp;
 		}

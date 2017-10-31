@@ -16,7 +16,7 @@ namespace Assets.Gamelogic.Core {
 		private List<int> toGet;
 		private int getResult;
 
-		public AITaskConstructionGet(CharacterController o, ConstructionJobAssignment a, AIActionJob j) : base(o) {
+		public AITaskConstructionGet(CharacterController o, ConstructionJobAssignment a, AIActionJob j) : base(o,"constructiongettask") {
 			assignment = a;
 			job = j;
 			toGet = new List<int> ();

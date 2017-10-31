@@ -37,7 +37,7 @@ namespace Assets.Gamelogic.Core {
 		private AIAction subAction;
 		private GatherResponse response;
 		
-		public AIActionGather(CharacterController o, EntityId t) : base(o) {
+		public AIActionGather(CharacterController o, EntityId t) : base(o,"gather") {
 			target = t;
 		}
 

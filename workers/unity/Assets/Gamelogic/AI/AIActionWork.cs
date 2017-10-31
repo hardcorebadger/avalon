@@ -35,7 +35,7 @@ namespace Assets.Gamelogic.Core {
 		private EntityId target;
 		private EnlistResponse enlistResponse;
 
-		public AIActionWork(CharacterController o, EntityId t) : base(o) {
+		public AIActionWork(CharacterController o, EntityId t) : base(o,"work") {
 			target = t;
 		}
 

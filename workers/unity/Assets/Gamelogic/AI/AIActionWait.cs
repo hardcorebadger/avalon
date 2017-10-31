@@ -10,7 +10,7 @@ namespace Assets.Gamelogic.Core {
 		private float time = 0f;
 		private float duration;
 
-		public AIActionWait(CharacterController o, float d) : base(o) {
+		public AIActionWait(CharacterController o, float d) : base(o,"wait") {
 			duration = d;
 		}
 

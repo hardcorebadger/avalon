@@ -33,7 +33,7 @@ namespace Assets.Gamelogic.Core {
 		Vector3 interiorPositon;
 		Vector3 doorPosition;
 
-		public AIJobQuarry(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d) {
+		public AIJobQuarry(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d,"quarry") {
 			interiorPositon = ip;
 			doorPosition = dp;
 		}

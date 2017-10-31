@@ -30,7 +30,7 @@ namespace Assets.Gamelogic.Core {
 		private AIAction task;
 		private int taskResult = 100;
 
-		public AIJobForester(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d) : base(o, w, p, d) {
+		public AIJobForester(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d) : base(o, w, p, d,"forester") {
 		}
 
 		public override int Update(){

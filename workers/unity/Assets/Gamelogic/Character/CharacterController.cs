@@ -102,8 +102,9 @@ namespace Assets.Gamelogic.Core {
 			if (currentAction == null)
 				return;
 
-			if (AIAction.OnTermination (currentAction.Update ()))
-				currentAction = actionQueue.Dequeue();
+			if (AIAction.OnTermination (currentAction.Update ())) {
+				currentAction = actionQueue.Dequeue ();
+			}
 		}
 
 		private IEnumerator UpdateVitals() {
@@ -137,14 +138,13 @@ namespace Assets.Gamelogic.Core {
 		// Action Queuing //
 
 		public void QueueAction(int priority, AIAction a) {
-			if (currentAction == null)
+			if (currentAction == null) {
 				currentAction = a;
-			else
+			} else
 				actionQueue.Enqueue (priority, a);
 		}
 
 		public void QueueActionImmediate(AIAction a) {
-			actionQueue.CancelAllJobActions ();
 			if (currentAction != null) {
 				currentAction.OnKill ();
 				currentAction = a;
@@ -165,7 +165,7 @@ namespace Assets.Gamelogic.Core {
 			if (request.command == "gather")
 				QueueActionImmediate (new AITaskGoAndGather (this, request.target));
 			else if (request.command == "work") {
-				QuitJob ();
+				QuitJob (true);
 				QueueActionImmediate (new AIActionWork (this, request.target));
 			}
 			else if (request.command == "attack")
@@ -176,7 +176,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnFire(Nothing request, ICommandCallerInfo callerinfo) {
-			QuitJob ();
+			QuitJob (true);
 			return new Nothing ();
 		}
 
@@ -402,14 +402,15 @@ namespace Assets.Gamelogic.Core {
 			);
 		}
 
-		public void QuitJob() {
-			
-			if (currentAction is AIActionJob) {
-				currentAction.OnKill ();
-				actionQueue.CancelAllJobActions ();
-				currentAction = actionQueue.Dequeue ();
-			} else {
-				actionQueue.CancelAllJobActions ();
+		public void QuitJob(bool clearActions) {
+			if (clearActions) {
+				if (currentAction is AIActionJob) {
+					currentAction.OnKill ();
+					actionQueue.CancelAllJobActions ();
+					currentAction = actionQueue.Dequeue ();
+				} else {
+					actionQueue.CancelAllJobActions ();
+				}
 			}
 
 			if (workSite.HasValue) {

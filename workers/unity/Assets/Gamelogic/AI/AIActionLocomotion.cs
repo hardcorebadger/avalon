@@ -7,7 +7,7 @@ namespace Assets.Gamelogic.Core {
 
 	public abstract class AIActionLocomotion : AIAction {
 
-		public AIActionLocomotion(CharacterController o) : base(o)	{}
+		public AIActionLocomotion(CharacterController o, string n) : base(o, n)	{}
 
 		private Vector3 CastPos() {
 			return agent.transform.position;

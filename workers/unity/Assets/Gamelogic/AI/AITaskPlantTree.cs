@@ -26,7 +26,7 @@ namespace Assets.Gamelogic.Core {
 		private ForesterJobAssignment assignment;
 		private int placeResult;
 
-		public AITaskPlantTree(CharacterController o, ForesterJobAssignment a, AIJobForester j) : base(o) {
+		public AITaskPlantTree(CharacterController o, ForesterJobAssignment a, AIJobForester j) : base(o,"planttreetask") {
 			assignment = a;
 			job = j;
 		}

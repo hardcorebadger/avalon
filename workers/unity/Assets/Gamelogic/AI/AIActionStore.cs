@@ -37,7 +37,7 @@ namespace Assets.Gamelogic.Core {
 		private GiveResponse giveResponse;
 
 
-		public AIActionStore(CharacterController o, EntityId d) : base(o) {
+		public AIActionStore(CharacterController o, EntityId d) : base(o,"store") {
 			districtId = d;
 		}
 

@@ -44,13 +44,13 @@ namespace Assets.Gamelogic.Core {
 		private EntityId storageId;
 		private AIActionGoTo seek;
 
-		public AIActionGetItem(CharacterController o, List<int> tg, Option<EntityId> d) : base(o) {
+		public AIActionGetItem(CharacterController o, List<int> tg, Option<EntityId> d) : base(o,"get") {
 			toGet = tg;
 			districtId = d;
 			asker = new Option<EntityId>();
 		}
 
-		public AIActionGetItem(CharacterController o, List<int> tg, Option<EntityId> d, EntityId a) : base(o) {
+		public AIActionGetItem(CharacterController o, List<int> tg, Option<EntityId> d, EntityId a) : base(o,"get") {
 			toGet = tg;
 			districtId = d;
 			asker = new Option<EntityId>(a);

@@ -19,11 +19,9 @@ namespace Assets.Gamelogic.Core {
 		// reponse codes //
 
 		private CharacterState charState;
-		private float duration;
 		private AIActionWait wait;
 
-		public AIActionCharacterState(CharacterController o, float d, CharacterState s) : base(o) {
-			duration = d;
+		public AIActionCharacterState(CharacterController o, float d, CharacterState s) : base(o,"charstate") {
 			charState = s;
 			wait = new AIActionWait (o, d);
 		}
@@ -41,7 +39,6 @@ namespace Assets.Gamelogic.Core {
 			case 2:
 				agent.SetState (CharacterState.DEFAULT);
 				return 200;
-				break;
 			}
 			return 100;
 		}

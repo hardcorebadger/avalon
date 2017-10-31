@@ -74,7 +74,11 @@ namespace Assets.Gamelogic.Core {
 			
 			if (!CheckConstructionProgress ()) {
 				SendRequirementsUpdate ();
-				return new TaskResponse (100);
+				// tell them it's done if they hve nothing left to do
+				if (CheckConstructionRequestedProgress())
+					return new TaskResponse (200);
+				else
+					return new TaskResponse (100);
 			} else
 				return new TaskResponse (200);
 		}
@@ -104,6 +108,15 @@ namespace Assets.Gamelogic.Core {
 			
 		}
 
+		private bool CheckConstructionRequestedProgress() {
+			foreach (int key in requirements.Keys) {
+				ConstructionRequirement val = requirements[key];
+				if (val.amount + val.requested < val.required)
+					return false;
+			}
+			return true;
+		}
+
 		private void OnReserveEntityId(EntityId id) {
 			if (districtBuildingConstruction) {
 				SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), owned.getOwnerObject(), new Improbable.Collections.Option<EntityId> (id)))
@@ -125,7 +138,7 @@ namespace Assets.Gamelogic.Core {
 				SpatialOS.Commands.SendCommand (
 					constructionWriter, 
 					District.Commands.RegisterBuilding.Descriptor, 
-					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z), beds, acceptingItems), 
+					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z), beds, acceptingItems, false), 
 					buildingWriter.Data.district.Value
 				).OnSuccess (OnBuildingRegistered);
 			} else {

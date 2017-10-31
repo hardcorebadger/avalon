@@ -11,7 +11,7 @@ namespace Assets.Gamelogic.Core {
 		private AIActionGoTo seek;
 		private AIActionGather gather;
 
-		public AITaskGoAndGather(CharacterController o, EntityId e) : base(o) {
+		public AITaskGoAndGather(CharacterController o, EntityId e) : base(o,"goandgathertask") {
 			target = e;
 		}
 

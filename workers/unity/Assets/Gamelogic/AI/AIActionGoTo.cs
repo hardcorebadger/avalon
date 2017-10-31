@@ -27,6 +27,7 @@ namespace Assets.Gamelogic.Core {
 		// agent is near the target
 
 		// reponse codes //
+		// 201 = has entity target but got to position
 		// 401 = entity didnt exist
 		// 501 = entity query failed
 
@@ -34,19 +35,19 @@ namespace Assets.Gamelogic.Core {
 		public EntityId targetId; //optional
 		public bool hasTargetEntity = false;
 
-		public AIActionGoTo(CharacterController o, Vector3 pos) : base(o)	{
+		public AIActionGoTo(CharacterController o, Vector3 pos) : base(o,"goto")	{
 			target = pos;
 			state = 2;
 		}
 
-		public AIActionGoTo(CharacterController o, EntityId eid, Vector3 pos) : base(o)	{
+		public AIActionGoTo(CharacterController o, EntityId eid, Vector3 pos) : base(o,"goto")	{
 			target = pos;
 			targetId = eid;
 			hasTargetEntity = true;
 			state = 2;
 		}
 
-		public AIActionGoTo(CharacterController o, EntityId eid) : base(o)	{
+		public AIActionGoTo(CharacterController o, EntityId eid) : base(o,"goto")	{
 			targetId = eid;
 			hasTargetEntity = true;
 		}
@@ -77,6 +78,8 @@ namespace Assets.Gamelogic.Core {
 				if (c.gameObject == agent.gameObject) {
 					agent.SetVelocity (0f);
 					agent.rigidBody.angularVelocity = Vector3.zero;
+					if (hasTargetEntity)
+						return 201;
 					return 200;
 				}
 			}

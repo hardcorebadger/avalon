@@ -8,6 +8,7 @@ type BuildingRegistrationRequest {
     Vector3d position = 2;
     int32 beds = 3; 
     list<int32> accepting_items = 4;
+    bool construction = 5;
 }
 
 type BuildingDeregistrationRequest {
@@ -52,6 +53,13 @@ type ItemStorageResponse {
     Vector3d position = 3;
 }
 
+type BuildingQueryResponse {
+    option<EntityId> building = 1;
+}
+
+type FindConstructionRequest {
+    EntityId prev = 1;
+}
 
 component District {
     id = 1020;
@@ -61,6 +69,7 @@ component District {
     map<int32, BuildingList> storage_availability_map = 3;
     int32 beds = 4;
     list<EntityId> character_list = 5; 
+    list<EntityId> construction_list = 6; 
    
     command Nothing register_building(BuildingRegistrationRequest);
     command Nothing deregister_building(BuildingDeregistrationRequest);
@@ -70,6 +79,7 @@ component District {
     command Nothing storage_update_not_accepting(StorageUpdateRequest);
     command ItemFindResponse find_any_item(ItemFindRequest);
     command ItemStorageResponse find_item_storage(ItemStorageRequest);
+    command BuildingQueryResponse find_construction_site(FindConstructionRequest);
     command Nothing register_character(CharacterRegistrationRequest); 
     command Nothing deregister_character(CharacterDeregistrationRequest); 
 

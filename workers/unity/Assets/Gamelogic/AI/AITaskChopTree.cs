@@ -31,7 +31,7 @@ namespace Assets.Gamelogic.Core {
 		private ForesterJobAssignment assignment;
 		private int chopResult;
 
-		public AITaskChopTree(CharacterController o, ForesterJobAssignment a, AIJobForester j) : base(o) {
+		public AITaskChopTree(CharacterController o, ForesterJobAssignment a, AIJobForester j) : base(o,"choptreetask") {
 			assignment = a;
 			job = j;
 		}

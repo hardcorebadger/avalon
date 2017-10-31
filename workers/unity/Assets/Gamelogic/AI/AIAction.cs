@@ -7,12 +7,14 @@ namespace Assets.Gamelogic.Core {
 	public abstract class AIAction {
 
 		public CharacterController agent;
+		public string name;
 
 		protected int state = 0;
 		protected int shouldRespond = 100;
 
-		public AIAction(CharacterController o) {
+		public AIAction(CharacterController o, string n) {
 			agent = o;
+			name = n;
 		}
 
 		public abstract int Update();
