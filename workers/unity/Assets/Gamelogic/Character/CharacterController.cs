@@ -35,6 +35,7 @@ namespace Assets.Gamelogic.Core {
 		public Animator anim;
 		public OwnedController owned;
 		public bool indoors = false;
+		public Option<Vector3> doorPosition;
 		private Option<EntityId> workSite;
 
 
@@ -93,25 +94,15 @@ namespace Assets.Gamelogic.Core {
 		// Updates //
 
 		private void Update() {
+			if (health <= 0F)
+				DestroyCharacter ();
 			
-			UpdateVitals ();
 			UpdateAI ();
-		}
-
-		private void UpdateAI() {
-			if (currentAction == null)
-				return;
-
-			if (AIAction.OnTermination (currentAction.Update ())) {
-				currentAction = actionQueue.Dequeue ();
-			}
 		}
 
 		private IEnumerator UpdateVitals() {
 			while (enabled) {
 				yield return new WaitForSeconds (5f);
-				if (health <= 0F)
-					DestroyCharacter ();
 
 				if (hunger >= 60f && !tryingToEat) {
 					tryingToEat = true;
@@ -123,6 +114,20 @@ namespace Assets.Gamelogic.Core {
 					hunger = 100f;
 				
 				characterWriter.Send (new Character.Update ().SetHunger (hunger));
+			}
+		}
+
+		private void UpdateAI() {
+			if (currentAction == null)
+				return;
+			
+			if (AIAction.OnTermination (currentAction.Update ())) {
+				AIAction newAction = actionQueue.Dequeue ();
+				if (indoors && !(newAction is AIActionJob)) {
+					SetIndoors (false, new Option<Vector3>());
+				}
+				currentAction = newAction;
+
 			}
 		}
 
@@ -367,17 +372,20 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		public void SetIndoors(bool b) {
+		public void SetIndoors(bool b, Option<Vector3> door) {
+
 			indoors = b;
 			characterWriter.Send (new Character.Update ()
 				.SetIsIndoors (indoors)
 			);
 			if (indoors) {
+				doorPosition = door;
 				GetComponent<Collider> ().enabled = false;
 				GetComponent<Rigidbody> ().isKinematic = true;
 			} else {
 				GetComponent<Collider> ().enabled = true;
 				GetComponent<Rigidbody> ().isKinematic = false;
+				transform.position = doorPosition.Value;
 			}
 		}
 

@@ -19,11 +19,13 @@ namespace Assets.Gamelogic.Core {
 		public EntityId workSite;
 		public Vector3 workSitePosition;
 		public Option<EntityId> district;
+		public Option<Vector3> doorPosition;
 
-		public AIActionJob(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, string n) : base(o,n) {
+		public AIActionJob(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Option<Vector3> dP, string n) : base(o,n) {
 			workSite = w;
 			workSitePosition = p;
 			district = d;
+			doorPosition = dP;
 		}
 
 		public override int Update(){

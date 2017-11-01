@@ -36,7 +36,7 @@ namespace Assets.Gamelogic.Core {
 			case 0:
 				owner.transform.position = interiorPositon;
 				state++;
-				owner.SetIndoors (true);
+				owner.SetIndoors (true, new Option<Vector3>(doorPosition));
 				break;
 			default:
 				break;
@@ -52,7 +52,7 @@ namespace Assets.Gamelogic.Core {
 
 		public override void OnKill () {
 			owner.transform.position = doorPosition;
-			owner.SetIndoors (false);
+			owner.SetIndoors (false, new Option<Vector3>(doorPosition));
 		}
 
 
