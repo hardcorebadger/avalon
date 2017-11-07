@@ -82,7 +82,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 50), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-quarry") {
 				return EntityBuilder.Begin ()
@@ -94,7 +94,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_MINING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Quarry.Data (), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 50), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-stockpile") {
 				Improbable.Collections.Map<int,int> initialQuotas = new Improbable.Collections.Map<int,int> ();
@@ -108,7 +108,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_STORAGE, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Storage.Data (sourcing, initialQuotas), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 20), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 50), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-farm") {
 				return EntityBuilder.Begin ()
@@ -120,7 +120,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_FARMING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Farm.Data (), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 30), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 50), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-settlement") {
 				Map<EntityId, Vector3d> p = new Map<EntityId, Vector3d> ();
@@ -143,7 +143,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent(new Building.Data(1,1,1, 100F, district, 4), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new Building.Data(1,1,1, 100F, district, 2), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.Build();
 			}
@@ -169,27 +169,33 @@ namespace Assets.Gamelogic.EntityTemplates
 			int x = 1;
 			int z = 1;
 			if (name == "construction-house-3d") {
-				req.Add (0, new ConstructionRequirement (0, 3, 0));
+				req.Add (0, new ConstructionRequirement (0, 5, 0));
+				req.Add (1, new ConstructionRequirement (1, 3, 0));
 			} else if (name == "construction-forester") {
-				req.Add (0, new ConstructionRequirement (0, 3, 0));
+				req.Add (0, new ConstructionRequirement (0, 10, 0));
+				req.Add (1, new ConstructionRequirement (1, 5, 0));
 				x = 3;
 			} else if (name == "construction-quarry") {
-				req.Add (0, new ConstructionRequirement (0, 3, 0));
+				req.Add (0, new ConstructionRequirement (0, 10, 0));
+				req.Add (1, new ConstructionRequirement (1, 5, 0));
 				x = 2;
 				z = 2;
 			} else if (name == "construction-farm") {
-				req.Add (0, new ConstructionRequirement (0, 3, 0));
+				req.Add (0, new ConstructionRequirement (0, 5, 0));
+				req.Add (1, new ConstructionRequirement (1, 5, 0));
 				x = 2;
 				z = 2;
 			} else if (name == "construction-stockpile") {
-				req.Add (0, new ConstructionRequirement (0, 3, 0));
+				req.Add (0, new ConstructionRequirement (0, 10, 0));
+				req.Add (1, new ConstructionRequirement (1, 5, 0));
 				x = 3;
 			} else if (name == "construction-settlement") {
-				req.Add (0, new ConstructionRequirement (0, 3, 0));
+				req.Add (0, new ConstructionRequirement (0, 15, 0));
+				req.Add (1, new ConstructionRequirement (1, 5, 0));
 				x = 4;
 				z = 4;
 			} else if (name == "construction-road") {
-				req.Add (0, new ConstructionRequirement (0, 1, 0));
+				req.Add (1, new ConstructionRequirement (1, 3, 0));
 			}
 				
 			return EntityBuilder.Begin()

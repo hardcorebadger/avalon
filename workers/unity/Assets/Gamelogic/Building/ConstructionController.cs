@@ -39,7 +39,16 @@ namespace Assets.Gamelogic.Core {
 			constructionWriter.CommandReceiver.OnCompleteJob.DeregisterResponse();
 		}
 
-		private ConstructionJobAssignment OnGetJob(Nothing _ , ICommandCallerInfo __) {
+		private ConstructionJobAssignment OnGetJob(ConstructionJobRequest r , ICommandCallerInfo __) {
+			if (r.itemInHand != -1 
+				&& requirements.ContainsKey (r.itemInHand) 
+				&& requirements [r.itemInHand].amount + requirements [r.itemInHand].requested < requirements [r.itemInHand].required 
+			) {
+				ConstructionRequirement req = requirements [r.itemInHand];
+				req.requested++;
+				requirements [r.itemInHand] = req;
+				return new ConstructionJobAssignment (new Option<int>(r.itemInHand));
+			}
 			foreach (int item in requirements.Keys) {
 				ConstructionRequirement req = requirements [item];
 				// if we need more still

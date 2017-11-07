@@ -82,7 +82,7 @@ namespace Assets.Gamelogic.Core {
 
 				spawnTimer += Time.deltaTime;
 
-				if (spawnTimer >= 5f) {
+				if (spawnTimer >= 60f) {
 					if (characters.Count < beds) {
 						SpatialOS.Commands.ReserveEntityId (districtWriter)
 							.OnSuccess (result => SpawnCharacterEntity (result.ReservedEntityId));

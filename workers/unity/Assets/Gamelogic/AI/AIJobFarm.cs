@@ -29,7 +29,7 @@ namespace Assets.Gamelogic.Core {
 
 
 		private AIActionWait wait;
-		private float waitDuration = 3f;
+		private float waitDuration = 30f;
 		Vector3 interiorPositon;
 
 		public AIJobFarm(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d, dp ,"farm") {

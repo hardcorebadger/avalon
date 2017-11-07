@@ -104,14 +104,14 @@ namespace Assets.Gamelogic.Core {
 			while (enabled) {
 				yield return new WaitForSeconds (5f);
 
+				hunger += 1f;
+				if (hunger >= 100f)
+					hunger = 100f;
+
 				if (hunger >= 60f && !tryingToEat) {
 					tryingToEat = true;
 					QueueAction (1, new AIActionEat (this));
 				}
-
-				hunger += 10f;
-				if (hunger >= 100f)
-					hunger = 100f;
 				
 				characterWriter.Send (new Character.Update ().SetHunger (hunger));
 			}

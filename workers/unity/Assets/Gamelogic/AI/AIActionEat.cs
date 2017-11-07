@@ -31,7 +31,7 @@ namespace Assets.Gamelogic.Core {
 
 		public AIActionGetItem getItem;
 		public AIActionWait wait;
-		private float grainFoodAmount = 30f;
+		private float grainFoodAmount = 5f;
 
 		public AIActionEat(CharacterController o) : base(o,"eat") {
 		}

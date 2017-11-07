@@ -44,7 +44,7 @@ namespace Assets.Gamelogic.Core {
 			switch (state) {
 			case 0:
 				// send command asking for a get job
-				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.GetJob.Descriptor, new Nothing (), workSite)
+				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.GetJob.Descriptor, new ConstructionJobRequest (agent.GetItemInHand()), workSite)
 					.OnSuccess (response => OnJobResponse (response))
 					.OnFailure (response => OnJobRequestFailed ());
 				state++;
@@ -78,7 +78,6 @@ namespace Assets.Gamelogic.Core {
 				// waiting
 				break;
 			case 5:
-				Debug.LogWarning (taskResponse.response);
 				// drop item because construction took it
 				if (assignment.toGet.HasValue)
 					agent.DropItem ();

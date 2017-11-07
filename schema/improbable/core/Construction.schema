@@ -9,6 +9,10 @@ type ConstructionRequirement {
     int32 requested = 3;
 }
 
+type ConstructionJobRequest {
+    int32 item_in_hand = 1;
+}
+
 type ConstructionJobAssignment {
     option<int32> to_get = 1;
 }
@@ -23,6 +27,6 @@ component Construction {
     
     map<int32, ConstructionRequirement> requirements = 1;
     
-    command ConstructionJobAssignment get_job(Nothing);
+    command ConstructionJobAssignment get_job(ConstructionJobRequest);
     command TaskResponse complete_job(ConstructionJobResult);
 }
