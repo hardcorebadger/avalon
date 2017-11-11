@@ -168,34 +168,53 @@ namespace Assets.Gamelogic.EntityTemplates
 			int tileMargin = 1;
 			int x = 1;
 			int z = 1;
+
+			if (GameSettings.debugMode) {
+				req.Add (0, new ConstructionRequirement (0, 1, 0));
+			}
+
 			if (name == "construction-house-3d") {
-				req.Add (0, new ConstructionRequirement (0, 5, 0));
-				req.Add (1, new ConstructionRequirement (1, 3, 0));
+				if (!GameSettings.debugMode) {
+					req.Add (0, new ConstructionRequirement (0, 5, 0));
+					req.Add (1, new ConstructionRequirement (1, 5, 0));
+				}
 			} else if (name == "construction-forester") {
-				req.Add (0, new ConstructionRequirement (0, 10, 0));
-				req.Add (1, new ConstructionRequirement (1, 5, 0));
+				if (!GameSettings.debugMode) {
+					req.Add (0, new ConstructionRequirement (0, 10, 0));
+					req.Add (1, new ConstructionRequirement (1, 10, 0));
+				}
 				x = 3;
 			} else if (name == "construction-quarry") {
-				req.Add (0, new ConstructionRequirement (0, 10, 0));
-				req.Add (1, new ConstructionRequirement (1, 5, 0));
+				if (!GameSettings.debugMode) {
+					req.Add (0, new ConstructionRequirement (0, 10, 0));
+					req.Add (1, new ConstructionRequirement (1, 10, 0));
+				}
 				x = 2;
 				z = 2;
 			} else if (name == "construction-farm") {
-				req.Add (0, new ConstructionRequirement (0, 5, 0));
-				req.Add (1, new ConstructionRequirement (1, 5, 0));
+				if (!GameSettings.debugMode) {
+					req.Add (0, new ConstructionRequirement (0, 5, 0));
+					req.Add (1, new ConstructionRequirement (1, 10, 0));
+				}
 				x = 2;
 				z = 2;
 			} else if (name == "construction-stockpile") {
-				req.Add (0, new ConstructionRequirement (0, 10, 0));
-				req.Add (1, new ConstructionRequirement (1, 5, 0));
+				if (!GameSettings.debugMode) {
+					req.Add (0, new ConstructionRequirement (0, 10, 0));
+					req.Add (1, new ConstructionRequirement (1, 10, 0));
+				}
 				x = 3;
 			} else if (name == "construction-settlement") {
-				req.Add (0, new ConstructionRequirement (0, 15, 0));
-				req.Add (1, new ConstructionRequirement (1, 5, 0));
+				if (!GameSettings.debugMode) {
+					req.Add (0, new ConstructionRequirement (0, 5, 0));
+					req.Add (1, new ConstructionRequirement (1, 5, 0));
+				}
 				x = 4;
 				z = 4;
 			} else if (name == "construction-road") {
-				req.Add (1, new ConstructionRequirement (1, 3, 0));
+				if (!GameSettings.debugMode) {
+					req.Add (1, new ConstructionRequirement (1, 3, 0));
+				}
 			}
 				
 			return EntityBuilder.Begin()

@@ -8,6 +8,7 @@ namespace Assets.Gamelogic.Core {
 
 		public CharacterController agent;
 		public string name;
+		public bool directCommand = false;
 
 		protected int state = 0;
 		protected int shouldRespond = 100;
@@ -15,6 +16,11 @@ namespace Assets.Gamelogic.Core {
 		public AIAction(CharacterController o, string n) {
 			agent = o;
 			name = n;
+		}
+
+		public AIAction DirectCommand() {
+			directCommand = true;
+			return this;
 		}
 
 		public abstract int Update();

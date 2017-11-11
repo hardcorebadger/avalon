@@ -14,6 +14,17 @@ namespace Assets.Gamelogic.Core {
 		public Material hoverMaterial;
 		private Material defaultMaterial;
 
+		private void OnEnable() {
+			MeshRenderer mr = GetComponentInChildren<MeshRenderer> ();
+			if (mr != null) {
+				defaultMaterial = mr.material;
+			}
+		}
+
+		private void OnDisable() {
+			SetHovered (HoverState.None);
+		}
+
 		public void Update() {
 			if (hoverContainer != null) {
 				hoverContainer.transform.position = Camera.main.WorldToScreenPoint (transform.position+offset);

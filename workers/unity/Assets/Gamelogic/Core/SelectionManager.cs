@@ -106,7 +106,6 @@ namespace Assets.Gamelogic.Core {
 				// If left button down for certain time /// Drag
 				if (!hasTriggered && Vector3.Distance(downPos,Input.mousePosition) > dragTriggerDistance && wasControllingMouseDown) {
 					StartBoxSelect ();
-					Debug.Log ("start");
 					hasTriggered = true;
 				}
 			}

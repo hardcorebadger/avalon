@@ -8,16 +8,20 @@ namespace Assets.Gamelogic.Core {
 	public class UIHoverCharacter : UIHoverWidget {
 
 		protected CharacterVisualizer character;
-		public Slider slider;
+		public Slider healthSlider;
+		public Slider hungerSlider;
 		public OnUIChange callback;
 
 		public override void Load(GameObject target) {
 			base.Load (target);
 
 			character = targetObject.GetComponent<CharacterVisualizer> ();
-			slider.maxValue = 100f;
-			slider.minValue = 0;
-			slider.value = character.getHealth ();
+			healthSlider.maxValue = 100f;
+			healthSlider.minValue = 0;
+			healthSlider.value = character.GetHealth ();
+			hungerSlider.maxValue = 100f;
+			hungerSlider.minValue = 0;
+			hungerSlider.value = 100f-character.GetHunger ();
 			callback = OnChange;
 			character.RegisterUIListener (callback);
 		}
@@ -27,8 +31,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void OnChange() {
-			slider.value = character.getHealth ();
-
+			healthSlider.value = character.GetHealth ();
+			hungerSlider.value = 100f-character.GetHunger ();
 		}
 
 	

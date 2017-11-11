@@ -97,7 +97,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override void OnKill () {
-			
+			if (state == 2)
+				gather.OnKill ();
 		}
 	}
 

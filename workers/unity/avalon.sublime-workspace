@@ -4,6 +4,54 @@
 		"selected_items":
 		[
 			[
+				"Lo",
+				"LogWarning(object message)\tvoid"
+			],
+			[
+				"Hear",
+				"HeartbeatCounter\tHeartbeatCounter"
+			],
+			[
+				"se",
+				"SetComponentWriteAcl(Map<uint, WorkerRequirementSet> _value)\tUpdate"
+			],
+			[
+				"Set",
+				"SetWriteAccess<TComponent>(WorkerRequirementSet requirementSet)\tAcl"
+			],
+			[
+				"p",
+				"PhysicsOrVisual\tWorkerRequirementSet"
+			],
+			[
+				"LoginAc",
+				"LoginAccessRequest\tLoginAccessRequest"
+			],
+			[
+				"LoginAcc",
+				"LoginAccessResponse\tLoginAccessResponse"
+			],
+			[
+				"On",
+				"OnPlayerLoginAccess\tCommandResponderWrapper<PlayerLoginAccess, LoginAccessRequest, LoginAccessResponse> { get; set; }"
+			],
+			[
+				"Entity",
+				"EntityAcl\tEntityAcl"
+			],
+			[
+				"player",
+				"playerCreatorWriter\tWriter"
+			],
+			[
+				"IEn",
+				"IEnumerator<\tIEnumerator<"
+			],
+			[
+				"Vector",
+				"Vector3\tVector3"
+			],
+			[
 				"w",
 				"W2"
 			],
@@ -27,10 +75,55 @@
 	},
 	"buffers":
 	[
+		{
+			"contents": "Laguage = syntax + semantics {\n\n\n\tgrammar(words) -> concrete syntax tree -> semantics(AST) -> meaning \n\n\n\tsyntax {\n\t\tsame semantics different syntax and vice versa\n\t\tconcrete syntax tree includes every work in the program\n\t\tast simplifies it preserves meaning\n\t\tsyntax tree = unique meaning\n\t\tgramar defines syntax of language\n\t\tgrammar {\n\t\t\tset of nonterminals\n\t\t\tset of terminals\n\t\t\tset of rules between those\n\t\t}\n\t\tambiguity {\n\t\t\tsame sentence derived by differnt trees\n\t\t}\n\t}\n\tsemantics {\n\t\tsemantic info (rules) help pick a syntax tree in face of ambiguity\n\t\ttext -> grammar -> ast(s) -> semantic info -> unique ast\n\t\tsemantics {\n\t\t\tstatic - at compile {\n\t\t\t\tlike the associativity rules of orders of operations\n\t\t\t\tdecides if valid syntax trees are legal\n\t\t\t}\n\t\t\tdynamic - at runtime {\n\t\t\t\trun program theoretically essentially, thats why the error happens when it runs...\n\t\t\t}\n\t\t}\n\t}\n}\n\ngrammars and parsing {\n\tlanguage = {sentences}\n\tsentences = {words}\n\tgrammars = rules that make sentences\n\ttokens = types of words\n\t\tin english thats nouns and verbs etc.\n\t( and { are single tokens } )\n\tlexeme = sequence of characters\n\ttoken = 1 level higher up, identifiers are tokens and they correspond to infinite lexemes\n\tlexeme = instance\n\ttoken = type\n\tenglish has 127,000 words.\n\ttokens are defined by their patterns since there could be an infinite amount\n\tREGEX is used for a lot of it\n\tlongest match decides which token it is\n\tyou can encode semantics into a grammar to a degree\n}\n\nimplementation and compilers {\n\tinterpreter - 1 step execution\n\tcompiler - translation first, then execution (JIT compiles at runtime)\n\tcompiler {\n\t\tsource program -> front end -> AST -> backend -> target program\n\t\tfront end = understand syntax and validate static semantics {\n\t\t\tlexical analysis (lexer) {\n\t\t\t\tinput: character stream\n\t\t\t\toutput: token stream\n\t\t\t\tbasically a giant automaton, use Regex's to find tokens\n\t\t\t}\n\t\t\tsyntax analysis (parser) {\n\t\t\t\tinput: token stream\n\t\t\t\toutput: AST\n\t\t\t\tbasically a PDA using the CFG of the language\n\t\t\t\tneed to transform the grammar into a suitable format for parsing\n\t\t\t\tparsing techniques {\n\t\t\t\t\ttop down parsing\n\t\t\t\t\tbottom up parsing\n\t\t\t\t}\n\t\t\t}\n\t\t\tstatic analysis (checker) {\n\t\t\t\tuses static semantics to check validity\n\t\t\t\ttraverse AST validating every node\n\t\t\t}\n\t\t\toutput: abstract syntax stree\n\t\t}\n\t\tAST = internal data structure that holds program in working memory\n\t\tbackend = synthesize equivalent machine code (or other lower level code) {\n\t\t\tinput: AST\n\t\t\tIR code generator {\n\t\t\t\t(intermediate representation)\n\t\t\t\tIR is the rosetta stone of all PL's\n\t\t\t\ttraverse AST and build IR for each node\n\t\t\t}\n\t\t\tIR Code optimizer {\n\t\t\t\toptimizes the IR code with pattern matching and dataflow analysis\n\t\t\t}\n\t\t\tTarget Code generator {\n\t\t\t\tgenerates target code from IR\n\t\t\t}\n\t\t\toutput: target code\n\t\t}\n\t\t1. compile to a different language that has a compiler\n\t\t2. cross-compiling  {\n\t\t\tmakes executable for a system other than the one it's running on\n\t\t}\n\t\t3. bootstrapping  {\n\t\t\t1. write a compiler in C\n\t\t\t2. write a compiler in Foo\n\t\t\t3. Compile your new compiler\n\t\t\t4. use your compiled compiler\n\t\t}\n\t}\n\tinterpreter {\n\t\t1 line at a time, interpret and execute\n\t\tsometimes they need to convert to an AST first\n\t\tusually slower than compilation, but easier and more portable\n\t\tsupport stuff like REPL read eval print loop\n\t}\n}\nParadigms {\n\tFunctional {\n\t\tSide Effect {\n\t\t\tWrites to state variables\n\t\t}\n\t\tReferential Transparency {\n\t\t\tDoesn't Write or Read state variables\n\t\t}\n\t}\n}\nBindings n Shit {\n\t\n}\n\n\n\n",
+			"file": "/Users/trefethen/Desktop/pl-m1-notes",
+			"file_size": 3515,
+			"file_write_time": 131528503490000000,
+			"settings":
+			{
+				"buffer_size": 3541,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/Gamelogic/Core/PlayerController.cs",
+			"settings":
+			{
+				"buffer_size": 1861,
+				"encoding": "UTF-8 with BOM",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs",
+			"settings":
+			{
+				"buffer_size": 14475,
+				"encoding": "UTF-8 with BOM",
+				"line_ending": "Unix"
+			}
+		}
 	],
-	"build_system": "",
+	"build_system": "Packages/Unity3D Build System/Unity.sublime-build",
 	"build_system_choices":
 	[
+		[
+			[
+				[
+					"Packages/Unity3D Build System/Unity.sublime-build",
+					""
+				],
+				[
+					"Packages/Unity3D Build System/Unity.sublime-build",
+					"Clean"
+				]
+			],
+			[
+				"Packages/Unity3D Build System/Unity.sublime-build",
+				""
+			]
+		]
 	],
 	"build_varint": "",
 	"command_palette":
@@ -69,10 +162,22 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/trefethen/Documents/unity/avalon/workers/unity/"
+		"/Users/trefethen/Documents/unity/avalon/workers/unity/",
+		"/Users/trefethen/Documents/unity/avalon/workers/unity//Assets",
+		"/Users/trefethen/Documents/unity/avalon/workers/unity//Assets/Gamelogic",
+		"/Users/trefethen/Documents/unity/avalon/workers/unity//Assets/Gamelogic/Character",
+		"/Users/trefethen/Documents/unity/avalon/workers/unity//Assets/Gamelogic/Core",
+		"/Users/trefethen/Documents/unity/avalon/workers/unity//Assets/Gamelogic/EntityTemplates"
 	],
 	"file_history":
 	[
+		"/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Gamelogic/Character/ActionForester.cs",
+		"/Users/trefethen/Documents/unity/avalon/schema/improbable/core/Character.schema",
+		"/Users/trefethen/Documents/unity/cellularAutomata/Assets/CellularAutomata.cs",
+		"/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Gamelogic/World/WorldGeneratorTest1.cs",
+		"/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Gamelogic/Core/PlayerOnlineController.cs",
+		"/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Gamelogic/Core/PlayerCreatorController.cs",
+		"/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Gamelogic/Core/PlayerController.cs",
 		"/Users/trefethen/Documents/unity/avalon/workers/unity/Assets/Gamelogic/Building/ConstructionGhost.cs",
 		"/Users/trefethen/Documents/unity/avalon/schema/improbable/core/Chunk.schema",
 		"/Users/trefethen/Documents/unity/avalon/workers/unity/avalon.sublime-project",
@@ -84,7 +189,7 @@
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -98,6 +203,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"GetTexture",
+			"linking"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -115,8 +222,146 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/Users/trefethen/Desktop/pl-m1-notes",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3541,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3132,
+								3132
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1181.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Assets/Gamelogic/Core/PlayerController.cs",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 1861,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 140.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Assets/Gamelogic/EntityTemplates/EntityTemplateFactory.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14475,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"oops":
+							{
+								"10768,10778": "Qualifier is redundant",
+								"10812,10822": "Qualifier is redundant",
+								"1088,1092": "Parameter can be IComparable",
+								"1125,1127": "Convert to 'return' statement",
+								"12167,12177": "Qualifier is redundant",
+								"1304,1306": "Convert to 'switch' statement",
+								"1390,1394": "Redundant 'else' keyword",
+								"1881,1889": "Parameter can be IComparable",
+								"1972,1976": "Redundant 'else' keyword",
+								"2107,2115": "Parameter can be IComparable",
+								"2200,2204": "Redundant 'else' keyword",
+								"2348,2356": "Parameter can be Option",
+								"2364,2378": "Use 'var' keyword",
+								"2486,2488": "Convert to 'switch' statement",
+								"2988,2998": "Qualifier is redundant",
+								"3056,3066": "Qualifier is redundant",
+								"3266,3276": "Qualifier is redundant",
+								"3366,3370": "Redundant 'else' keyword",
+								"363,364": "Parameter can be IComponentData",
+								"3871,3881": "Qualifier is redundant",
+								"3938,3948": "Qualifier is redundant",
+								"4145,4155": "Qualifier is redundant",
+								"4290,4300": "Qualifier is redundant",
+								"4346,4356": "Qualifier is redundant",
+								"4884,4894": "Qualifier is redundant",
+								"4952,4962": "Qualifier is redundant",
+								"5183,5193": "Qualifier is redundant",
+								"5786,5796": "Qualifier is redundant",
+								"5854,5864": "Qualifier is redundant",
+								"6059,6069": "Qualifier is redundant",
+								"6205,6208": "Use 'var' keyword",
+								"6269,6272": "Use 'var' keyword",
+								"6759,6769": "Qualifier is redundant",
+								"7145,7153": "Parameter can be Option",
+								"7701,7709": "Parameter can be Option",
+								"7716,7726": "Qualifier is redundant",
+								"776,784": "Parameter can be Option",
+								"7783,7793": "Qualifier is redundant",
+								"7851,7861": "Convert to constant",
+								"7898,7900": "Convert to 'switch' statement",
+								"800,810": "'System.String.StartsWith' is culture-aware and missing a StringComparison argument",
+								"8594,8608": "Use 'var' keyword",
+								"8964,8974": "Qualifier is redundant",
+								"9033,9043": "Qualifier is redundant",
+								"905,909": "Redundant 'else' keyword",
+								"919,929": "'System.String.StartsWith' is culture-aware and missing a StringComparison argument",
+								"9936,9946": "Qualifier is redundant",
+								"9980,9990": "Qualifier is redundant"
+							},
+							"syntax": "Packages/Unity3D/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 3582.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -161,7 +406,7 @@
 	},
 	"output.variable_get":
 	{
-		"height": 102.0
+		"height": 163.0
 	},
 	"pinned_build_system": "",
 	"project": "avalon.sublime-project",

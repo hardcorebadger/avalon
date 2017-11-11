@@ -102,13 +102,15 @@ namespace Assets.Gamelogic.Core {
 
 		private IEnumerator UpdateVitals() {
 			while (enabled) {
-				yield return new WaitForSeconds (5f);
+				yield return new WaitForSeconds (60f);
 
-				hunger += 1f;
-				if (hunger >= 100f)
+				hunger += GameSettings.hungerPerHour/60f;
+				if (hunger >= 100f) {
 					hunger = 100f;
+					Hurt (10f);
+				}
 
-				if (hunger >= 60f && !tryingToEat) {
+				if (hunger >= 10f && !tryingToEat) {
 					tryingToEat = true;
 					QueueAction (1, new AIActionEat (this));
 				}
@@ -150,6 +152,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void QueueActionImmediate(AIAction a) {
+			if (a.directCommand)
+				QuitJob (true);
 			if (currentAction != null) {
 				currentAction.OnKill ();
 				currentAction = a;
@@ -162,21 +166,21 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "goto")
-				QueueActionImmediate (new AIActionGoTo (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.y, (float)request.targetPosition.z)));
+				QueueActionImmediate (new AIActionGoTo (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.y, (float)request.targetPosition.z)).DirectCommand());
 			return new Nothing ();
 		}
 
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "gather")
-				QueueActionImmediate (new AITaskGoAndGather (this, request.target));
+				QueueActionImmediate (new AITaskGoAndGather (this, request.target).DirectCommand());
 			else if (request.command == "work") {
 				QuitJob (true);
-				QueueActionImmediate (new AIActionWork (this, request.target));
+				QueueActionImmediate (new AIActionWork (this, request.target).DirectCommand());
 			}
 			else if (request.command == "attack")
-				QueueActionImmediate (new AIActionAttack (this, request.target));
+				QueueActionImmediate (new AIActionAttack (this, request.target).DirectCommand());
 			else if (request.command == "damage")
-				QueueActionImmediate (new AIActionDamage (this, request.target));
+				QueueActionImmediate (new AIActionDamage (this, request.target).DirectCommand());
 			return new Nothing ();
 		}
 
@@ -185,15 +189,21 @@ namespace Assets.Gamelogic.Core {
 			return new Nothing ();
 		}
 
-		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
-
-			health -= Random.Range(3.0f, 6.0f);
+		public void Hurt(float f) {
+			health -= f;
 			characterWriter.Send (new Character.Update ()
 				.SetHealth (health)
 				.AddShowHurt(new Nothing())
 			);
-			if (!(currentAction is AIActionAttack) && !(currentAction is AIActionDamage)) {
+		}
+
+		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
+
+			Hurt (Random.Range (3.0f, 6.0f));
+			if (currentAction == null || !(currentAction is AIActionAttack || currentAction is AIActionDamage || currentAction.directCommand)) {
 				QueueActionImmediate (new AIActionAttack (this, request.source));
+			} else if (currentAction.directCommand) {
+				Debug.LogWarning ("cool");
 			}
 			Collider[] cols = Physics.OverlapSphere (transform.position, 50);
 			System.Collections.Generic.List<CharacterController> enemies = new System.Collections.Generic.List<CharacterController>();
@@ -201,6 +211,11 @@ namespace Assets.Gamelogic.Core {
 
 			for (int x = 0; x < cols.Length; x++) {
 				GameObject g = cols [x].gameObject;
+
+				// this is yourself
+				if (g.EntityId ().Id == gameObject.EntityId ().Id)
+					continue;
+				
 				CharacterController c = g.GetComponent<CharacterController> ();
 				if (c != null) {
 					if (c.characterWriter.Data.playerId == characterWriter.Data.playerId) {
@@ -230,7 +245,7 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnHostileAlert(HostileAlertRequest request, ICommandCallerInfo callerinfo) {
 
-			if (!(currentAction is AIActionAttack) && !(currentAction is AIActionDamage)) {
+			if (currentAction == null || !(currentAction is AIActionAttack || currentAction is AIActionDamage || currentAction.directCommand)) {
 				QueueActionImmediate(new AIActionAttack (this, request.target));
 			}
 

@@ -31,7 +31,6 @@ namespace Assets.Gamelogic.Core {
 
 		public AIActionGetItem getItem;
 		public AIActionWait wait;
-		private float grainFoodAmount = 5f;
 
 		public AIActionEat(CharacterController o) : base(o,"eat") {
 		}
@@ -69,8 +68,8 @@ namespace Assets.Gamelogic.Core {
 			case 2: 
 				//eat food. 
 				agent.DropItem ();
-				agent.Eat (grainFoodAmount);
-				if (agent.hunger >= grainFoodAmount)
+				agent.Eat (GameSettings.wheatHunger);
+				if (agent.hunger >= GameSettings.wheatHunger)
 					state = 0;
 				else
 					return 200;
@@ -86,7 +85,7 @@ namespace Assets.Gamelogic.Core {
 			if (agent.GetItemInHand () == 2) { 
 				//got the food already!
 				agent.DropItem ();
-				agent.Eat (grainFoodAmount);
+				agent.Eat (GameSettings.wheatHunger);
 
 			}
 			agent.QueueAction (1, new AIActionEat (agent));

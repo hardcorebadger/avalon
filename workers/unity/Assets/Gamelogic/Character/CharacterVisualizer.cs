@@ -52,15 +52,16 @@ namespace Assets.Gamelogic.Core {
 			sprite.color = new Color(c.red, c.green, c.blue, 1f); 
 			transform.position = positionReader.Data.coords.ToVector3();
 			state = characterReader.Data.state;
+			facing = Quaternion.identity;
 			facing.eulerAngles = new Vector3 (0, 0, rotationReader.Data.rotation);
+			SetIndoors (characterReader.Data.isIndoors);
+			SetItemInHand (characterReader.Data.itemInHand);
 
 			positionReader.ComponentUpdated.Add(OnPositionUpdated);
 			rotationReader.ComponentUpdated.Add(OnRotationUpdated);
 			characterReader.ComponentUpdated.Add(OnCharacterUpdated);
 			characterReader.ShowHitTriggered.Add (OnShowHit);
 			characterReader.ShowHurtTriggered.Add (OnShowHurt);
-			if (GetComponent<OwnedVisualizer> ().GetOwnerId () != Bootstrap.playerId)
-				GetComponent<Selectable> ().enabled = false;
 
 			listeners = new System.Collections.Generic.List<OnUIChange> ();
 		}
@@ -73,8 +74,9 @@ namespace Assets.Gamelogic.Core {
 
 		void OnPositionUpdated(Position.Update update) {
 			if (!positionReader.HasAuthority && update.coords.HasValue) {
-				if (Vector3.Distance(update.coords.Value.ToVector3 (),transform.position) > ipAllowance)
+				if (Vector3.Distance (update.coords.Value.ToVector3 (), transform.position) > ipAllowance) {
 					transform.position = update.coords.Value.ToVector3 ();
+				}
 			}
 		}
 
@@ -93,25 +95,31 @@ namespace Assets.Gamelogic.Core {
 				else
 					anim.SetBool ("walking", false);
 				rigidBody.velocity = new Vector3(0f, rigidBody.velocity.y, 0f) + facing * new Vector3 (0, 0, update.velocity.Value);
+
 			}
 			if (!characterReader.HasAuthority && update.itemInHand.HasValue) {
-				if (update.itemInHand.Value == -1) {
-					itemSprite.enabled = false;
-				} else {
-					itemSprite.sprite = Item.GetIcon(update.itemInHand.Value);
-					itemSprite.enabled = true;
-				}
+				SetItemInHand (update.itemInHand.Value);
 			}
-			if (update.isIndoors.HasValue) {
-				if (update.isIndoors.Value) {
-					GetComponent<Collider> ().enabled = false;
-					GetComponent<Rigidbody> ().isKinematic = true;
-				} else {
-					GetComponent<Collider> ().enabled = true;
-					GetComponent<Rigidbody> ().isKinematic = false;
-				}
+			if (!characterReader.HasAuthority && update.isIndoors.HasValue) {
+				SetIndoors (update.isIndoors.Value);
 			}
+			foreach (OnUIChange c in listeners) {
+				c ();
+			}
+		}
 
+		private void SetItemInHand(int i) {
+			if (i == -1)
+				itemSprite.enabled = false;
+			else {
+				itemSprite.sprite = Item.GetIcon (i);
+				itemSprite.enabled = true;
+			}
+		}
+
+		private void SetIndoors(bool b) {
+			GetComponent<Collider> ().enabled = !b;
+			GetComponent<Rigidbody> ().isKinematic = b;
 		}
 
 		private void OnShowHit(Nothing n) {
@@ -126,20 +134,16 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void OnShowHurt(Nothing n) {
-
-			if (listeners != null && characterReader != null && anim != null) {
-				foreach (OnUIChange c in listeners) {
-					c ();
-				}
-				if (!characterReader.HasAuthority)
-					anim.SetTrigger ("hurt");
-
-			}
-
+			if (!characterReader.HasAuthority)
+				anim.SetTrigger ("hurt");
 		}
 
-		public float getHealth() {
+		public float GetHealth() {
 			return characterReader.Data.health;
+		}
+
+		public float GetHunger() {
+			return characterReader.Data.hunger;
 		}
 
 		public bool CanControl() {

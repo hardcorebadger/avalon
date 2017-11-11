@@ -38,6 +38,12 @@ namespace Assets.Gamelogic.Core {
 			}
 			return 100;
 		}
+
+		public override void OnKill () {
+			base.OnKill ();
+			if (state == 1)
+				gather.OnKill ();
+		}
 	}
 
 }

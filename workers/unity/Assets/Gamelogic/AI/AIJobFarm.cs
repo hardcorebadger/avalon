@@ -29,7 +29,6 @@ namespace Assets.Gamelogic.Core {
 
 
 		private AIActionWait wait;
-		private float waitDuration = 30f;
 		Vector3 interiorPositon;
 
 		public AIJobFarm(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d, dp ,"farm") {
@@ -54,7 +53,7 @@ namespace Assets.Gamelogic.Core {
 			case 1:
 				//"Farm"
 				if (wait == null)
-					wait = new AIActionWait (agent, waitDuration);
+					wait = new AIActionWait (agent, 3600f/GameSettings.farmProductivity);
 				if (AIAction.OnSuccess (wait.Update ())) {
 					wait = null;
 					state++;

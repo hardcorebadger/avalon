@@ -42,6 +42,11 @@ namespace Assets.Gamelogic.Core {
 			}
 			return 100;
 		}
+
+		public override void OnKill () {
+			base.OnKill ();
+			agent.SetState (CharacterState.DEFAULT);
+		}
 	}
 
 }

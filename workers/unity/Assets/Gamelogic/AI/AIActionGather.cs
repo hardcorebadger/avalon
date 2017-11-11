@@ -91,6 +91,12 @@ namespace Assets.Gamelogic.Core {
 		private void OnGatherFailed() {
 			shouldRespond = 501;
 		}
+
+		public override void OnKill () {
+			base.OnKill ();
+			if (state == 1)
+				subAction.OnKill ();
+		}
 	}
 
 }

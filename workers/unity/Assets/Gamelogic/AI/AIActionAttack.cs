@@ -46,6 +46,10 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private int UpdateLocalEntity(){
+			if (state != 0 && targetObject == null) {
+				Debug.LogWarning("Attack Target Crossed Worker Boundary, Action Failing...");
+				return 401;
+			}
 			switch (state) {
 			case 0:
 				if (LocalEntities.Instance.ContainsEntity (targetId)) {
