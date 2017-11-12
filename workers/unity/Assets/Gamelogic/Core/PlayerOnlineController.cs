@@ -39,6 +39,7 @@ namespace Assets.Gamelogic.Core
 			playerOnlineWriter.CommandReceiver.OnRegisterCharacter.RegisterResponse (OnRegisterCharacter);
 			playerOnlineWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
 			playerOnlineWriter.CommandReceiver.OnRegisterDistrict.RegisterResponse (OnRegisterDistrict);
+			playerOnlineWriter.CommandReceiver.OnDeregisterDistrict.RegisterResponse (OnDeregisterDistrict);
 
 			characters = playerOnlineWriter.Data.characters;
 			districts = playerOnlineWriter.Data.districts;
@@ -53,7 +54,7 @@ namespace Assets.Gamelogic.Core
 			playerOnlineWriter.CommandReceiver.OnRegisterCharacter.DeregisterResponse ();
 			playerOnlineWriter.CommandReceiver.OnDeregisterCharacter.DeregisterResponse ();
 			playerOnlineWriter.CommandReceiver.OnRegisterDistrict.DeregisterResponse ();
-
+			playerOnlineWriter.CommandReceiver.OnDeregisterDistrict.DeregisterResponse ();
 		}
 
 		private LoginAccessResponse OnPlayerLoginAccess(LoginAccessRequest r, ICommandCallerInfo callerinfo) {
@@ -144,6 +145,16 @@ namespace Assets.Gamelogic.Core
 			}
 
 			districts.Add(r.districtId);
+
+			playerOnlineWriter.Send (new PlayerOnline.Update ()
+				.SetDistricts(districts)
+			);
+			return new Nothing ();
+		}
+
+		private Nothing OnDeregisterDistrict(DistrictDeregisterRequest r, ICommandCallerInfo _) {
+			
+			districts.Remove(r.districtId);
 
 			playerOnlineWriter.Send (new PlayerOnline.Update ()
 				.SetDistricts(districts)

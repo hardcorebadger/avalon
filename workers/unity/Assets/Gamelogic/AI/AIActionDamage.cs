@@ -70,7 +70,7 @@ namespace Assets.Gamelogic.Core {
 				//wait for hit
 				break;
 			case 4: 
-				SpatialOS.Commands.SendCommand (agent.characterWriter, Building.Commands.ReceiveDamage.Descriptor, new ReceiveDamageRequest(agent.characterWriter.EntityId, agent.characterWriter.Data.playerId), targetId);
+				SpatialOS.Commands.SendCommand (agent.characterWriter, Building.Commands.ReceiveDamage.Descriptor, new ReceiveDamageRequest(agent.characterWriter.EntityId, agent.owned.getOwner(), agent.owned.getOwnerObject()), targetId);
 				waitDuration = Random.Range (1.0f, 2.0f);
 				state = 1;
 				break;

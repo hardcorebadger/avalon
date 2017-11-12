@@ -27,7 +27,7 @@ type HostileAlertRequest {
 }
 
 type SetCharacterDistrictRequest {
-  EntityId district_id = 1;
+  option<EntityId> district_id = 1;
 } 
 
 enum CharacterState {

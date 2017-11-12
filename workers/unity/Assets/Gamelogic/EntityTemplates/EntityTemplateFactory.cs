@@ -24,7 +24,7 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		public static Entity CreateEntityTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject, Option<EntityId> district) {
 			if (name.StartsWith("construction")) {
-				return CreateConstructionTemplate (name, pos, ownerId, ownerObject, district);
+				return CreateConstructionTemplate (name, pos, ownerId, ownerObject, district, false);
 			} else if (name.StartsWith("building")) {
 				return CreateBuildingTemplate (name, pos, ownerId, ownerObject, district);
 			} else if (name == "character") {
@@ -165,7 +165,11 @@ namespace Assets.Gamelogic.EntityTemplates
 
 		}
 
-		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject, Option<EntityId> district) {
+		public static Entity CreateDestroyedBuildingTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject, Option<EntityId> district) {
+			return CreateConstructionTemplate (name, pos, ownerId, ownerObject, district, true);
+		}
+			
+		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject, Option<EntityId> district, bool wasDestroyed) {
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
 			int tileMargin = 1;
 			int x = 1;
@@ -225,7 +229,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetPersistence(true)
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, 4), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Construction.Data(req), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Construction.Data(req,wasDestroyed), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Building.Data(tileMargin,x,z, 100f, district, 0), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CONSTRUCTION, ownerObject), CommonRequirementSets.PhysicsOnly)
 				.Build();

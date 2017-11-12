@@ -43,14 +43,11 @@ public class OwnedController : MonoBehaviour {
 	}
 
 	private OwnResponse OnSetOwner(OwnRequest request, ICommandCallerInfo callerinfo) {
-		if (this.ownedWriter.Data.owner == 0) {
-			ownedWriter.Send (new Owned.Update ()
-				.SetOwner (request.owner)
-			);
-			return new OwnResponse (true);
-
-		} else 
-			return new OwnResponse (false);
+		ownedWriter.Send (new Owned.Update ()
+			.SetOwner (request.owner)
+			.SetPlayer (request.player)
+		);
+		return new OwnResponse (true);
 	}
 
 }

@@ -1,6 +1,7 @@
 ﻿using Improbable.Collections;
 using UnityEngine;
 using Improbable;
+using Improbable.Worker;
 using Improbable.Core;
 using Improbable.Entity.Component;
 using Improbable.Unity;

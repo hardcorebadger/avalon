@@ -290,6 +290,30 @@ namespace Assets.Gamelogic.Core {
 				return new Option<EntityId> ();
 		}
 
+		public void Cede(EntityId playerEntity, int playerId) {
+
+			// set the characters to no district
+			foreach (EntityId id in characters) {
+				SpatialOS.Commands.SendCommand (districtWriter, Character.Commands.SetDistrict.Descriptor, new SetCharacterDistrictRequest(new Option<EntityId>()), id);
+			}
+			characters.Clear ();
+			districtWriter.Send (new District.Update ()
+				.SetCharacterList (characters)
+			);
+
+
+			// tell our owner to unregister the district
+			SpatialOS.Commands.SendCommand (districtWriter, PlayerOnline.Commands.DeregisterDistrict.Descriptor, new DistrictDeregisterRequest(gameObject.EntityId()), owned.getOwnerObject());
+
+			// tell the buildings to flip their owned components over to new player
+			foreach (EntityId id in positionMap.Keys) {
+				SpatialOS.Commands.SendCommand (districtWriter, Owned.Commands.SetOwner.Descriptor, new OwnRequest(playerId, playerEntity), id);
+			}
+
+			// tell our new owner to register the district
+			SpatialOS.Commands.SendCommand (districtWriter, PlayerOnline.Commands.RegisterDistrict.Descriptor, new DistrictRegisterRequest(gameObject.EntityId()), playerEntity);
+
+		}
 
 	}
 

@@ -26,6 +26,7 @@ component Construction {
     id = 1007;
     
     map<int32, ConstructionRequirement> requirements = 1;
+    bool was_destroyed = 2;
     
     command ConstructionJobAssignment get_job(ConstructionJobRequest);
     command TaskResponse complete_job(ConstructionJobResult);

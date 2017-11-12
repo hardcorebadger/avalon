@@ -32,6 +32,10 @@ type DistrictRegisterRequest {
   EntityId district_id = 1;
 }
 
+type DistrictDeregisterRequest {
+  EntityId district_id = 1;
+}
+
 component PlayerOnline {
     id = 1006;
     int32 player_id = 1;
@@ -43,5 +47,5 @@ component PlayerOnline {
     command Nothing register_character(CharacterPlayerRegisterRequest); 
     command Nothing deregister_character(CharacterPlayerDeregisterRequest); 
     command Nothing register_district(DistrictRegisterRequest); 
-
+    command Nothing deregister_district(DistrictDeregisterRequest); 
 }

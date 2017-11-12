@@ -5,8 +5,10 @@ import "improbable/core/Nothing.schema";
 
 type ReceiveDamageRequest {
   EntityId source = 1;
-  int32 player_id = 2; 
+  int32 player_id = 2;
+  EntityId player_entity_id = 3; 
 }
+
 
 component Building {
     id = 1013;

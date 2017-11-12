@@ -96,6 +96,12 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
+		public void FireAll() {
+			foreach (EntityId i in workers) {
+				SpatialOS.Commands.SendCommand (workSiteWriter, Character.Commands.Fire.Descriptor, new Nothing (), i);
+			}
+		}
+
 	}
 
 }

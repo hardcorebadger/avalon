@@ -111,8 +111,7 @@ namespace Assets.Gamelogic.Core {
 				if (val.amount < val.required)
 					return false;
 			}
-			SpatialOS.Commands.ReserveEntityId (constructionWriter)
-				.OnSuccess (result => OnReserveEntityId (result.ReservedEntityId));
+			CompleteConstruction ();
 			return true;
 			
 		}
@@ -126,40 +125,29 @@ namespace Assets.Gamelogic.Core {
 			return true;
 		}
 
-		private void OnReserveEntityId(EntityId id) {
+		private void CompleteConstruction() {
 			if (districtBuildingConstruction) {
-				SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), owned.getOwnerObject(), new Improbable.Collections.Option<EntityId> (id)))
-					.OnSuccess (entityId => OnBuildingCreated (id));
+				// custom replacement for making new settlements
+				SpatialOS.Commands.ReserveEntityId (constructionWriter)
+					.OnSuccess (result => OnReserveSettlementId (result.ReservedEntityId));
 			} else {
-				SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), owned.getOwnerObject(), buildingWriter.Data.district))
-					.OnSuccess (entityId => OnBuildingCreated (id));
+				// else just use default building replace
+				GetComponent<BuildingController> ().ReplaceBuilding (EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), owned.getOwnerObject (), buildingWriter.Data.district),false);
 			}
 		}
 
-		private void OnBuildingCreated(EntityId id) {
-			if (!districtBuildingConstruction) {
-				int beds = 0;
-				List<int> acceptingItems = new List<int> ();
-
-				if (gameObject.name.Contains ("house-3d")) {
-					beds = 4;
-				}
-				SpatialOS.Commands.SendCommand (
-					constructionWriter, 
-					District.Commands.RegisterBuilding.Descriptor, 
-					new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z), beds, acceptingItems, false), 
-					buildingWriter.Data.district.Value
-				).OnSuccess (OnBuildingRegistered);
-			} else {
-				// pre registered if its a settlement
-
-				SpatialOS.Commands.SendCommand(constructionWriter, PlayerOnline.Commands.RegisterDistrict.Descriptor, new DistrictRegisterRequest(id), owned.getOwnerObject());
-
-				OnBuildingRegistered (new Nothing ());
-			}
+		// custom replacement for making new settlements
+		private void OnReserveSettlementId(EntityId id) {
+			SpatialOS.Commands.CreateEntity (constructionWriter, id, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate ("building-" + buildingToSpawn, transform.position, owned.getOwner (), owned.getOwnerObject (), new Improbable.Collections.Option<EntityId> (id)))
+				.OnSuccess (entityId => OnSettlementCreated (id));
 		}
 
-		private void OnBuildingRegistered(Nothing n) {
+		private void OnSettlementCreated(EntityId id) {
+			SpatialOS.Commands.SendCommand(constructionWriter, PlayerOnline.Commands.RegisterDistrict.Descriptor, new DistrictRegisterRequest(id), owned.getOwnerObject());
+			OnSettlementRegistered (new Nothing ());
+		}
+
+		private void OnSettlementRegistered(Nothing n) {
 			GetComponent<BuildingController> ().DestroyBuilding ();
 		}
 

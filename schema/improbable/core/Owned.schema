@@ -2,6 +2,7 @@ package improbable.core;
 
 type OwnRequest {
   int32 owner = 1;
+  EntityId player = 2;
 }
 
 type OwnResponse {

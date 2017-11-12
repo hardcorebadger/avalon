@@ -16,7 +16,9 @@ namespace Assets.Gamelogic.Core
 
 		private OwnedVisualizer owned;
 		public Map<int,ConstructionRequirement> requirements;
+		public GameObject fireParticles;
 		private System.Collections.Generic.List<OnUIChange> listeners;
+		private bool wasDestroyed = false;
 
 		public float completion = 0.0f;
 
@@ -30,7 +32,10 @@ namespace Assets.Gamelogic.Core
 			requirements = constructionReader.Data.requirements;
 			constructionReader.ComponentUpdated.Add (OnConstructionUpdated);
 			listeners = new System.Collections.Generic.List<OnUIChange> ();
-
+			wasDestroyed = constructionReader.Data.wasDestroyed;
+			if (wasDestroyed) {
+				CreateFire ();
+			}
 		}
 
 		// Update is called once per frame
@@ -76,6 +81,13 @@ namespace Assets.Gamelogic.Core
 
 		public float getProgress() {
 			return completion;
+		}
+
+		private void CreateFire() {
+			Transform t = transform.Find ("fire");
+			foreach (Transform t1 in t) {
+				Instantiate (fireParticles, t1);
+			}
 		}
 
 	}

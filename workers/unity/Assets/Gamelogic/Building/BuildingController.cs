@@ -1,6 +1,7 @@
 ﻿using Improbable.Collections;
 using UnityEngine;
 using Improbable;
+using Improbable.Worker;
 using Improbable.Core;
 using Improbable.Entity.Component;
 using Improbable.Unity;
@@ -18,6 +19,10 @@ namespace Assets.Gamelogic.Core {
 
 		public float strength;
 		public Option<EntityId> district;
+		public string constructionName;
+		private bool hasDied = false;
+		private Option<EntityId> mostRecentAttacker;
+		private Option<int> mostRecentAttackerId;
 
 		private void OnEnable() {
 	
@@ -31,13 +36,30 @@ namespace Assets.Gamelogic.Core {
 		private void Update() {
 			// if the controlling action completes, stop doing it
 
-			if (strength <= 0F) {
-				DestroyBuilding ();
+			if (strength <= 0F && !hasDied) {
+				DistrictController district = GetComponent<DistrictController> ();
+				if (district != null) {
+					if (mostRecentAttacker.HasValue) {
+						Debug.LogWarning ("cedeing town to: " + mostRecentAttacker.Value.Id + " " + mostRecentAttackerId.Value);
+						district.Cede (mostRecentAttacker.Value, mostRecentAttackerId.Value);
+						strength = 100f;
+						buildingWriter.Send (new Building.Update ()
+							.SetStrength (strength)
+						);
+					}
+				} else {
+					hasDied = true;
+					ReplaceBuilding (EntityTemplates.EntityTemplateFactory.CreateDestroyedBuildingTemplate (constructionName, transform.position, owned.getOwner (), owned.getOwnerObject (), buildingWriter.Data.district), true);
+				}
+
 			}
 
 		}
 
 		private Nothing OnReceiveDamage(ReceiveDamageRequest request, ICommandCallerInfo callerinfo) {
+			
+			mostRecentAttacker = request.playerEntityId;
+			mostRecentAttackerId = request.playerId;
 
 			strength -= Random.Range(3.0f, 6.0f);
 			buildingWriter.Send (new Building.Update ()
@@ -53,10 +75,10 @@ namespace Assets.Gamelogic.Core {
 				GameObject g = cols [x].gameObject;
 				CharacterController c = g.GetComponent<CharacterController> ();
 				if (c != null) {
-					if (c.characterWriter.Data.playerId == owned.getOwner()) {
+					if (c.owned.getOwnerObject().Id == owned.getOwnerObject().Id) {
 						//my character found 
 						friends.Add(c);
-					} else if (c.characterWriter.Data.playerId == request.playerId) {
+					} else if (c.owned.getOwnerObject().Id == request.playerEntityId.Id) {
 						//other HOSTILE character found
 						enemies.Add(c);
 					} else {
@@ -65,29 +87,32 @@ namespace Assets.Gamelogic.Core {
 				}
 
 			}
-			int i = -1; 
-			for (int y = 0; y < friends.Count; y++) {
-				i++;
-				SpatialOS.Commands.SendCommand (buildingWriter, Character.Commands.HostileAlert.Descriptor, new HostileAlertRequest(enemies[i].characterWriter.EntityId), friends[y].characterWriter.EntityId);
-				if (i >= (enemies.Count - 1)) {
-					i = -1;
-				}
+			if (enemies.Count > 0) {
+				int i = -1; 
+				for (int y = 0; y < friends.Count; y++) {
+					i++;
+					SpatialOS.Commands.SendCommand (buildingWriter, Character.Commands.HostileAlert.Descriptor, new HostileAlertRequest (enemies [i].characterWriter.EntityId), friends [y].characterWriter.EntityId);
+					if (i >= (enemies.Count - 1)) {
+						i = -1;
+					}
 
+				}
 			}
 
 			return new Nothing ();
-
 		}
 
 		public int GetBeds() {
-
 			return buildingWriter.Data.beds;
-
 		}
 
 		public void DestroyBuilding() {
+			WorkSiteController workSite = GetComponent<WorkSiteController> ();
+			if (workSite != null) {
+				workSite.FireAll ();
+			}
 			if (buildingWriter.Data.district.HasValue) {
-				// deregiste the construction site
+				// deregister the construction site
 				int beds = 0;
 
 				if (gameObject.name.Contains ("building-house-3d")) {
@@ -108,6 +133,40 @@ namespace Assets.Gamelogic.Core {
 		private void OnDeregisteredSelf(Nothing n) {
 			// finally delete yourself
 			SpatialOS.WorkerCommands.DeleteEntity (gameObject.EntityId ());
+		}
+
+
+		public void ReplaceBuilding(Entity e, bool isConstruction) {
+			SpatialOS.Commands.ReserveEntityId (buildingWriter)
+				.OnSuccess (result => OnReserveReplacementEntityId (result.ReservedEntityId,e,isConstruction));
+		}
+
+		private void OnReserveReplacementEntityId(EntityId id, Entity e, bool b) {
+			SpatialOS.Commands.CreateEntity (buildingWriter, id, e)
+				.OnSuccess (entityId => OnReplacementBuildingCreated (id,b));
+		}
+
+		private void OnReplacementBuildingCreated(EntityId id, bool b) {
+			if (!buildingWriter.Data.district.HasValue) {
+				OnReplacementBuildingRegistered (new Nothing());
+				return;
+			}
+			int beds = 0;
+			List<int> acceptingItems = new List<int> ();
+
+			if (gameObject.name.Contains ("building-house-3d")) {
+				beds = 4;
+			}
+			SpatialOS.Commands.SendCommand (
+				buildingWriter, 
+				District.Commands.RegisterBuilding.Descriptor, 
+				new BuildingRegistrationRequest (id, new Vector3d(transform.position.x, transform.position.y, transform.position.z), beds, acceptingItems, b), 
+				buildingWriter.Data.district.Value
+			).OnSuccess (OnReplacementBuildingRegistered);
+		}
+
+		private void OnReplacementBuildingRegistered(Nothing n) {
+			DestroyBuilding ();
 		}
 
 	}

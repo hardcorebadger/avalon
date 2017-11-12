@@ -204,8 +204,6 @@ namespace Assets.Gamelogic.Core {
 			Hurt (Random.Range (3.0f, 6.0f));
 			if (currentAction == null || !(currentAction is AIActionAttack || currentAction is AIActionDamage || currentAction.directCommand)) {
 				QueueActionImmediate (new AIActionAttack (this, request.source));
-			} else if (currentAction.directCommand) {
-				Debug.LogWarning ("cool");
 			}
 			Collider[] cols = Physics.OverlapSphere (transform.position, 50);
 			System.Collections.Generic.List<CharacterController> enemies = new System.Collections.Generic.List<CharacterController>();
@@ -255,7 +253,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnSetDistrict(SetCharacterDistrictRequest request, ICommandCallerInfo callerinfo) {
-
 			district = request.districtId;
 			characterWriter.Send (new Character.Update ()
 				.SetDistrict (district)
