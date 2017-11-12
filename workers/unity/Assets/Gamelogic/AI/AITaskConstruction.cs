@@ -13,7 +13,7 @@ using Improbable.Unity.Core.EntityQueries;
 
 namespace Assets.Gamelogic.Core {
 	
-	public class AIJobConstruction : AIActionJob {
+	public class AITaskConstruction : AIAction {
 
 		// description //
 		// agent does a job cycle (1 task) at a construction site
@@ -32,9 +32,20 @@ namespace Assets.Gamelogic.Core {
 		private TaskResponse taskResponse;
 		private AIAction task;
 		private int taskResult = 100;
-	
-		public AIJobConstruction(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d) : base(o,w, p, d, new Option<Vector3>(),"construction") {}
 
+		public EntityId constructionSite;
+		public Option<EntityId> district;
+
+		public AITaskConstruction(CharacterController o, EntityId w, Option<EntityId> d) : base(o,"construction") {
+			constructionSite = w;
+			district = d;
+		}
+
+		public AITaskConstruction(CharacterController o, EntityId w) : base(o,"construction") {
+			constructionSite = w;
+			district = new Option<EntityId>();
+		}
+	
 		public override int Update(){
 			
 			if (shouldRespond != 100) {
@@ -44,7 +55,7 @@ namespace Assets.Gamelogic.Core {
 			switch (state) {
 			case 0:
 				// send command asking for a get job
-				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.GetJob.Descriptor, new ConstructionJobRequest (agent.GetItemInHand()), workSite)
+				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.GetJob.Descriptor, new ConstructionJobRequest (agent.GetItemInHand()), constructionSite)
 					.OnSuccess (response => OnJobResponse (response))
 					.OnFailure (response => OnJobRequestFailed ());
 				state++;
@@ -58,8 +69,6 @@ namespace Assets.Gamelogic.Core {
 					if (assignment.toGet.HasValue)
 						task = new AITaskConstructionGet (agent, assignment, this);
 					else {
-						agent.QuitJob (false);
-						agent.QueueAction (10, new AIActionFindConstructionJob (agent, workSite));
 						return 200;
 					}
 				}
@@ -69,7 +78,7 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 3:
 				// send command giving results of get job
-				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.CompleteJob.Descriptor, new ConstructionJobResult (assignment,taskResult), workSite)
+				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.CompleteJob.Descriptor, new ConstructionJobResult (assignment,taskResult), constructionSite)
 					.OnSuccess (response => OnJobCompletionResponse (response))
 					.OnFailure (response => OnJobCompletionRequestFailed ());
 				state++;
@@ -83,18 +92,13 @@ namespace Assets.Gamelogic.Core {
 					agent.DropItem ();
 	
 				if (taskResponse.response == 100) { /* keep working */
-					// requeue this job
-					agent.QueueAction (10, new AIJobConstruction (agent, workSite, workSitePosition, district));
-				} else if (taskResponse.response == 400) {  /* issue */
-					// quit this job
-					agent.QuitJob (false);
-				} else if (taskResponse.response == 200) { /* you are done */
-					// find another job
-					agent.QuitJob (false);
-					agent.QueueAction (10, new AIActionFindConstructionJob (agent, workSite));
+					// restart
+					state = 0;
+				} else {
+					// terminate
+					return taskResponse.response;
 				}
-				// terminate
-				return 200;
+				break;
 			}
 			return 100;
 		}
@@ -112,7 +116,6 @@ namespace Assets.Gamelogic.Core {
 		private void OnJobRequestFailed() {
 			shouldRespond = 501;
 			// it doesnt exist (anymore)
-			agent.QueueAction (10, new AIActionFindConstructionJob (agent, workSite));
 		}
 
 		private void OnJobCompletionRequestFailed() {
@@ -122,12 +125,11 @@ namespace Assets.Gamelogic.Core {
 		public override void OnKill () {
 			if (state == 2 /* the task is being done */) {
 				task.OnKill ();
-				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.CompleteJob.Descriptor, new ConstructionJobResult (assignment, 420), workSite);
+				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.CompleteJob.Descriptor, new ConstructionJobResult (assignment, 420), constructionSite);
 			} else if (state > 2) {
 				if (assignment.toGet.HasValue)
 					agent.DropItem ();
 			}
-			agent.QueueAction (10, new AIJobConstruction (agent, workSite, workSitePosition, district));
 		}
 
 

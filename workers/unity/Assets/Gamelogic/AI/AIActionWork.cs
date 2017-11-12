@@ -74,7 +74,7 @@ namespace Assets.Gamelogic.Core {
 			case 4:
 				switch (enlistResponse.workType) {
 				case WorkType.WORK_BUILDING:
-					agent.QueueAction (10, new AIJobConstruction (agent, target, enlistResponse.position.ToUnityVector (), enlistResponse.district));
+					agent.QueueAction (10, new AIJobBuilder (agent, target, enlistResponse.position.ToUnityVector (), enlistResponse.district));
 					break;
 				case WorkType.WORK_LOGGING:
 					agent.QueueAction (10, new AIJobForester (agent, target, enlistResponse.position.ToUnityVector (), enlistResponse.district));

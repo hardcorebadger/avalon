@@ -228,6 +228,11 @@ namespace Assets.Gamelogic.Core {
 				if (!options.Contains ("damage"))
 					options.Add ("damage");
 			}
+			ConstructionVisualizer construction = g.GetComponent<ConstructionVisualizer> ();
+			if (construction != null && construction.CanControl()) {
+				if (!options.Contains ("construction"))
+					options.Add ("construction");
+			}
 		}
 			
 	}

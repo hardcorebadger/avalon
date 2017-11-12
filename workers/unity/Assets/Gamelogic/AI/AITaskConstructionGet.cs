@@ -11,14 +11,14 @@ namespace Assets.Gamelogic.Core {
 		
 		private ConstructionJobAssignment assignment;
 		private AIActionGetItem getAction;
-		private AIActionJob job;
+		private AITaskConstruction task;
 		private AIActionGoTo seek;
 		private List<int> toGet;
 		private int getResult;
 
-		public AITaskConstructionGet(CharacterController o, ConstructionJobAssignment a, AIActionJob j) : base(o,"constructiongettask") {
+		public AITaskConstructionGet(CharacterController o, ConstructionJobAssignment a, AITaskConstruction c) : base(o,"constructiongettask") {
 			assignment = a;
-			job = j;
+			task = c;
 			toGet = new List<int> ();
 		}
 
@@ -34,7 +34,7 @@ namespace Assets.Gamelogic.Core {
 			case 1:
 				// get item
 				if (getAction == null)
-					getAction = new AIActionGetItem (agent, toGet, job.district);
+					getAction = new AIActionGetItem (agent, toGet, task.district);
 				getResult = getAction.Update ();
 				if (AIAction.OnTermination (getResult))
 					state++;
@@ -42,7 +42,7 @@ namespace Assets.Gamelogic.Core {
 			case 2:
 				// walk back, return get response
 				if (seek == null)
-					seek = new AIActionGoTo (agent, job.workSite, job.workSitePosition);
+					seek = new AIActionGoTo (agent, task.constructionSite);
 				if (AIAction.OnSuccess (seek.Update ()))
 					return getResult;
 				break;

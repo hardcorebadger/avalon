@@ -181,6 +181,8 @@ namespace Assets.Gamelogic.Core {
 				QueueActionImmediate (new AIActionAttack (this, request.target).DirectCommand());
 			else if (request.command == "damage")
 				QueueActionImmediate (new AIActionDamage (this, request.target).DirectCommand());
+			else if (request.command == "construction")
+				QueueActionImmediate (new AITaskConstruction (this, request.target, characterWriter.Data.district).DirectCommand());
 			return new Nothing ();
 		}
 

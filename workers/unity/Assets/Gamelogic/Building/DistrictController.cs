@@ -283,6 +283,13 @@ namespace Assets.Gamelogic.Core {
 			);
 		}
 
+		public Option<EntityId> GetFirstConstructionSite() {
+			if (constructionList.Count > 0)
+				return constructionList.First ();
+			else
+				return new Option<EntityId> ();
+		}
+
 
 	}
 

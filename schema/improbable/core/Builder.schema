@@ -1,0 +1,20 @@
+package improbable.core;
+
+import "improbable/core/Task.schema";
+
+type BuilderJobRequest {
+}
+type BuilderJobAssignment {
+    option<EntityId> construction = 1;
+}
+type BuilderJobResult {
+    BuilderJobAssignment assignment = 1;
+    int32 response = 2;
+}
+
+component Builder {
+    id = 1023;
+        
+    command BuilderJobAssignment get_job(BuilderJobRequest);
+    command TaskResponse complete_job(BuilderJobResult);
+}
