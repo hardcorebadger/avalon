@@ -182,44 +182,44 @@ namespace Assets.Gamelogic.EntityTemplates
 			if (name == "construction-house-3d") {
 				if (!GameSettings.debugMode) {
 					req.Add (0, new ConstructionRequirement (0, 5, 0));
-					req.Add (1, new ConstructionRequirement (1, 5, 0));
+					req.Add (1, new ConstructionRequirement (0, 5, 0));
 				}
 			} else if (name == "construction-forester") {
 				if (!GameSettings.debugMode) {
 					req.Add (0, new ConstructionRequirement (0, 10, 0));
-					req.Add (1, new ConstructionRequirement (1, 10, 0));
+					req.Add (1, new ConstructionRequirement (0, 10, 0));
 				}
 				x = 3;
 			} else if (name == "construction-quarry") {
 				if (!GameSettings.debugMode) {
 					req.Add (0, new ConstructionRequirement (0, 10, 0));
-					req.Add (1, new ConstructionRequirement (1, 10, 0));
+					req.Add (1, new ConstructionRequirement (0, 10, 0));
 				}
 				x = 2;
 				z = 2;
 			} else if (name == "construction-farm") {
 				if (!GameSettings.debugMode) {
 					req.Add (0, new ConstructionRequirement (0, 5, 0));
-					req.Add (1, new ConstructionRequirement (1, 10, 0));
+					req.Add (1, new ConstructionRequirement (0, 10, 0));
 				}
 				x = 2;
 				z = 2;
 			} else if (name == "construction-stockpile") {
 				if (!GameSettings.debugMode) {
 					req.Add (0, new ConstructionRequirement (0, 10, 0));
-					req.Add (1, new ConstructionRequirement (1, 10, 0));
+					req.Add (1, new ConstructionRequirement (0, 10, 0));
 				}
 				x = 3;
 			} else if (name == "construction-settlement") {
 				if (!GameSettings.debugMode) {
 					req.Add (0, new ConstructionRequirement (0, 5, 0));
-					req.Add (1, new ConstructionRequirement (1, 5, 0));
+					req.Add (1, new ConstructionRequirement (0, 5, 0));
 				}
 				x = 4;
 				z = 4;
 			} else if (name == "construction-road") {
 				if (!GameSettings.debugMode) {
-					req.Add (1, new ConstructionRequirement (1, 3, 0));
+					req.Add (1, new ConstructionRequirement (0, 3, 0));
 				}
 			}
 				

@@ -6,6 +6,8 @@ using Improbable.Entity.Component;
 using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Assets.Gamelogic.Core
 {

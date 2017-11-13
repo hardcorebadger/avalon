@@ -23,7 +23,7 @@ namespace Assets.Gamelogic.Core {
 			SetTitle ("Construction");
 
 			content = Instantiate (constructionPrefab.gameObject, transform);
-			content.GetComponent<UIConstruction> ().Load (construction);
+//			content.GetComponent<UIConstruction> ().Load (construction);
 		}
 
 //		public void LoadInventoryFromSelection() {
