@@ -30,12 +30,12 @@ namespace Assets.Gamelogic.Core {
 			WorkSiteVisualizer workSite = target.GetComponent<WorkSiteVisualizer> ();
 			playerColor = workSite.GetOwnerColor ();
 			buttons = new GameObject[workSite.maxWorkers];
-			currentMax = workSite.workers - 1;
+			currentMax = workSite.GetWorkerCount() - 1;
 			for (int i = 0; i < workSite.maxWorkers; i++) {
 				GameObject btn = Instantiate (buttonPrefab, content.transform);
 				btn.GetComponent<Button> ().onClick.AddListener (delegate{ButtonPressed (btn);});
 				buttons [i] = btn;
-				if (i < workSite.workers)
+				if (i < workSite.GetWorkerCount())
 					btn.GetComponent<UIWorkerButton> ().Enable (playerColor);
 			}
 		}

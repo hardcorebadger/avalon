@@ -102,21 +102,7 @@ namespace Assets.Gamelogic.Core {
 
 
 			if (Input.GetKeyDown (KeyCode.I)) {
-				// select idle workers
-				DistrictVisualizer v = FindObjectOfType<DistrictVisualizer>();
-				if (v != null) {
-					List<EntityId> idles = v.GetIdleCharacters ();
-					CharacterVisualizer[] characters = FindObjectsOfType<CharacterVisualizer> ();
-					foreach (CharacterVisualizer c in characters) {
-						if (idles.Contains (c.gameObject.EntityId ())) {
-							AddSelected (c.GetComponent<CharacterVisualizer> ());
-							idles.Remove (c.gameObject.EntityId ());
-						}
-					}
-					foreach (EntityId i in idles) {
-						remoteSelected.Add (i);
-					}
-				}
+				SelectIdle ();
 			}
 
 			if (Input.GetMouseButtonDown (0)) {
@@ -203,7 +189,7 @@ namespace Assets.Gamelogic.Core {
 
 		void RightClickRMBMode() {
 			RaycastHit hit = GetHit();
-			if (selected.Count == 0) {
+			if (NothingSelected()) {
 				// info pop ups
 				if (hit.collider != null)
 					UIManager.OpenPreview (hit.collider.gameObject);
@@ -244,7 +230,7 @@ namespace Assets.Gamelogic.Core {
 			RaycastHit hit = GetHit ();
 			if (
 				Input.GetKey (KeyCode.LeftShift) || 
-				selected.Count == 0 || 
+				NothingSelected() || 
 				(hit.collider != null && hit.collider.GetComponent<CharacterVisualizer>() != null  && hit.collider.GetComponent<CharacterVisualizer>().CanControl())
 			) {
 				// If pos hits a character, select them
@@ -257,7 +243,12 @@ namespace Assets.Gamelogic.Core {
 						} else {
 							SetSelected (s);
 						}
+					} else if (NothingSelected()) {
+						WorkSiteVisualizer ws = hit.transform.GetComponent<WorkSiteVisualizer> ();
+						if (ws != null)
+							SelectWorkers (ws);
 					}
+
 				} else {
 					// deselect
 					ClearSelected ();
@@ -372,6 +363,21 @@ namespace Assets.Gamelogic.Core {
 			currentDragSelection.Clear ();
 		}
 
+
+		public void SetSelected(List<EntityId> selection) {
+			ClearSelected ();
+			CharacterVisualizer[] characters = FindObjectsOfType<CharacterVisualizer> ();
+			foreach (CharacterVisualizer c in characters) {
+				if (selection.Contains (c.gameObject.EntityId ())) {
+					AddSelected (c.GetComponent<CharacterVisualizer> ());
+					selection.Remove (c.gameObject.EntityId ());
+				}
+			}
+			foreach (EntityId i in selection) {
+				remoteSelected.Add (i);
+			}
+		}
+
 		public void SetSelected(CharacterVisualizer s) {
 			ClearSelected ();
 			if (s.CanControl ()) {
@@ -407,8 +413,12 @@ namespace Assets.Gamelogic.Core {
 			return selected.Contains (s);
 		}
 
+		public bool NothingSelected() {
+			return remoteSelected.Count == 0 && selected.Count == 0;
+		}
+
 		public Vector3 GetMedianSelectionPosition() {
-			if (selected.Count == 0)
+			if (NothingSelected())
 				return Vector3.zero;
 
 			float x = 0;
@@ -427,6 +437,16 @@ namespace Assets.Gamelogic.Core {
 			return new Vector3 (x, y);
 		}
 
+		private void SelectIdle() {
+			DistrictVisualizer v = FindObjectOfType<DistrictVisualizer>();
+			if (v != null)
+				SetSelected (v.GetIdleCharacters ());
+		}
+
+		private void SelectWorkers(WorkSiteVisualizer workSite) {
+			SetSelected (workSite.GetWorkers());
+		}
+			
 		public void OnCharacterEnabled(GameObject o) {
 			if (remoteSelected.Contains (o.EntityId ())) {
 				remoteSelected.Remove (o.EntityId ());
