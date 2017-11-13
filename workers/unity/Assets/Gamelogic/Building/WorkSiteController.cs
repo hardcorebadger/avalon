@@ -41,22 +41,30 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private EnlistResponse OnEnlist(EnlistRequest request, ICommandCallerInfo callerinfo) {
-			bool full = false;
-			if (workers.Count >= workSiteWriter.Data.maxWorkers) {
-				full = true;
+			// return no
+			if (workers.Count >= workSiteWriter.Data.maxWorkers)
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), true, buildingWriter.Data.district, new Option<Vector3d> ());
+			
+			// add to list
+			workers.Add (request.worker);
+			workSiteWriter.Send (new WorkSite.Update ()
+				.SetWorkers (workers)
+			);
+
+				// register job with district
+			if (buildingWriter.Data.district.HasValue)
+				SpatialOS.Commands.SendCommand (workSiteWriter, District.Commands.SetJob.Descriptor, new SetJobRequest(request.worker,new JobInfo(gameObject.EntityId(),workSiteWriter.Data.type)), buildingWriter.Data.district.Value);
+
+			// return no interior pos
+			if (interiorPositions.Length < workers.Count) {
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), false, buildingWriter.Data.district, new Option<Vector3d> ());
 			} else {
-				workers.Add (request.worker);
-				workSiteWriter.Send (new WorkSite.Update ()
-					.SetWorkers (workers)
-				);
-			}
-			if (full || interiorPositions.Length < workers.Count) {
-				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), full, buildingWriter.Data.district, new Option<Vector3d> ());
-			} else {
+				// return with next interior pos
 				Vector3 v = interiorPositions [workers.Count - 1].transform.position;
 				Option<Vector3d> v3d = new Option<Vector3d> (new Vector3d(v.x,v.y,v.z));
-				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), full, buildingWriter.Data.district, v3d);
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), false, buildingWriter.Data.district, v3d);
 			}
+
 		}
 
 		private UnEnlistResponse OnUnEnlist(UnEnlistRequest request, ICommandCallerInfo callerinfo) {
@@ -64,6 +72,11 @@ namespace Assets.Gamelogic.Core {
 			workSiteWriter.Send (new WorkSite.Update ()
 				.SetWorkers (workers)
 			);
+
+				// register unemployed with district
+			if (buildingWriter.Data.district.HasValue)
+				SpatialOS.Commands.SendCommand (workSiteWriter, District.Commands.SetJob.Descriptor, new SetJobRequest(request.worker,new Option<JobInfo>()), buildingWriter.Data.district.Value);
+
 			return new UnEnlistResponse ();
 		}
 
