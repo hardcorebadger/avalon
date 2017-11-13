@@ -154,7 +154,7 @@ namespace Assets.Gamelogic.Core {
 			int beds = 0;
 			List<int> acceptingItems = new List<int> ();
 
-			if (gameObject.name.Contains ("building-house-3d")) {
+			if (gameObject.name.Contains ("house-3d")) {
 				beds = 4;
 			}
 			SpatialOS.Commands.SendCommand (

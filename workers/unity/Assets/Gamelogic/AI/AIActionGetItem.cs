@@ -70,8 +70,9 @@ namespace Assets.Gamelogic.Core {
 				if (!agent.EmptyHanded ()) {
 					if (toGet.Contains (agent.GetItemInHand ()))
 						return 202;
-					else
+					else {
 						return 401;
+					}
 				}
 				if (!districtId.HasValue)
 					return 402;

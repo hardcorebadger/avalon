@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameSettings : MonoBehaviour {
 
-	public static bool debugMode = true;
+	public static bool debugMode = false;
 
 	public static float speed = 1f;
 
@@ -22,7 +22,7 @@ public class GameSettings : MonoBehaviour {
 	// if we up wheatHunger to 6, we get an extra 100 wheat per hour,
 	// which you can imagine is available to convert to logs or stone
 
-	public static float wheatHunger = 10f;
+	public static float wheatHunger = 15f;
 	public static float hungerPerHour = 500f * speed;
 
 

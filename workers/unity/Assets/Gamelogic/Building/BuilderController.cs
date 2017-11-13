@@ -30,7 +30,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private BuilderJobAssignment OnGetJob(BuilderJobRequest r , ICommandCallerInfo __) {
-			return new BuilderJobAssignment (districtController.GetFirstConstructionSite());
+			return new BuilderJobAssignment (districtController.GetRandomConstructionSite());
 		}
 
 		private TaskResponse OnCompleteJob(BuilderJobResult result, ICommandCallerInfo _) {

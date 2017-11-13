@@ -82,5 +82,6 @@ component District {
     command BuildingQueryResponse find_construction_site(FindConstructionRequest);
     command Nothing register_character(CharacterRegistrationRequest); 
     command Nothing deregister_character(CharacterDeregistrationRequest); 
+    event Nothing show_cede;
 
 }

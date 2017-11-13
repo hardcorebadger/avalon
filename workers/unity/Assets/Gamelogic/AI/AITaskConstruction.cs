@@ -94,6 +94,8 @@ namespace Assets.Gamelogic.Core {
 				if (taskResponse.response == 100) { /* keep working */
 					// restart
 					state = 0;
+					task = null;
+					taskResult = 100;
 				} else {
 					// terminate
 					return taskResponse.response;

@@ -283,9 +283,9 @@ namespace Assets.Gamelogic.Core {
 			);
 		}
 
-		public Option<EntityId> GetFirstConstructionSite() {
+		public Option<EntityId> GetRandomConstructionSite() {
 			if (constructionList.Count > 0)
-				return constructionList.First ();
+				return constructionList[Random.Range(0,constructionList.Count)];
 			else
 				return new Option<EntityId> ();
 		}
@@ -299,6 +299,7 @@ namespace Assets.Gamelogic.Core {
 			characters.Clear ();
 			districtWriter.Send (new District.Update ()
 				.SetCharacterList (characters)
+				.AddShowCede(new Nothing())
 			);
 
 
