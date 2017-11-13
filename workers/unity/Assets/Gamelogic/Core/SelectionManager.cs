@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Improbable;
 
 namespace Assets.Gamelogic.Core {
 	
@@ -28,6 +29,7 @@ namespace Assets.Gamelogic.Core {
 		private bool wasControllingMouseDown = false;
 
 		public List<CharacterVisualizer> selected;
+		private List<EntityId> remoteSelected;
 		private List<CharacterVisualizer> currentDragSelection;
 
 		private Hoverable currentHover = null;
@@ -35,6 +37,7 @@ namespace Assets.Gamelogic.Core {
 		void OnEnable() {
 			instance = this;
 			selected = new List<CharacterVisualizer> ();
+			remoteSelected = new List<EntityId> ();
 			currentDragSelection = new List<CharacterVisualizer> ();
 		}
 
@@ -97,6 +100,25 @@ namespace Assets.Gamelogic.Core {
 				}
 			}
 
+
+			if (Input.GetKeyDown (KeyCode.I)) {
+				// select idle workers
+				DistrictVisualizer v = FindObjectOfType<DistrictVisualizer>();
+				if (v != null) {
+					List<EntityId> idles = v.GetIdleCharacters ();
+					CharacterVisualizer[] characters = FindObjectsOfType<CharacterVisualizer> ();
+					foreach (CharacterVisualizer c in characters) {
+						if (idles.Contains (c.gameObject.EntityId ())) {
+							AddSelected (c.GetComponent<CharacterVisualizer> ());
+							idles.Remove (c.gameObject.EntityId ());
+						}
+					}
+					foreach (EntityId i in idles) {
+						remoteSelected.Add (i);
+					}
+				}
+			}
+
 			if (Input.GetMouseButtonDown (0)) {
 				wasControllingMouseDown = true;
 				downPos = Input.mousePosition;
@@ -121,7 +143,7 @@ namespace Assets.Gamelogic.Core {
 					StopBoxSelect ();
 			}
 
-			// If left button down
+			// If right button down
 			if (Input.GetMouseButtonDown (1)) {
 				downPos = Input.mousePosition;
 			}
@@ -186,7 +208,7 @@ namespace Assets.Gamelogic.Core {
 				if (hit.collider != null)
 					UIManager.OpenPreview (hit.collider.gameObject);
 			} else {
-				CommandCenter.InterpretClickCommand (selected, hit);
+				CommandCenter.InterpretClickCommand (selected, remoteSelected, hit);
 			}
 		}
 
@@ -241,7 +263,7 @@ namespace Assets.Gamelogic.Core {
 					ClearSelected ();
 				}
 			} else {
-				CommandCenter.InterpretClickCommand (selected, hit);
+				CommandCenter.InterpretClickCommand (selected, remoteSelected, hit);
 			}
 		}
 
@@ -266,7 +288,7 @@ namespace Assets.Gamelogic.Core {
 			Vector3 pt1 = Camera.main.ScreenToWorldPoint (startPos + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
 			Vector3 pt2 = Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
 
-			CommandCenter.InterpretRadialCommand (selected, pt1, Vector3.Distance (pt1, pt2));
+			CommandCenter.InterpretRadialCommand (selected, remoteSelected, pt1, Vector3.Distance (pt1, pt2));
 		}
 
 		private void StartBoxSelect() {
@@ -378,6 +400,7 @@ namespace Assets.Gamelogic.Core {
 					selected.Remove (s);
 			}
 			selected.Clear ();
+			remoteSelected.Clear ();
 		}
 
 		public bool IsSelected(CharacterVisualizer s) {
@@ -402,6 +425,20 @@ namespace Assets.Gamelogic.Core {
 			y /= selected.Count;
 
 			return new Vector3 (x, y);
+		}
+
+		public void OnCharacterEnabled(GameObject o) {
+			if (remoteSelected.Contains (o.EntityId ())) {
+				remoteSelected.Remove (o.EntityId ());
+				AddSelected (o.GetComponent<CharacterVisualizer>());
+			}
+		}
+
+		public void OnCharacterDisabled(GameObject o) {
+			if (selected.Contains (o.GetComponent<CharacterVisualizer>())) {
+				RemoveSelected (o.GetComponent<CharacterVisualizer> ());
+				remoteSelected.Add (o.EntityId ());
+			}
 		}
 
 	}

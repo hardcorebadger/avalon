@@ -25,8 +25,8 @@ namespace Assets.Gamelogic.Core {
 		private static bool radial;
 
 		// called from selection manager
-		public static void InterpretRadialCommand(List<CharacterVisualizer> s, Vector3 p, float r) {
-			agents = ParseControllableEntities (s);
+		public static void InterpretRadialCommand(List<CharacterVisualizer> s, List<EntityId> rs, Vector3 p, float r) {
+			agents = ParseControllableEntities (s, rs);
 			if (agents.Count == 0)
 				return;
 			
@@ -47,8 +47,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		// called from selection manager
-		public static void InterpretClickCommand(List<CharacterVisualizer> s, RaycastHit h) {
-			agents = ParseControllableEntities (s);
+		public static void InterpretClickCommand(List<CharacterVisualizer> s, List<EntityId> rs, RaycastHit h) {
+			agents = ParseControllableEntities (s, rs);
 			if (agents.Count == 0)
 				return;
 
@@ -195,14 +195,13 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
-		private static List<EntityId> ParseControllableEntities(List<CharacterVisualizer> selected) {
-			List<EntityId> ids = new List<EntityId>();
-			foreach (CharacterVisualizer cv in selected) {
+		private static List<EntityId> ParseControllableEntities(List<CharacterVisualizer> localSelected, List<EntityId> selected) {
+			foreach (CharacterVisualizer cv in localSelected) {
 				if (cv != null && cv.CanControl ()) {
-					ids.Add (cv.gameObject.EntityId());
+					selected.Add (cv.gameObject.EntityId());
 				}
 			}
-			return ids;
+			return selected;
 		}
 
 		//TODO this is the function the parses options from targets

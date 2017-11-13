@@ -64,6 +64,7 @@ namespace Assets.Gamelogic.Core {
 			characterReader.ShowHurtTriggered.Add (OnShowHurt);
 
 			listeners = new System.Collections.Generic.List<OnUIChange> ();
+			SelectionManager.instance.OnCharacterEnabled (gameObject);
 		}
 
 		void OnDisable() {
