@@ -246,6 +246,18 @@ namespace Assets.Gamelogic.Core {
 		public Nothing OnSetJob(SetJobRequest r, ICommandCallerInfo _) {
 			if (!characters.ContainsKey(r.character))
 				return new Nothing ();
+			JobInfoOption job = characters [r.character];
+
+			// this only happens for de-registering jobs
+			// basically, if we get a command to deregister from worksite A, 
+			// but the map already has worksite B registered, we don't need to do anything
+			// if thats not the case, then in the meantime we can set the job to empty
+			if (job.jobInfo.HasValue && r.currentWorksite.HasValue) {
+				if (job.jobInfo.Value.id.Id != r.currentWorksite.Value.Id)
+					return new Nothing ();
+			}
+
+			// set the job to the new one
 			characters [r.character] = new JobInfoOption (r.job);
 			districtWriter.Send (new District.Update ()
 				.SetCharacterMap(characters)

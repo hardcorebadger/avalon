@@ -6,6 +6,8 @@ using Improbable.Entity.Component;
 using Improbable.Unity;
 using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Assets.Gamelogic.Core
 {
@@ -36,6 +38,8 @@ namespace Assets.Gamelogic.Core
 			if (wasDestroyed) {
 				CreateFire ();
 			}
+
+			CalculateCompletion ();
 		}
 
 		// Update is called once per frame
@@ -46,17 +50,21 @@ namespace Assets.Gamelogic.Core
 		private void OnConstructionUpdated(Construction.Update update) {
 			if (update.requirements.HasValue) {
 				requirements = update.requirements.Value;
-				int total = requirements.Count;
-				float percentage = 0;
-				foreach(var item in requirements) {
-					percentage += ((float)item.Value.amount / (float)item.Value.required);
-				}
-				completion = percentage / total;
+				CalculateCompletion ();
 			}
 			foreach (OnUIChange c in listeners) {
 				c ();
 			}
 		} 
+
+		public void CalculateCompletion() {
+			int total = requirements.Count;
+			float percentage = 0;
+			foreach(var item in requirements) {
+				percentage += ((float)item.Value.amount / (float)item.Value.required);
+			}
+			completion = percentage / total;
+		}
 
 		public void Log() {
 			foreach (int key in requirements.Keys) {

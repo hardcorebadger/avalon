@@ -42,7 +42,7 @@ namespace Assets.Gamelogic.Core {
 					if (mostRecentAttacker.HasValue) {
 						Debug.LogWarning ("cedeing town to: " + mostRecentAttacker.Value.Id + " " + mostRecentAttackerId.Value);
 						district.Cede (mostRecentAttacker.Value, mostRecentAttackerId.Value);
-						strength = 100f;
+						strength = 1000f;
 						buildingWriter.Send (new Building.Update ()
 							.SetStrength (strength)
 						);

@@ -53,7 +53,7 @@ namespace Assets.Gamelogic.Core {
 
 				// register job with district
 			if (buildingWriter.Data.district.HasValue)
-				SpatialOS.Commands.SendCommand (workSiteWriter, District.Commands.SetJob.Descriptor, new SetJobRequest(request.worker,new JobInfo(gameObject.EntityId(),workSiteWriter.Data.type)), buildingWriter.Data.district.Value);
+				SpatialOS.Commands.SendCommand (workSiteWriter, District.Commands.SetJob.Descriptor, new SetJobRequest(request.worker,new JobInfo(gameObject.EntityId(),workSiteWriter.Data.type),new Option<EntityId>()), buildingWriter.Data.district.Value);
 
 			// return no interior pos
 			if (interiorPositions.Length < workers.Count) {
@@ -75,7 +75,7 @@ namespace Assets.Gamelogic.Core {
 
 				// register unemployed with district
 			if (buildingWriter.Data.district.HasValue)
-				SpatialOS.Commands.SendCommand (workSiteWriter, District.Commands.SetJob.Descriptor, new SetJobRequest(request.worker,new Option<JobInfo>()), buildingWriter.Data.district.Value);
+				SpatialOS.Commands.SendCommand (workSiteWriter, District.Commands.SetJob.Descriptor, new SetJobRequest(request.worker,new Option<JobInfo>(),new Option<EntityId>(gameObject.EntityId())), buildingWriter.Data.district.Value);
 
 			return new UnEnlistResponse ();
 		}

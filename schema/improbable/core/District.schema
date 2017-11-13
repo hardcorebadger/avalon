@@ -74,6 +74,7 @@ type JobInfoOption {
 type SetJobRequest {
     EntityId character = 1;
     option<JobInfo> job = 2;
+    option<EntityId> current_worksite = 3;
 }
 
 component District {
