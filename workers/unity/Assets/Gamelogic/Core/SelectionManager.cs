@@ -21,6 +21,7 @@ namespace Assets.Gamelogic.Core {
 		public static SelectionManager instance;
 
 
+		private bool isChatting = false;
 		private bool hasTriggered = false;
 		private Vector3 startPos;
 		private Vector3 downPos;
@@ -43,104 +44,114 @@ namespace Assets.Gamelogic.Core {
 
 		void Update() {
 
-			if (EventSystem.current.IsPointerOverGameObject () && !boxSelecting) {
-				wasControllingMouseDown = false;
-				return;
-			}
+			if (!isChatting) {
+				if (EventSystem.current.IsPointerOverGameObject () && !boxSelecting) {
+					wasControllingMouseDown = false;
+					return;
+				}
 
-			if (BuildingManager.isBuilding) {
-				wasControllingMouseDown = false;
-				return;
-			}
+				if (BuildingManager.isBuilding) {
+					wasControllingMouseDown = false;
+					return;
+				}
 
-			RaycastHit hit = GetHit();
-			if (hit.collider != null && hit.collider.GetComponent<Hoverable> () != null) {
-				if (hit.collider.GetComponent<Hoverable> () != currentHover) {
-					if (currentHover != null && !selected.Contains(currentHover.GetComponent<CharacterVisualizer>()))
-						currentHover.SetHovered (Hoverable.HoverState.None);
-					else if (currentHover != null && selected.Contains(currentHover.GetComponent<CharacterVisualizer>()))
-						currentHover.SetHovered (Hoverable.HoverState.Selected);
-					CharacterVisualizer c = hit.collider.GetComponent<CharacterVisualizer> ();
-					ConstructionVisualizer cons = hit.collider.GetComponent<ConstructionVisualizer> ();
+				RaycastHit hit = GetHit ();
+				if (hit.collider != null && hit.collider.GetComponent<Hoverable> () != null) {
+					if (hit.collider.GetComponent<Hoverable> () != currentHover) {
+						if (currentHover != null && !selected.Contains (currentHover.GetComponent<CharacterVisualizer> ()))
+							currentHover.SetHovered (Hoverable.HoverState.None);
+						else if (currentHover != null && selected.Contains (currentHover.GetComponent<CharacterVisualizer> ()))
+							currentHover.SetHovered (Hoverable.HoverState.Selected);
+						CharacterVisualizer c = hit.collider.GetComponent<CharacterVisualizer> ();
+						ConstructionVisualizer cons = hit.collider.GetComponent<ConstructionVisualizer> ();
 
-					if (c != null) {
-						if (c.CanControl ()) {
+						if (c != null) {
+							if (c.CanControl ()) {
+								hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
+								currentHover = hit.collider.GetComponent<Hoverable> ();
+							}
+						} else if (cons != null) {
+							if (cons.CanControl ()) {
+								hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
+								currentHover = hit.collider.GetComponent<Hoverable> ();
+							}
+
+						} else {
+
 							hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
 							currentHover = hit.collider.GetComponent<Hoverable> ();
-						}
-					} else if (cons != null) {
-						if (cons.CanControl ()) {
-							hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
-							currentHover = hit.collider.GetComponent<Hoverable> ();
-						}
-					
-					} else {
-						
-						hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
-						currentHover = hit.collider.GetComponent<Hoverable> ();
 
+						}
+					}
+				} else if (currentHover != null && !selected.Contains (currentHover.GetComponent<CharacterVisualizer> ())) {
+					currentHover.SetHovered (Hoverable.HoverState.None);
+					currentHover = null;
+				} else if (currentHover != null && selected.Contains (currentHover.GetComponent<CharacterVisualizer> ())) {
+					currentHover.SetHovered (Hoverable.HoverState.Selected);
+					currentHover = null;
+				}
+
+				if (boxSelecting)
+					UpdateBoxSelect ();
+				if (radiusSelecting)
+					UpdateRadiusSelect ();
+
+				if (leftMouseInputMode) {
+					if (Input.GetKeyDown (KeyCode.Escape)) {
+						ClearSelected ();
 					}
 				}
-			} else if (currentHover != null && !selected.Contains(currentHover.GetComponent<CharacterVisualizer>())) {
-				currentHover.SetHovered (Hoverable.HoverState.None);
-				currentHover = null;
-			} else if (currentHover != null && selected.Contains(currentHover.GetComponent<CharacterVisualizer>())) {
-				currentHover.SetHovered (Hoverable.HoverState.Selected);
-				currentHover = null;
-			}
 
-			if (boxSelecting)
-				UpdateBoxSelect ();
-			if (radiusSelecting)
-				UpdateRadiusSelect ();
+				if (Input.GetKeyDown (KeyCode.I)) {
+					SelectIdle ();
+				}
 
-			if (leftMouseInputMode) {
-				if (Input.GetKeyDown (KeyCode.Escape)) {
-					ClearSelected ();
+				if (Input.GetMouseButtonDown (0)) {
+					wasControllingMouseDown = true;
+					downPos = Input.mousePosition;
+				}
+
+				if (Input.GetMouseButton (0)) {
+					// If left button down for certain time /// Drag
+					if (!hasTriggered && Vector3.Distance (downPos, Input.mousePosition) > dragTriggerDistance && wasControllingMouseDown) {
+						StartBoxSelect ();
+						hasTriggered = true;
+					}
+				}
+
+				if (Input.GetMouseButtonUp (0)) {
+					if (leftMouseInputMode)
+						LeftClickLMBMode ();
+					else
+						LeftClickRMBMode ();
+
+					hasTriggered = false;
+					if (boxSelecting)
+						StopBoxSelect ();
+				}
+
+				// If right button down
+				if (Input.GetMouseButtonDown (1)) {
+					downPos = Input.mousePosition;
+				}
+
+				if (Input.GetMouseButtonUp (1)) {
+					if (leftMouseInputMode)
+						RightClickLMBMode ();
+					else
+						RightClickRMBMode ();
+				}
+
+				if (Input.GetKeyUp (KeyCode.Return) && !UIManager.instance.chat.isActive) {
+					isChatting = true;
+					UIManager.instance.chat.setInputEnabled (true);
+				}
+			} else {
+				if (Input.GetKeyUp (KeyCode.Return) && UIManager.instance.chat.isActive) {
+					isChatting = false;
+					UIManager.instance.chat.onInputSubmitted ();
 				}
 			}
-
-
-			if (Input.GetKeyDown (KeyCode.I)) {
-				SelectIdle ();
-			}
-
-			if (Input.GetMouseButtonDown (0)) {
-				wasControllingMouseDown = true;
-				downPos = Input.mousePosition;
-			}
-
-			if (Input.GetMouseButton (0)) {
-				// If left button down for certain time /// Drag
-				if (!hasTriggered && Vector3.Distance(downPos,Input.mousePosition) > dragTriggerDistance && wasControllingMouseDown) {
-					StartBoxSelect ();
-					hasTriggered = true;
-				}
-			}
-
-			if (Input.GetMouseButtonUp (0)) {
-				if (leftMouseInputMode)
-					LeftClickLMBMode();
-				else
-					LeftClickRMBMode();
-
-				hasTriggered = false;
-				if (boxSelecting)
-					StopBoxSelect ();
-			}
-
-			// If right button down
-			if (Input.GetMouseButtonDown (1)) {
-				downPos = Input.mousePosition;
-			}
-
-			if (Input.GetMouseButtonUp (1)) {
-				if (leftMouseInputMode)
-					RightClickLMBMode();
-				else
-					RightClickRMBMode();
-			}
-
 
 //			
 //			if (Input.GetMouseButtonDown (0)) {
@@ -459,6 +470,10 @@ namespace Assets.Gamelogic.Core {
 				RemoveSelected (o.GetComponent<CharacterVisualizer> ());
 				remoteSelected.Add (o.EntityId ());
 			}
+		}
+
+		public bool IsChatting() {
+			return isChatting;
 		}
 
 	}

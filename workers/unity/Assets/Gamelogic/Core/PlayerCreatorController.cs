@@ -24,6 +24,8 @@ namespace Assets.Gamelogic.Core
 		{
 			playerCreatorWriter.CommandReceiver.OnCreatePlayer.RegisterResponse(OnCreatePlayer);
 			playerCreatorWriter.CommandReceiver.OnDisconnectPlayer.RegisterResponse(OnDisconnectPlayer);
+			playerCreatorWriter.CommandReceiver.OnSendChat.RegisterResponse (OnSendChat);
+
 			players = playerCreatorWriter.Data.players;
 
 		}
@@ -168,7 +170,18 @@ namespace Assets.Gamelogic.Core
 			Debug.LogError("Failed to Create Entity: " + response.ErrorMessage);
 		}
 
-		
+		private void BroadcastMessage(string message, int sender = -1) {
+			foreach (int i in players.Keys) {
+				if (sender != i) {
+					SpatialOS.Commands.SendCommand(playerCreatorWriter, Player.Commands.ReceiveChat.Descriptor, new ReceiveChatRequest(message, sender), players[i].id);
+				}
+ 			}
+		}
+
+		private Nothing OnSendChat(SendChatRequest r, ICommandCallerInfo _) {
+			BroadcastMessage(r.message, r.player);
+			return new Nothing ();
+		}
 
 	}
 }

@@ -1,12 +1,18 @@
 package improbable.core;
+import "improbable/core/Nothing.schema";
 
 type Heartbeat{}
+
+type ReceiveChatRequest {
+  string message = 1; 
+  int32 player = 2; 
+} 
 
 component Player {
     id = 1003;
     EntityId creator = 1;
 
-    
-
     event Heartbeat heartbeat;    
+    
+    command Nothing receive_chat(ReceiveChatRequest); 
 }

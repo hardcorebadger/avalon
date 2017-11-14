@@ -19,9 +19,11 @@ namespace Assets.Gamelogic.Core
 
 		public static PlayerDataComponent playerDataObject;
 
-		public static Improbable.Collections.Map<int, PlayerColor> players = new Improbable.Collections.Map<int, PlayerColor> ();
+		public static Improbable.Collections.Map<int, LoginMenu.PlayerData> players = new Improbable.Collections.Map<int, LoginMenu.PlayerData> ();
 
 		public static int playerId = 1;
+		public static LoginMenu.PlayerData playerData;
+		public static EntityId playerCreator;
 
         private void Start() {
 			Bootstrap.playerDataObject = FindObjectOfType<PlayerDataComponent> ();
@@ -34,18 +36,18 @@ namespace Assets.Gamelogic.Core
             Time.fixedDeltaTime = 1.0f / SimulationSettings.FixedFramerate;
 
             // Distinguishes between when the Unity is running as a client or a server.
-            switch (SpatialOS.Configuration.WorkerPlatform)
-            {
-			case WorkerPlatform.UnityWorker:
+            switch (SpatialOS.Configuration.WorkerPlatform) {
+				case WorkerPlatform.UnityWorker:
 
-				Application.targetFrameRate = SimulationSettings.TargetServerFramerate;
-				SpatialOS.OnDisconnected += reason => Application.Quit ();
-				SpatialOS.Connect(gameObject);
+					Application.targetFrameRate = SimulationSettings.TargetServerFramerate;
+					SpatialOS.OnDisconnected += reason => Application.Quit ();
+					SpatialOS.Connect(gameObject);
 
                     break;
-                case WorkerPlatform.UnityClient:
+				case WorkerPlatform.UnityClient:
 					LoadPlayers ();
 
+					playerData = FindObjectOfType<PlayerDataComponent> ().data;
                     Application.targetFrameRate = SimulationSettings.TargetClientFramerate;
 					SpatialOS.OnConnected += OnClientConnection;
                     break;
@@ -67,7 +69,8 @@ namespace Assets.Gamelogic.Core
 			}
 
 			var playerCreatorEntityId = queryResult.Entities.First.Value.Key;
-			RequestPlayerCreation(playerCreatorEntityId);
+			playerCreator = playerCreatorEntityId;
+			RequestPlayerCreation(playerCreator);
 		}
 
 		private static void OnFailedPlayerCreatorQuery(ICommandErrorDetails _) {
@@ -102,9 +105,13 @@ namespace Assets.Gamelogic.Core
 					for (int x = 0; x < playerData.list.Count; x++) {
 						if (players.ContainsKey (playerData.list [x].id)) {
 
-							players [playerData.list [x].id] = new PlayerColor (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue);
-						} else {
-							players [playerData.list [x].id] = new PlayerColor (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue);
+							players [playerData.list [x].id] = playerData.list [x];
+							players [playerData.list [x].id].htmlColor = ColorUtility.ToHtmlStringRGBA (new Color (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue));
+
+						} else { 
+							players [playerData.list [x].id] = playerData.list [x];
+							players [playerData.list [x].id].htmlColor = ColorUtility.ToHtmlStringRGBA (new Color (playerData.list [x].red, playerData.list [x].green, playerData.list [x].blue));
+
 						}
 					}
 					SpatialOS.Connect(gameObject);
