@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameSettings : MonoBehaviour {
 
-	public static bool debugMode = false;
+	public static bool debugMode = true;
 
 	public static float speed = 1f;
 

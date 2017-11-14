@@ -29,7 +29,7 @@ public class UIChatText : MonoBehaviour {
 
 			if (alphaTimer > 0.13f) {
 				alpha -= 0.01f;
-				text.color = new Color (0, 0, 0, alpha);
+				text.color = new Color ((45f/255f), (45f/255f), (45f/255f), alpha);
 				alphaTimer = 0f;
 			}
 		}

@@ -15,18 +15,18 @@ namespace Assets.Gamelogic.Core {
 		[Require] private WorkSite.Reader workSiteReader;
 		[Require] private Owned.Reader ownedReader;
 
-		public int workers = 0;
 		public int maxWorkers = 0;
 		public Color ownerColor;
 
-		private int currentCharViz = 0;
+		private List<EntityId> workers;
 
 		void OnEnable () {
 			if (workSiteReader.HasAuthority)
 				return;
 			workSiteReader.ComponentUpdated.Add(OnWorkSiteUpdated);
-			workers = workSiteReader.Data.workers.Count;
 			maxWorkers = workSiteReader.Data.maxWorkers;
+			workers = workSiteReader.Data.workers;
+
 			ownerColor = GetOwnerColor ();
 		}
 
@@ -42,11 +42,19 @@ namespace Assets.Gamelogic.Core {
 			if (workSiteReader.HasAuthority)
 				return;
 			if (update.workers.HasValue) {
-				workers = update.workers.Value.Count;
+				workers = update.workers.Value;
 			}
 			if (update.maxWorkers.HasValue) {
 				maxWorkers = update.maxWorkers.Value; 
 			}
+		}
+
+		public int GetWorkerCount() {
+			return workers.Count;
+		}
+
+		public List<EntityId> GetWorkers() {
+			return new List<EntityId>(workers);
 		}
 	}
 

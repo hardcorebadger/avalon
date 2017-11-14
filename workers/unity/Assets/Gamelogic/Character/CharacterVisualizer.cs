@@ -64,12 +64,18 @@ namespace Assets.Gamelogic.Core {
 			characterReader.ShowHurtTriggered.Add (OnShowHurt);
 
 			listeners = new System.Collections.Generic.List<OnUIChange> ();
+
+			SelectionManager.instance.OnCharacterEnabled (gameObject);
 		}
 
 		void OnDisable() {
+			if (characterReader.HasAuthority) {
+				return;
+			}
 			positionReader.ComponentUpdated.Remove(OnPositionUpdated);
 			rotationReader.ComponentUpdated.Remove(OnRotationUpdated);
 			characterReader.ComponentUpdated.Remove(OnCharacterUpdated);
+			SelectionManager.instance.OnCharacterDisabled (gameObject);
 		}
 
 		void OnPositionUpdated(Position.Update update) {

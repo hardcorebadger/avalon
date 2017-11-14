@@ -153,7 +153,7 @@ namespace Assets.Gamelogic.Core {
 
 		public void QueueActionImmediate(AIAction a) {
 			if (a.directCommand)
-				QuitJob (true);
+				QuitJob ();
 			if (currentAction != null) {
 				currentAction.OnKill ();
 				currentAction = a;
@@ -173,10 +173,8 @@ namespace Assets.Gamelogic.Core {
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
 			if (request.command == "gather")
 				QueueActionImmediate (new AITaskGoAndGather (this, request.target).DirectCommand());
-			else if (request.command == "work") {
-				QuitJob (true);
+			else if (request.command == "work")
 				QueueActionImmediate (new AIActionWork (this, request.target).DirectCommand());
-			}
 			else if (request.command == "attack")
 				QueueActionImmediate (new AIActionAttack (this, request.target).DirectCommand());
 			else if (request.command == "damage")
@@ -187,7 +185,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnFire(Nothing request, ICommandCallerInfo callerinfo) {
-			QuitJob (true);
+			QuitJob ();
 			return new Nothing ();
 		}
 
@@ -424,6 +422,10 @@ namespace Assets.Gamelogic.Core {
 			);
 		}
 
+		public void QuitJob() {
+			QuitJob (true);
+		}
+			
 		public void QuitJob(bool clearActions) {
 			if (clearActions) {
 				if (currentAction is AIActionJob) {

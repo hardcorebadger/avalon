@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Improbable;
 
 namespace Assets.Gamelogic.Core {
 	
@@ -29,6 +30,7 @@ namespace Assets.Gamelogic.Core {
 		private bool wasControllingMouseDown = false;
 
 		public List<CharacterVisualizer> selected;
+		private List<EntityId> remoteSelected;
 		private List<CharacterVisualizer> currentDragSelection;
 
 		private Hoverable currentHover = null;
@@ -36,6 +38,7 @@ namespace Assets.Gamelogic.Core {
 		void OnEnable() {
 			instance = this;
 			selected = new List<CharacterVisualizer> ();
+			remoteSelected = new List<EntityId> ();
 			currentDragSelection = new List<CharacterVisualizer> ();
 		}
 
@@ -72,9 +75,9 @@ namespace Assets.Gamelogic.Core {
 								hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
 								currentHover = hit.collider.GetComponent<Hoverable> ();
 							}
-					
+
 						} else {
-						
+
 							hit.collider.GetComponent<Hoverable> ().SetHovered (Hoverable.HoverState.Hovered);
 							currentHover = hit.collider.GetComponent<Hoverable> ();
 
@@ -97,7 +100,10 @@ namespace Assets.Gamelogic.Core {
 					if (Input.GetKeyDown (KeyCode.Escape)) {
 						ClearSelected ();
 					}
+				}
 
+				if (Input.GetKeyDown (KeyCode.I)) {
+					SelectIdle ();
 				}
 
 				if (Input.GetMouseButtonDown (0)) {
@@ -124,7 +130,7 @@ namespace Assets.Gamelogic.Core {
 						StopBoxSelect ();
 				}
 
-				// If left button down
+				// If right button down
 				if (Input.GetMouseButtonDown (1)) {
 					downPos = Input.mousePosition;
 				}
@@ -135,15 +141,16 @@ namespace Assets.Gamelogic.Core {
 					else
 						RightClickRMBMode ();
 				}
-			}
 
-			if (Input.GetKeyUp (KeyCode.Tab) && !UIManager.instance.chat.isActive) {
-				isChatting = true;
-				UIManager.instance.chat.setInputEnabled (true);
-			}
-			if (Input.GetKeyUp (KeyCode.Return) && UIManager.instance.chat.isActive) {
-				isChatting = false;
-				UIManager.instance.chat.onInputSubmitted ();
+				if (Input.GetKeyUp (KeyCode.Return) && !UIManager.instance.chat.isActive) {
+					isChatting = true;
+					UIManager.instance.chat.setInputEnabled (true);
+				}
+			} else {
+				if (Input.GetKeyUp (KeyCode.Return) && UIManager.instance.chat.isActive) {
+					isChatting = false;
+					UIManager.instance.chat.onInputSubmitted ();
+				}
 			}
 
 //			
@@ -193,12 +200,12 @@ namespace Assets.Gamelogic.Core {
 
 		void RightClickRMBMode() {
 			RaycastHit hit = GetHit();
-			if (selected.Count == 0) {
+			if (NothingSelected()) {
 				// info pop ups
 				if (hit.collider != null)
 					UIManager.OpenPreview (hit.collider.gameObject);
 			} else {
-				CommandCenter.InterpretClickCommand (selected, hit);
+				CommandCenter.InterpretClickCommand (selected, remoteSelected, hit);
 			}
 		}
 
@@ -234,7 +241,7 @@ namespace Assets.Gamelogic.Core {
 			RaycastHit hit = GetHit ();
 			if (
 				Input.GetKey (KeyCode.LeftShift) || 
-				selected.Count == 0 || 
+				NothingSelected() || 
 				(hit.collider != null && hit.collider.GetComponent<CharacterVisualizer>() != null  && hit.collider.GetComponent<CharacterVisualizer>().CanControl())
 			) {
 				// If pos hits a character, select them
@@ -247,13 +254,18 @@ namespace Assets.Gamelogic.Core {
 						} else {
 							SetSelected (s);
 						}
+					} else if (NothingSelected()) {
+						WorkSiteVisualizer ws = hit.transform.GetComponent<WorkSiteVisualizer> ();
+						if (ws != null)
+							SelectWorkers (ws);
 					}
+
 				} else {
 					// deselect
 					ClearSelected ();
 				}
 			} else {
-				CommandCenter.InterpretClickCommand (selected, hit);
+				CommandCenter.InterpretClickCommand (selected, remoteSelected, hit);
 			}
 		}
 
@@ -278,7 +290,7 @@ namespace Assets.Gamelogic.Core {
 			Vector3 pt1 = Camera.main.ScreenToWorldPoint (startPos + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
 			Vector3 pt2 = Camera.main.ScreenToWorldPoint (Input.mousePosition + new Vector3 (0, 0, Camera.main.transform.position.z*-1));
 
-			CommandCenter.InterpretRadialCommand (selected, pt1, Vector3.Distance (pt1, pt2));
+			CommandCenter.InterpretRadialCommand (selected, remoteSelected, pt1, Vector3.Distance (pt1, pt2));
 		}
 
 		private void StartBoxSelect() {
@@ -362,6 +374,21 @@ namespace Assets.Gamelogic.Core {
 			currentDragSelection.Clear ();
 		}
 
+
+		public void SetSelected(List<EntityId> selection) {
+			ClearSelected ();
+			CharacterVisualizer[] characters = FindObjectsOfType<CharacterVisualizer> ();
+			foreach (CharacterVisualizer c in characters) {
+				if (selection.Contains (c.gameObject.EntityId ())) {
+					AddSelected (c.GetComponent<CharacterVisualizer> ());
+					selection.Remove (c.gameObject.EntityId ());
+				}
+			}
+			foreach (EntityId i in selection) {
+				remoteSelected.Add (i);
+			}
+		}
+
 		public void SetSelected(CharacterVisualizer s) {
 			ClearSelected ();
 			if (s.CanControl ()) {
@@ -390,14 +417,19 @@ namespace Assets.Gamelogic.Core {
 					selected.Remove (s);
 			}
 			selected.Clear ();
+			remoteSelected.Clear ();
 		}
 
 		public bool IsSelected(CharacterVisualizer s) {
 			return selected.Contains (s);
 		}
 
+		public bool NothingSelected() {
+			return remoteSelected.Count == 0 && selected.Count == 0;
+		}
+
 		public Vector3 GetMedianSelectionPosition() {
-			if (selected.Count == 0)
+			if (NothingSelected())
 				return Vector3.zero;
 
 			float x = 0;
@@ -414,6 +446,34 @@ namespace Assets.Gamelogic.Core {
 			y /= selected.Count;
 
 			return new Vector3 (x, y);
+		}
+
+		private void SelectIdle() {
+			DistrictVisualizer v = FindObjectOfType<DistrictVisualizer>();
+			if (v != null)
+				SetSelected (v.GetIdleCharacters ());
+		}
+
+		private void SelectWorkers(WorkSiteVisualizer workSite) {
+			SetSelected (workSite.GetWorkers());
+		}
+			
+		public void OnCharacterEnabled(GameObject o) {
+			if (remoteSelected.Contains (o.EntityId ())) {
+				remoteSelected.Remove (o.EntityId ());
+				AddSelected (o.GetComponent<CharacterVisualizer>());
+			}
+		}
+
+		public void OnCharacterDisabled(GameObject o) {
+			if (selected.Contains (o.GetComponent<CharacterVisualizer>())) {
+				RemoveSelected (o.GetComponent<CharacterVisualizer> ());
+				remoteSelected.Add (o.EntityId ());
+			}
+		}
+
+		public bool IsChatting() {
+			return isChatting;
 		}
 
 	}

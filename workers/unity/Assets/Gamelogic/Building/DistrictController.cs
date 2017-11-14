@@ -21,7 +21,7 @@ namespace Assets.Gamelogic.Core {
 		Map<int, BuildingList> storageMap;
 		Map<int, BuildingList> storageAvailabilityMap;
 		List<EntityId> constructionList;
-		List<EntityId> characters;
+		Map<EntityId, JobInfoOption> characters;
 
 		int beds;
 		float spawnTimer = -1f;
@@ -39,11 +39,12 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnFindConstructionSite.RegisterResponse (OnFindConstructionSite);
 			districtWriter.CommandReceiver.OnRegisterCharacter.RegisterResponse (OnRegisterCharacter);
 			districtWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
+			districtWriter.CommandReceiver.OnSetJob.RegisterResponse (OnSetJob);
 
 			positionMap = districtWriter.Data.positionMap;
 			storageMap = districtWriter.Data.storageMap;
 			storageAvailabilityMap = districtWriter.Data.storageAvailabilityMap;
-			characters = districtWriter.Data.characterList;
+			characters = districtWriter.Data.characterMap;
 			beds = districtWriter.Data.beds;
 			constructionList = districtWriter.Data.constructionList;
 			building = GetComponent<BuildingController> ();
@@ -73,6 +74,7 @@ namespace Assets.Gamelogic.Core {
 			districtWriter.CommandReceiver.OnRegisterCharacter.DeregisterResponse ();
 			districtWriter.CommandReceiver.OnDeregisterCharacter.DeregisterResponse ();
 
+			districtWriter.CommandReceiver.OnSetJob.DeregisterResponse ();
 
 		}
 
@@ -107,9 +109,9 @@ namespace Assets.Gamelogic.Core {
 
 			SpatialOS.Commands.SendCommand (districtWriter, PlayerOnline.Commands.RegisterCharacter.Descriptor, new CharacterPlayerRegisterRequest (characterId), owned.getOwnerObject ());
 
-			characters.Add(characterId);
+			characters.Add (characterId, new JobInfoOption (new Option<JobInfo> ()));
 			districtWriter.Send (new District.Update ()
-				.SetCharacterList(characters)
+				.SetCharacterMap(characters)
 			);
 		}
 
@@ -214,11 +216,11 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnRegisterCharacter(CharacterRegistrationRequest r, ICommandCallerInfo _) {
-			foreach (var e in r.characters) {
-				characters.Add(e);
+			foreach (var characterId in r.characters) {
+				characters.Add (characterId, new JobInfoOption (new Option<JobInfo> ()));
 			}
 			districtWriter.Send (new District.Update ()
-				.SetCharacterList(characters)
+				.SetCharacterMap(characters)
 			);
 			return new Nothing ();
 		}
@@ -228,7 +230,7 @@ namespace Assets.Gamelogic.Core {
 				characters.Remove(e);
 			}
 			districtWriter.Send (new District.Update ()
-				.SetCharacterList(characters)
+				.SetCharacterMap(characters)
 			);
 			return new Nothing ();
 		}
@@ -239,6 +241,28 @@ namespace Assets.Gamelogic.Core {
 					return new BuildingQueryResponse (new Option<EntityId>(id));
 			}
 			return new BuildingQueryResponse (new Option<EntityId>());
+		}
+
+		public Nothing OnSetJob(SetJobRequest r, ICommandCallerInfo _) {
+			if (!characters.ContainsKey(r.character))
+				return new Nothing ();
+			JobInfoOption job = characters [r.character];
+
+			// this only happens for de-registering jobs
+			// basically, if we get a command to deregister from worksite A, 
+			// but the map already has worksite B registered, we don't need to do anything
+			// if thats not the case, then in the meantime we can set the job to empty
+			if (job.jobInfo.HasValue && r.currentWorksite.HasValue) {
+				if (job.jobInfo.Value.id.Id != r.currentWorksite.Value.Id)
+					return new Nothing ();
+			}
+
+			// set the job to the new one
+			characters [r.character] = new JobInfoOption (r.job);
+			districtWriter.Send (new District.Update ()
+				.SetCharacterMap(characters)
+			);
+			return new Nothing ();
 		}
 
 		private void AddBuildingToStorageMaps(EntityId id, List<int> accepting) {
@@ -293,12 +317,12 @@ namespace Assets.Gamelogic.Core {
 		public void Cede(EntityId playerEntity, int playerId) {
 
 			// set the characters to no district
-			foreach (EntityId id in characters) {
+			foreach (EntityId id in characters.Keys) {
 				SpatialOS.Commands.SendCommand (districtWriter, Character.Commands.SetDistrict.Descriptor, new SetCharacterDistrictRequest(new Option<EntityId>()), id);
 			}
 			characters.Clear ();
 			districtWriter.Send (new District.Update ()
-				.SetCharacterList (characters)
+				.SetCharacterMap (characters)
 				.AddShowCede(new Nothing())
 			);
 
