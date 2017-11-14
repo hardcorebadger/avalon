@@ -22,6 +22,8 @@ namespace Assets.Gamelogic.Core {
 		public UIHoverWidget hoverTagWidget;
 		public Dictionary<Type,UIHoverWidget> hoverWidgetsOptions;
 
+		public UIChat chat;
+
 		public GameObject hoverContainer;
 
 		void OnEnable () {
@@ -47,6 +49,18 @@ namespace Assets.Gamelogic.Core {
 
 		public static void OpenPreview(GameObject o) {
 			Instantiate (instance.previewPrefab, instance.transform).GetComponent<UIPreviewWindow> ().Load (o);
+		}
+
+		public static void DisplayMessage(string message, int sender) { 
+			string senderName = "";
+				
+			if (sender == -1)
+				senderName = "Server";
+			else
+				senderName = Bootstrap.players [sender].username;
+
+			instance.chat.displayMessage ("<color=#"+Bootstrap.players [sender].htmlColor+">" +senderName + "</color>: " + message);
+
 		}
 
 	}

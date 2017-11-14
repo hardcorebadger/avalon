@@ -48,7 +48,7 @@ namespace Assets.Gamelogic.Core {
 			sprite = GetComponent<SpriteRenderer> ();
 			anim = GetComponent<Animator> ();
 			audioSrc = GetComponent<AudioSource> ();
-			PlayerColor c = Bootstrap.players [characterReader.Data.playerId];
+			PlayerColor c = new PlayerColor(Bootstrap.players [characterReader.Data.playerId].red, Bootstrap.players [characterReader.Data.playerId].green, Bootstrap.players [characterReader.Data.playerId].blue);
 			sprite.color = new Color(c.red, c.green, c.blue, 1f); 
 			transform.position = positionReader.Data.coords.ToVector3();
 			state = characterReader.Data.state;

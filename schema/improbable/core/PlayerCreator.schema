@@ -1,7 +1,7 @@
 package improbable.core;
 
 import "improbable/core/Owned.schema";
-
+import "improbable/core/Nothing.schema";
 
 type CreatePlayerRequest {
   int32 player_id = 1;
@@ -20,6 +20,11 @@ type PlayerInfo {
   bool online = 2;
 }
 
+type SendChatRequest {
+  string message = 1; 
+  int32 player = 2; 
+} 
+
 component PlayerCreator {
   // Component ID, unique within the project
   id = 1001;
@@ -27,5 +32,5 @@ component PlayerCreator {
   // Command the client sends to the PlayerCreator entity to request a Player entity is created
   command CreatePlayerResponse create_player(CreatePlayerRequest);
   command DisconnectPlayerResponse disconnect_player(DisconnectPlayerRequest);
-
+  command Nothing send_chat(SendChatRequest);     
 }

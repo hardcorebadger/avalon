@@ -95,6 +95,10 @@ namespace Assets.Gamelogic.Core {
 			target = null;
 		}
 
+		public static void SendChat(string message) {
+			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerCreator.Commands.SendChat.Descriptor, new SendChatRequest(message, Bootstrap.playerId), Bootstrap.playerCreator);
+		}
+
 		// depricated
 		private static void ExecuteRadialTargetedCommand(string command) {
 			foreach (EntityId id in agents) {

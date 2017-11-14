@@ -36,6 +36,7 @@ type DistrictDeregisterRequest {
   EntityId district_id = 1;
 }
 
+
 component PlayerOnline {
     id = 1006;
     int32 player_id = 1;

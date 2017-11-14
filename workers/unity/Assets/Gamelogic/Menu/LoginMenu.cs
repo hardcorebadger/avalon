@@ -162,6 +162,8 @@ namespace Assets.Gamelogic.Core {
 			public float blue;
 			public int status;
 			public string error;
+			public string htmlColor;
+		
 			public override string ToString () {
 				return string.Format ("[PlayerData: playerId={0}, username={1}, email={2}, password={3}, status={4}, error={5}, red={6}, token={7}]", id, username, email, password, status, error, red, token);
 			}

@@ -40,7 +40,6 @@ namespace Assets.Gamelogic.Core
 			playerOnlineWriter.CommandReceiver.OnDeregisterCharacter.RegisterResponse (OnDeregisterCharacter);
 			playerOnlineWriter.CommandReceiver.OnRegisterDistrict.RegisterResponse (OnRegisterDistrict);
 			playerOnlineWriter.CommandReceiver.OnDeregisterDistrict.RegisterResponse (OnDeregisterDistrict);
-
 			characters = playerOnlineWriter.Data.characters;
 			districts = playerOnlineWriter.Data.districts;
 

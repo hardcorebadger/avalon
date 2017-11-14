@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Improbable;
 using Improbable.Core;
+using Improbable.Entity.Component;
 using Improbable.Unity;
+using Improbable.Unity.Core;
 using Improbable.Unity.Visualizer;
 using UnityEngine;
 using Assets.Gamelogic.Utils;
@@ -22,6 +25,10 @@ namespace Assets.Gamelogic.Core {
 
 
 		private void OnEnable() {
+
+			playerWriter.CommandReceiver.OnReceiveChat.RegisterResponse (OnReceiveChat);
+
+
 			transform.eulerAngles = new Vector3 (30, 45, 0);
 			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatSendingIntervalSecs, SendHeartbeat));
 		}
@@ -59,6 +66,12 @@ namespace Assets.Gamelogic.Core {
 		{
 			playerWriter.Send(new Player.Update().AddHeartbeat(new Heartbeat()));
 		}
+
+		private Nothing OnReceiveChat(ReceiveChatRequest r, ICommandCallerInfo _) {
+			UIManager.DisplayMessage (r.message, r.player);
+			return new Nothing ();
+		}
+
 
 	}
 
