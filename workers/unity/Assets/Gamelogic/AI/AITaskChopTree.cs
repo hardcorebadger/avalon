@@ -74,7 +74,7 @@ namespace Assets.Gamelogic.Core {
 			case 4:
 				// put log into the inventory
 				if (give == null)
-					give = new AIActionGive (agent, job.workSite);
+					give = new AIActionGive (agent, job.district);
 				int a = give.Update ();
 				if (AIAction.OnTermination (a)) {
 					return GetResponse(chopResult, a);

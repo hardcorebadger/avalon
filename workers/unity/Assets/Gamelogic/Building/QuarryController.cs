@@ -17,21 +17,16 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private Quarry.Writer quarryWriter;
 
-		private InventoryController inventoryController;
 
 		void OnEnable () {
 			quarryWriter.CommandReceiver.OnCompleteQuarryJob.RegisterResponse (OnCompleteJob);
-			inventoryController = GetComponent<InventoryController> ();
 		}
 
 		void Update() {
-
 		}
 
 		private Nothing OnCompleteJob(Nothing n, ICommandCallerInfo _) {
-
-			inventoryController.Insert (1, 1);
-
+			SpatialOS.Commands.SendCommand (quarryWriter, Inventory.Commands.Give.Descriptor, new ItemStack (1, 1), GetComponent<BuildingController> ().district.Value);
 			return new Nothing ();
 		}
 

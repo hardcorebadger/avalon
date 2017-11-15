@@ -31,7 +31,7 @@ namespace Assets.Gamelogic.Core {
 		private AIAction task;
 		private int taskResult = 100;
 
-		public AIJobBuilder(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d) : base(o, w, p, d, new Option<Vector3>(),"builder") {
+		public AIJobBuilder(CharacterController o, EntityId w, Vector3 p, EntityId d) : base(o, w, p, d, new Option<Vector3>(),"builder") {
 		}
 
 		public override int Update(){

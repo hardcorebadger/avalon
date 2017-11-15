@@ -82,7 +82,6 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 50), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-quarry") {
 				return EntityBuilder.Begin ()
@@ -94,7 +93,6 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_MINING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Quarry.Data (), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 50), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-stockpile") {
 				Improbable.Collections.Map<int,int> initialQuotas = new Improbable.Collections.Map<int,int> ();
@@ -108,7 +106,6 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_STORAGE, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Storage.Data (sourcing, initialQuotas), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 50), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-farm") {
 				return EntityBuilder.Begin ()
@@ -120,12 +117,9 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_FARMING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Farm.Data (), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new Inventory.Data (new Improbable.Collections.Map<int,int> (), 50), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-settlement") {
 				Map<EntityId, Vector3d> p = new Map<EntityId, Vector3d> ();
-				Map<int, BuildingList> s = new Map<int, BuildingList> ();
-				Map<int, BuildingList> sa = new Map<int, BuildingList> ();
 				p.Add (district.Value, new Vector3d (pos.x, pos.y, pos.z));
 				return EntityBuilder.Begin ()
 					.AddPositionComponent (pos, CommonRequirementSets.PhysicsOnly)
@@ -133,10 +127,11 @@ namespace Assets.Gamelogic.EntityTemplates
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
 					.AddComponent (new Building.Data (3, 4, 4, 1000F, district, GameSettings.settlementBeds), CommonRequirementSets.PhysicsOnly)
-					.AddComponent (new District.Data (p, s, sa, 0, new Improbable.Collections.Map<EntityId, JobInfoOption> (), new Improbable.Collections.List<EntityId> ()), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new District.Data (p, 0, new Improbable.Collections.Map<EntityId, JobInfoOption> (), new Improbable.Collections.List<EntityId> ()), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Builder.Data (), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Inventory.Data (GameSettings.startingInventory, 200), CommonRequirementSets.PhysicsOnly)
 					.Build ();
 			} else if (name == "building-house-3d") {
 

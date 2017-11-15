@@ -16,23 +16,19 @@ namespace Assets.Gamelogic.Core {
 	public class ForesterController : MonoBehaviour {
 
 		[Require] private Forester.Writer foresterWriter;
-		[Require] private Inventory.Reader inventoryReader;
+
 		public float localTreeRefreshRate = 60f;
 		// doesnt work yet
 		public int maxTrees = 100;
 		public int minTrees = 10;
 		private float timer = -1f;
 		private List<EntityId> localTrees;
-		private int currentLogs = 0;
 		private bool treeDensitySatisfied = false;
-		private bool notAcceptingItems = false;
 
 		void OnEnable () {
 			foresterWriter.CommandReceiver.OnGetJob.RegisterResponse (OnGetJob);
 			foresterWriter.CommandReceiver.OnCompleteJob.RegisterResponse (OnCompleteJob);
-			inventoryReader.ComponentUpdated.Add (OnInventoryUpdate);
 			RefreshLocalTrees ();
-			currentLogs = InventoryController.GetTotal (inventoryReader.Data);
 		}
 		
 		void OnDisable () {
@@ -79,13 +75,8 @@ namespace Assets.Gamelogic.Core {
 
 		private ForesterJobAssignment OnGetJob(Nothing n, ICommandCallerInfo _) {
 			// basically "if you need to replant or the thing is full so be proactive why dont ya"
-			if (localTrees.Count < minTrees || currentLogs >= inventoryReader.Data.max) {
-				if (!treeDensitySatisfied)
-					return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> (GetNewTreePlantPosition ()));
-				else {
-					Debug.LogWarning (localTrees.Count + " " + minTrees + " " + maxTrees + " " + treeDensitySatisfied);
-					return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> ());
-				}
+			if (localTrees.Count < minTrees) {
+				return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> (GetNewTreePlantPosition ()));
 			} else {
 				EntityId id = localTrees [0];
 				localTrees.RemoveAt (0);
@@ -95,17 +86,6 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnCompleteJob(ForesterJobResult r, ICommandCallerInfo _) {
 			return new Nothing ();
-		}
-
-		private void OnInventoryUpdate(Inventory.Update u) {
-			if (u.inventory.HasValue) {
-
-				if (!u.inventory.Value.ContainsKey (0)) {
-					currentLogs = 0;
-					return;
-				}
-				currentLogs = u.inventory.Value[0];
-			}
 		}
 
 		private Vector3d GetNewTreePlantPosition() {

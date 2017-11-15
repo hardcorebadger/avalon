@@ -31,7 +31,7 @@ namespace Assets.Gamelogic.Core {
 		private AIActionWait wait;
 		Vector3 interiorPositon;
 
-		public AIJobQuarry(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d, dp,"quarry") {
+		public AIJobQuarry(CharacterController o, EntityId w, Vector3 p, EntityId d, Vector3 ip, Vector3 dp) : base(o, w, p, d, dp,"quarry") {
 			interiorPositon = ip;
 		}
 

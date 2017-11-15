@@ -1,12 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Improbable.Collections;
 using UnityEngine;
 
 public class GameSettings : MonoBehaviour {
 
-	public static bool debugMode = true;
-	public static int initialCharacters = 1;
-	public static int settlementBeds = 1;
+	public static bool debugMode = false;
+	public static int initialCharacters = 4;
+	public static int settlementBeds = 4;
+
+	public static Improbable.Collections.Map<int,int> startingInventory = new Improbable.Collections.Map<int,int> () {
+		{0, 20},
+		{1, 20},
+		{2, 20}
+	};
 
 	public static float speed = 1f;
 

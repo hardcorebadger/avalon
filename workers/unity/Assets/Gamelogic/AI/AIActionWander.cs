@@ -41,21 +41,18 @@ namespace Assets.Gamelogic.Core {
 		public override int Update(){
 
 			if (shouldRespond != 100) {
-				Debug.LogWarning ("error");
 				return shouldRespond;
 			}
 			
 			if (state > 1) {
 				time += Time.deltaTime;
 				if (time > duration) {
-					Debug.LogWarning ("done wandering");
 					return 200;
 				}
 			}
 
 			switch (state) {
 			case -2:
-				Debug.LogWarning ("req");
 				// query for position
 				var entityQuery = Query.HasEntityId(pivotEntity).ReturnComponents(Position.ComponentId);
 				SpatialOS.WorkerCommands.SendQuery(entityQuery)
@@ -68,7 +65,6 @@ namespace Assets.Gamelogic.Core {
 				break;
 			// initial wait
 			case 0:
-				Debug.LogWarning ("wait init");
 				subAction = new AIActionWait (agent, 30f);
 				state++;
 				break;
@@ -79,7 +75,6 @@ namespace Assets.Gamelogic.Core {
 			//LOOP go somewhere
 			case 2:
 				Vector3 v = GetRandomLocation ();
-				Debug.LogWarning ("walk: " + v);
 				subAction = new AIActionGoTo (agent, GetRandomLocation ());
 				state++;
 				break;
@@ -89,7 +84,6 @@ namespace Assets.Gamelogic.Core {
 				break;
 			// hang there a bit
 			case 4:
-				Debug.LogWarning ("wait");
 				subAction = new AIActionWait (agent, Random.Range(5f,30f));
 				state++;
 				break;

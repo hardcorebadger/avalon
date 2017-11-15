@@ -121,7 +121,6 @@ namespace Assets.Gamelogic.Core {
 
 		private void UpdateAI() {
 			if (currentAction == null) {
-				Debug.LogWarning ("start wandering");
 				if (district.HasValue)
 					currentAction = new AIActionWander (this, 60f, district.Value, 60f);
 				else
@@ -137,7 +136,6 @@ namespace Assets.Gamelogic.Core {
 				currentAction = newAction;
 				if (currentAction == null)
 					UpdateAI ();
-				Debug.LogWarning (currentAction.name);
 			}
 		}
 

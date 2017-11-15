@@ -43,11 +43,9 @@ namespace Assets.Gamelogic.Core {
 
 			switch (state) {
 			case 0:
-				if (getItem == null) {
-					List<int> i = new List<int> ();
-					i.Add (2);
-					getItem = new AIActionGetItem (agent, i, agent.district);
-				}
+				if (getItem == null)
+					getItem = new AIActionGetItem (agent, 2, agent.district);
+
 				int responseCode = getItem.Update ();
 				if (AIAction.OnSuccess (responseCode)) {
 					// has food item!

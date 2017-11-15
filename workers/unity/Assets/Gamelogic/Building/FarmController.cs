@@ -17,22 +17,15 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private Farm.Writer farmWriter;
 
-		private InventoryController inventoryController;
-
 		void OnEnable () {
 			farmWriter.CommandReceiver.OnCompleteFarmJob.RegisterResponse (OnCompleteJob);
-
-			inventoryController = GetComponent<InventoryController> ();
 		}
 
 		void Update() {
-
 		}
 
 		private Nothing OnCompleteJob(Nothing n, ICommandCallerInfo _) {
-
-			inventoryController.Insert (2, 1);
-
+			SpatialOS.Commands.SendCommand (farmWriter, Inventory.Commands.Give.Descriptor, new ItemStack (2, 1), GetComponent<BuildingController> ().district.Value);
 			return new Nothing ();
 		}
 

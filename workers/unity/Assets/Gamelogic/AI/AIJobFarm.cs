@@ -31,7 +31,7 @@ namespace Assets.Gamelogic.Core {
 		private AIActionWait wait;
 		Vector3 interiorPositon;
 
-		public AIJobFarm(CharacterController o, EntityId w, Vector3 p, Option<EntityId> d, Vector3 ip, Vector3 dp) : base(o, w, p, d, dp ,"farm") {
+		public AIJobFarm(CharacterController o, EntityId w, Vector3 p, EntityId d, Vector3 ip, Vector3 dp) : base(o, w, p, d, dp ,"farm") {
 			interiorPositon = ip;
 		}
 

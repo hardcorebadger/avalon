@@ -8,7 +8,7 @@ type EnlistResponse {
     WorkType work_type = 1;
     Vector3d position = 2;
     bool full = 4;  
-    option<EntityId> district = 5;
+    EntityId district = 5;
     option<Vector3d> interior_position = 6;
 }
 

@@ -43,7 +43,7 @@ namespace Assets.Gamelogic.Core {
 		private EnlistResponse OnEnlist(EnlistRequest request, ICommandCallerInfo callerinfo) {
 			// return no
 			if (workers.Count >= workSiteWriter.Data.maxWorkers)
-				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), true, buildingWriter.Data.district, new Option<Vector3d> ());
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), true, buildingWriter.Data.district.Value, new Option<Vector3d> ());
 			
 			// add to list
 			workers.Add (request.worker);
@@ -57,12 +57,12 @@ namespace Assets.Gamelogic.Core {
 
 			// return no interior pos
 			if (interiorPositions.Length < workers.Count) {
-				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), false, buildingWriter.Data.district, new Option<Vector3d> ());
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), false, buildingWriter.Data.district.Value, new Option<Vector3d> ());
 			} else {
 				// return with next interior pos
 				Vector3 v = interiorPositions [workers.Count - 1].transform.position;
 				Option<Vector3d> v3d = new Option<Vector3d> (new Vector3d(v.x,v.y,v.z));
-				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), false, buildingWriter.Data.district, v3d);
+				return new EnlistResponse (workSiteWriter.Data.type, new Improbable.Vector3d (building.door.position.x, building.door.position.y, building.door.position.z), false, buildingWriter.Data.district.Value, v3d);
 			}
 
 		}

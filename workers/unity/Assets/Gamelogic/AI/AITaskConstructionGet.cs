@@ -13,13 +13,12 @@ namespace Assets.Gamelogic.Core {
 		private AIActionGetItem getAction;
 		private AITaskConstruction task;
 		private AIActionGoTo seek;
-		private List<int> toGet;
+		private int toGet;
 		private int getResult;
 
 		public AITaskConstructionGet(CharacterController o, ConstructionJobAssignment a, AITaskConstruction c) : base(o,"constructiongettask") {
 			assignment = a;
 			task = c;
-			toGet = new List<int> ();
 		}
 
 		public override int Update(){
@@ -28,7 +27,7 @@ namespace Assets.Gamelogic.Core {
 				//set up
 				if (!assignment.toGet.HasValue)
 					return 203;
-				toGet.Add (assignment.toGet.Value);
+				toGet = assignment.toGet.Value;
 				state++;
 				break;
 			case 1:

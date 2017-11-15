@@ -35,23 +35,13 @@ type StorageUpdateRequest {
 }
 
 type ItemFindRequest {
-    list<int32> ids = 1;
+    int32 id = 1;
     option<EntityId> asker = 2;
 }
 
 type ItemFindResponse {
-    int32 id = 1;
-    option<EntityId> storage = 2;
-    Vector3d position = 3;
-}
-
-type ItemStorageRequest {
-    int32 id = 1;
-}
-
-type ItemStorageResponse {
-    option<EntityId> storage = 2;
-    Vector3d position = 3;
+    option<EntityId> building = 2;
+    option<Vector3d> position = 3;
 }
 
 type BuildingQueryResponse {
@@ -81,24 +71,19 @@ component District {
     id = 1020;
     
     map<EntityId, Vector3d> position_map = 1;
-    map<int32, BuildingList> storage_map = 2;
-    map<int32, BuildingList> storage_availability_map = 3;
     int32 beds = 4;
     map<EntityId, JobInfoOption> character_map = 5; 
     list<EntityId> construction_list = 6; 
    
     command Nothing register_building(BuildingRegistrationRequest);
     command Nothing deregister_building(BuildingDeregistrationRequest);
-    command Nothing storage_update_has(StorageUpdateRequest);
-    command Nothing storage_update_out(StorageUpdateRequest);
-    command Nothing storage_update_accepting(StorageUpdateRequest);
-    command Nothing storage_update_not_accepting(StorageUpdateRequest);
-    command ItemFindResponse find_any_item(ItemFindRequest);
-    command ItemStorageResponse find_item_storage(ItemStorageRequest);
-    command BuildingQueryResponse find_construction_site(FindConstructionRequest);
     command Nothing register_character(CharacterRegistrationRequest); 
     command Nothing deregister_character(CharacterDeregistrationRequest);
     command Nothing set_job(SetJobRequest); 
+
+    command ItemFindResponse find_item_get(ItemFindRequest);
+    command ItemFindResponse find_item_put(ItemFindRequest);
+
     event Nothing show_cede;
 
 }

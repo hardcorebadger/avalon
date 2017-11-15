@@ -54,22 +54,6 @@ namespace Assets.Gamelogic.Core {
 			return new TakeResponse (Drop(ToDictionary(itemStackList)));
 		}
 
-		private void SendDistrictStorageUpdateHas(int id) {
-			if (!buildingWriter.Data.district.HasValue)
-				return;
-
-			SpatialOS.Commands.SendCommand (buildingWriter, District.Commands.StorageUpdateHas.Descriptor, new StorageUpdateRequest (gameObject.EntityId (), id), buildingWriter.Data.district.Value);
-			
-		}
-
-		private void SendDistrictStorageUpdateOut(int id) {
-			if (!buildingWriter.Data.district.HasValue)
-				return;
-
-			SpatialOS.Commands.SendCommand (buildingWriter, District.Commands.StorageUpdateOut.Descriptor, new StorageUpdateRequest (gameObject.EntityId (), id), buildingWriter.Data.district.Value);
-		
-		}
-
 		private void UnwrapComponentInventory() {
 			foreach (int key in inventoryWriter.Data.inventory.Keys) {
 				int val = inventoryWriter.Data.inventory[key];
@@ -114,17 +98,15 @@ namespace Assets.Gamelogic.Core {
 
 		public bool Insert(int id, int amount) {
 			
-			if (!CanHold(id,amount)) 
+			if (!CanHold(amount)) 
 				return false;
 			
 
 			int val = 0;
 			items.TryGetValue (id, out val);
-			bool newItem = val == 0;
 			val += amount;
 			items [id] = val;
-			if (newItem)
-				SendDistrictStorageUpdateHas (id);
+
 			SendInventoryUpdate ();
 			return true;
 		}
@@ -147,10 +129,9 @@ namespace Assets.Gamelogic.Core {
 			if (amount < 0)
 				return false;
 			
-			if (amount == 0) {
+			if (amount == 0)
 				items.Remove (i);
-				SendDistrictStorageUpdateOut (i);
-			} else
+			else
 				items [i] = amount;
 
 			SendInventoryUpdate ();
@@ -183,8 +164,20 @@ namespace Assets.Gamelogic.Core {
 			return true;
 		}
 
-		public bool CanHold(int id, int amount) {
-			return (GetTotal () + amount <= maxItems);
+		public bool Full() {
+			return maxItems == GetTotal ();
+		}
+
+		public bool HasRoom() {
+			return !Full();
+		}
+
+		public bool HasItem(int id) {
+			return items.ContainsKey (id) && items[id] > 0;
+		}
+
+		public bool CanHold(int amount) {
+			return amount <= maxItems - GetTotal ();
 		}
 
 		public ItemStackList GetItemStackList() {
