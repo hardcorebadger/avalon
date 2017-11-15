@@ -60,12 +60,17 @@ namespace Assets.Gamelogic.Core
 					if (player.status != 200) {
 						//failed
 						Debug.LogError ("Bad Login!");
-					} else if (!players.ContainsKey(player.id)) {
-						FirstLogin (callerInfo.CallerWorkerId, player.id, Vector3.zero);
-
 					} else {
-						// Find the player
-						ReturningPlayer (callerInfo.CallerWorkerId, player.id);
+
+						if (!players.ContainsKey (player.id)) {
+							FirstLogin (callerInfo.CallerWorkerId, player.id, Vector3.zero);
+
+						} else {
+							// Find the player
+							ReturningPlayer (callerInfo.CallerWorkerId, player.id);
+						}
+
+						BroadcastNotification ("[[" + player.id + "]] has logged in!");
 					}
 				}
 			} else {
@@ -96,6 +101,9 @@ namespace Assets.Gamelogic.Core
 			playerCreatorWriter.Send(new PlayerCreator.Update()
 				.SetPlayers(players)
 			);
+
+			BroadcastNotification ("[[" + i.id + "]] has logged out!");
+
 			return new DisconnectPlayerResponse();
 		}
 
@@ -177,6 +185,13 @@ namespace Assets.Gamelogic.Core
 				}
  			}
 		}
+
+		private void BroadcastNotification(string message) {
+			foreach (int i in players.Keys) {
+					SpatialOS.Commands.SendCommand(playerCreatorWriter, Player.Commands.ReceiveNotification.Descriptor, new ReceiveNotificationRequest(message, new Option<EntityId>(), new Option<Vector3d>()), players[i].id);
+			}
+		}
+
 
 		private Nothing OnSendChat(SendChatRequest r, ICommandCallerInfo _) {
 			BroadcastMessage(r.message, r.player);

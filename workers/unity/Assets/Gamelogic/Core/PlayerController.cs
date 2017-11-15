@@ -27,7 +27,7 @@ namespace Assets.Gamelogic.Core {
 		private void OnEnable() {
 
 			playerWriter.CommandReceiver.OnReceiveChat.RegisterResponse (OnReceiveChat);
-
+			playerWriter.CommandReceiver.OnReceiveNotification.RegisterResponse (OnReceiveNotification);
 
 			transform.eulerAngles = new Vector3 (30, 45, 0);
 			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatSendingIntervalSecs, SendHeartbeat));
@@ -71,6 +71,13 @@ namespace Assets.Gamelogic.Core {
 
 		private Nothing OnReceiveChat(ReceiveChatRequest r, ICommandCallerInfo _) {
 			UIManager.DisplayMessage (r.message, r.player);
+			return new Nothing ();
+		}
+
+		private Nothing OnReceiveNotification(ReceiveNotificationRequest r, ICommandCallerInfo _) {
+			UIManager.DisplayNotification (r.message);
+			//trigger notification visual on r.entity
+
 			return new Nothing ();
 		}
 

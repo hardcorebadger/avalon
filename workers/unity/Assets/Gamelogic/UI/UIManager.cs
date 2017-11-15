@@ -52,16 +52,22 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public static void DisplayMessage(string message, int sender) { 
-			string senderName = "";
 				
 			if (sender == -1)
-				senderName = "Server";
+				instance.chat.displayMessage (message);
 			else
-				senderName = Bootstrap.players [sender].username;
+				instance.chat.displayMessage ("<color=#"+Bootstrap.players [sender].htmlColor+">" + Bootstrap.players [sender].username + "</color>: " + message);
 
-			instance.chat.displayMessage ("<color=#"+Bootstrap.players [sender].htmlColor+">" +senderName + "</color>: " + message);
 
 		}
+			
+		public static void DisplayNotification(string message) { 
+
+			instance.chat.displayNotification (message);
+	
+
+		}
+
 
 	}
 

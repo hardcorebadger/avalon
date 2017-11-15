@@ -107,6 +107,8 @@ namespace Assets.Gamelogic.Core {
 
 		public void RegisterSpawnedCharacter(EntityId characterId) {
 
+			SpatialOS.Commands.SendCommand (districtWriter, Player.Commands.ReceiveNotification.Descriptor, new ReceiveNotificationRequest ("A new worker has spawned!", new Option<EntityId>(characterId), new Option<Vector3d>()), owned.getOwnerObject ());
+
 			SpatialOS.Commands.SendCommand (districtWriter, PlayerOnline.Commands.RegisterCharacter.Descriptor, new CharacterPlayerRegisterRequest (characterId), owned.getOwnerObject ());
 
 			characters.Add (characterId, new JobInfoOption (new Option<JobInfo> ()));

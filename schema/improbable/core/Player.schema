@@ -1,11 +1,19 @@
 package improbable.core;
 import "improbable/core/Nothing.schema";
+import "improbable/vector3.schema";
 
 type Heartbeat{}
 
 type ReceiveChatRequest {
   string message = 1; 
   int32 player = 2; 
+} 
+
+type ReceiveNotificationRequest {
+  string message = 1; 
+  option<EntityId> entity = 2;
+  option<Vector3d> position = 3;
+  
 } 
 
 component Player {
@@ -15,4 +23,6 @@ component Player {
     event Heartbeat heartbeat;    
     
     command Nothing receive_chat(ReceiveChatRequest); 
+    command Nothing receive_notification(ReceiveNotificationRequest); 
+
 }
