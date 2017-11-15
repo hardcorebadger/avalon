@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameSettings : MonoBehaviour {
 
 	public static bool debugMode = true;
+	public static int initialCharacters = 1;
+	public static int settlementBeds = 1;
 
 	public static float speed = 1f;
 

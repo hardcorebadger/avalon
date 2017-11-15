@@ -120,16 +120,24 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void UpdateAI() {
-			if (currentAction == null)
+			if (currentAction == null) {
+				Debug.LogWarning ("start wandering");
+				if (district.HasValue)
+					currentAction = new AIActionWander (this, 60f, district.Value, 60f);
+				else
+					currentAction = new AIActionWander (this, 60f, transform.position, 60f);
 				return;
-			
+			}
+
 			if (AIAction.OnTermination (currentAction.Update ())) {
 				AIAction newAction = actionQueue.Dequeue ();
 				if (indoors && !(newAction is AIActionJob)) {
 					SetIndoors (false, new Option<Vector3>());
 				}
 				currentAction = newAction;
-
+				if (currentAction == null)
+					UpdateAI ();
+				Debug.LogWarning (currentAction.name);
 			}
 		}
 
