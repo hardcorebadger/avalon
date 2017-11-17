@@ -51,6 +51,13 @@ namespace Assets.Gamelogic.Core {
 				Debug.Log (Item.GetName (key) + " " + val);
 			}
 		}
+
+		public int GetAmount(int id) {
+			if (!items.ContainsKey (id))
+				return 0;
+			return items [id];
+		}
+
 	}
 
 }

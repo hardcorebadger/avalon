@@ -67,13 +67,19 @@ type SetJobRequest {
     option<EntityId> current_worksite = 3;
 }
 
+type ItemTrend {
+    int32 previous_amount = 1;
+    int32 current_trend = 2;
+}
+
 component District {
     id = 1020;
     
     map<EntityId, Vector3d> position_map = 1;
-    int32 beds = 4;
-    map<EntityId, JobInfoOption> character_map = 5; 
-    list<EntityId> construction_list = 6; 
+    int32 beds = 2;
+    map<EntityId, JobInfoOption> character_map = 3; 
+    list<EntityId> construction_list = 4; 
+    map<int32,ItemTrend> item_trends = 5;
    
     command Nothing register_building(BuildingRegistrationRequest);
     command Nothing deregister_building(BuildingDeregistrationRequest);

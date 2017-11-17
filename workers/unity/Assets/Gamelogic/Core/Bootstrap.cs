@@ -24,6 +24,7 @@ namespace Assets.Gamelogic.Core
 		public static int playerId = 1;
 		public static LoginMenu.PlayerData playerData;
 		public static EntityId playerCreator;
+		public static GameObject playerObject;
 
         private void Start() {
 			Bootstrap.playerDataObject = FindObjectOfType<PlayerDataComponent> ();
@@ -121,6 +122,11 @@ namespace Assets.Gamelogic.Core
 				Debug.LogWarning(_w.error);
 
 			}
+		}
+
+		public static void SetPlayerObject(PlayerController p) {
+			playerObject = p.gameObject;
+			FindObjectOfType<UINavbar> ().OnPlayerInitialized ();
 		}
 
 		[System.Serializable]

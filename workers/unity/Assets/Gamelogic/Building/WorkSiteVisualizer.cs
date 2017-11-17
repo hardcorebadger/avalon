@@ -16,7 +16,6 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Owned.Reader ownedReader;
 
 		public int maxWorkers = 0;
-		public Color ownerColor;
 
 		private List<EntityId> workers;
 
@@ -27,11 +26,6 @@ namespace Assets.Gamelogic.Core {
 			maxWorkers = workSiteReader.Data.maxWorkers;
 			workers = workSiteReader.Data.workers;
 
-			ownerColor = GetOwnerColor ();
-		}
-
-		public Color GetOwnerColor() {
-			return new Color (Bootstrap.players [ownedReader.Data.owner].red, Bootstrap.players [ownedReader.Data.owner].green, Bootstrap.players [ownedReader.Data.owner].blue);
 		}
 
 		void OnDisable () {

@@ -13,41 +13,45 @@ using Improbable.Entity;
 using Improbable.Unity.Core.EntityQueries;
 using Improbable.Collections;
 
-public class OwnedController : MonoBehaviour {
+namespace Assets.Gamelogic.Core {
 
-	[Require] private Owned.Writer ownedWriter;
+	public class OwnedController : MonoBehaviour {
+
+		[Require] private Owned.Writer ownedWriter;
 
 
-	// Use this for initialization
-	void OnEnable () {
-		ownedWriter.CommandReceiver.OnSetOwner.RegisterResponse(OnSetOwner);
+		// Use this for initialization
+		void OnEnable () {
+			ownedWriter.CommandReceiver.OnSetOwner.RegisterResponse(OnSetOwner);
 
-	}
+		}
 
-	private void OnDisable()
-	{
-		ownedWriter.CommandReceiver.OnSetOwner.DeregisterResponse();
-	}
+		private void OnDisable()
+		{
+			ownedWriter.CommandReceiver.OnSetOwner.DeregisterResponse();
+		}
 
-	// Update is called once per frame
-	void Update () {
-		
-	}
+		// Update is called once per frame
+		void Update () {
+			
+		}
 
-	public int getOwner() {
-		return ownedWriter.Data.owner;
-	}
+		public int getOwner() {
+			return ownedWriter.Data.owner;
+		}
 
-	public EntityId getOwnerObject() {
-		return ownedWriter.Data.player;
-	}
+		public EntityId getOwnerObject() {
+			return ownedWriter.Data.player;
+		}
 
-	private OwnResponse OnSetOwner(OwnRequest request, ICommandCallerInfo callerinfo) {
-		ownedWriter.Send (new Owned.Update ()
-			.SetOwner (request.owner)
-			.SetPlayer (request.player)
-		);
-		return new OwnResponse (true);
+		private OwnResponse OnSetOwner(OwnRequest request, ICommandCallerInfo callerinfo) {
+			ownedWriter.Send (new Owned.Update ()
+				.SetOwner (request.owner)
+				.SetPlayer (request.player)
+			);
+			return new OwnResponse (true);
+		}
+
 	}
 
 }

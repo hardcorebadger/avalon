@@ -1,6 +1,5 @@
 package improbable.core;
 
-import "improbable/core/Owned.schema";
 import "improbable/core/Nothing.schema";
 
 type CreatePlayerRequest {

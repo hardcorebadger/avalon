@@ -14,6 +14,7 @@ namespace Assets.Gamelogic.Core {
 		
 		[Require] private District.Writer districtWriter;
 		[Require] private Building.Writer buildingWriter;
+		[Require] private Inventory.Writer inventoryWriter;
 
 		public GameObject spawn;
 
@@ -53,6 +54,8 @@ namespace Assets.Gamelogic.Core {
 					);
 				}
 			}
+
+			StartCoroutine (ItemTrendUpdate());
 		}
 
 		void OnDisable() {
@@ -70,30 +73,45 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void Update() {
-
-			if (districtWriter.HasAuthority) {
-
-				spawnTimer += Time.deltaTime;
-
-				if (spawnTimer >= 60f) {
-					if (characters.Count < beds) {
-						SpatialOS.Commands.ReserveEntityId (districtWriter)
-							.OnSuccess (result => SpawnCharacterEntity (result.ReservedEntityId));
-					}
-					spawnTimer = 0F;
+			spawnTimer += Time.deltaTime;
+			if (spawnTimer >= 60f) {
+				if (characters.Count < beds) {
+					SpatialOS.Commands.ReserveEntityId (districtWriter)
+						.OnSuccess (result => SpawnCharacterEntity (result.ReservedEntityId));
 				}
-
-
+				spawnTimer = 0F;
 			}
+		}
 
+		private System.Collections.IEnumerator ItemTrendUpdate() {
+			while (enabled) {
+				Map<int, int> inventory = inventoryWriter.Data.inventory;
+				Map<int, ItemTrend> trends = districtWriter.Data.itemTrends;
+				foreach (int id in inventory.Keys) {
+					if (!trends.ContainsKey (id))
+						trends.Add (id, new ItemTrend (inventory[id], 0));
+					else {
+						ItemTrend t = trends [id];
+						if (t.currentTrend == 0)
+							t.currentTrend = inventory [id] - t.previousAmount;
+						else {
+							float f = ((inventory [id] - t.previousAmount) * 80f + t.currentTrend * 20f);
+							t.currentTrend = Mathf.RoundToInt (f/100f);
+						}
+						t.previousAmount = inventory [id];
+						trends [id] = t;
+					}
+				}
+				districtWriter.Send (new District.Update ()
+					.SetItemTrends(trends)
+				);
+				yield return new WaitForSeconds (60f);
+			}
 		}
 
 		public void SpawnCharacterEntity(EntityId entityId) {
-
-			SpatialOS.Commands
-				.CreateEntity(districtWriter, entityId, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.position, owned.getOwner(), owned.getOwnerObject(), new Option<EntityId>(districtWriter.EntityId)))
+			SpatialOS.Commands.CreateEntity(districtWriter, entityId, Gamelogic.EntityTemplates.EntityTemplateFactory.CreateCharacterTemplate(building.door.position, owned.getOwner(), owned.getOwnerObject(), new Option<EntityId>(districtWriter.EntityId)))
 					.OnSuccess(result => RegisterSpawnedCharacter(entityId));
-
 		}
 
 		public void RegisterSpawnedCharacter(EntityId characterId) {

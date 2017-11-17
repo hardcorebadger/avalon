@@ -1,6 +1,5 @@
 package improbable.core;
 
-import "improbable/core/Nothing.schema";
 import "improbable/core/Task.schema";
 
 type ConstructionRequirement {

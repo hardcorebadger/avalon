@@ -26,6 +26,8 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnEnable() {
 
+			Bootstrap.SetPlayerObject (this);
+
 			playerWriter.CommandReceiver.OnReceiveChat.RegisterResponse (OnReceiveChat);
 			playerWriter.CommandReceiver.OnReceiveNotification.RegisterResponse (OnReceiveNotification);
 

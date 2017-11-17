@@ -13,22 +13,32 @@ using Improbable.Entity;
 using Improbable.Unity.Core.EntityQueries;
 using Improbable.Collections;
 
-public class OwnedVisualizer : MonoBehaviour {
-
-	[Require] private Owned.Reader ownedReader;
-
-	// Use this for initialization
-	void Start () {
-		
-	}
+namespace Assets.Gamelogic.Core {
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
-	public int GetOwnerId() {
-		return ownedReader.Data.owner;
+	public class OwnedVisualizer : MonoBehaviour {
+
+		[Require] private Owned.Reader ownedReader;
+
+		// Use this for initialization
+		void Start () {
+			
+		}
+		
+		// Update is called once per frame
+		void Update () {
+			
+		}
+
+		public int GetOwnerId() {
+			return ownedReader.Data.owner;
+		}
+
+
+		public Color GetOwnerColor() {
+			return new Color (Bootstrap.players [ownedReader.Data.owner].red, Bootstrap.players [ownedReader.Data.owner].green, Bootstrap.players [ownedReader.Data.owner].blue);
+		}
+
 	}
 
 }

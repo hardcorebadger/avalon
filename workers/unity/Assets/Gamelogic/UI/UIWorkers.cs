@@ -28,7 +28,7 @@ namespace Assets.Gamelogic.Core {
 		public override void Load(UIPreviewWindow window, GameObject target) {
 			base.Load (window, target);
 			WorkSiteVisualizer workSite = target.GetComponent<WorkSiteVisualizer> ();
-			playerColor = workSite.GetOwnerColor ();
+			playerColor = target.GetComponent<OwnedVisualizer>().GetOwnerColor ();
 			buttons = new GameObject[workSite.maxWorkers];
 			currentMax = workSite.GetWorkerCount() - 1;
 			for (int i = 0; i < workSite.maxWorkers; i++) {
