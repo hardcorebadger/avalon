@@ -24,7 +24,7 @@ namespace Assets.Gamelogic.Core {
 			instance = this;
 			options = new Dictionary<string, ConstructionInfo> ();
 			options.Add ("house-3d", new ConstructionInfo(1,1, true, true));
-			options.Add ("forester", new ConstructionInfo(3,1, true, true));
+			options.Add ("forester", new ConstructionInfo(2,1, true, true));
 			options.Add ("quarry", new ConstructionInfo(2,2, true, true));
 			options.Add ("farm", new ConstructionInfo(2,2, true, true));
 			options.Add ("stockpile", new ConstructionInfo(3,1, true, true));

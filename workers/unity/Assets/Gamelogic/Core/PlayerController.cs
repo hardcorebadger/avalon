@@ -42,7 +42,7 @@ namespace Assets.Gamelogic.Core {
 		// Use this for initialization
 		void Start () {
 			Camera.main.transform.SetParent (transform);
-			Camera.main.transform.localPosition = new Vector3(0,0,-500);
+			Camera.main.transform.localPosition = new Vector3(0,0,-100);
 			Camera.main.transform.localEulerAngles = new Vector3 (0, 0, 0);
 			instance = this;
 		}

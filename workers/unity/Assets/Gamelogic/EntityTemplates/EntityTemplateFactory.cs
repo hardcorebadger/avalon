@@ -78,7 +78,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (1, 3, 1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1, 2, 1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
@@ -184,7 +184,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					req.Add (0, new ConstructionRequirement (0, 10, 0));
 					req.Add (1, new ConstructionRequirement (0, 10, 0));
 				}
-				x = 3;
+				x = 2;
 			} else if (name == "construction-quarry") {
 				if (!GameSettings.debugMode) {
 					req.Add (0, new ConstructionRequirement (0, 10, 0));
