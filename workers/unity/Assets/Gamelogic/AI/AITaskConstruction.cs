@@ -125,7 +125,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override void OnKill () {
-			if (state == 2 /* the task is being done */) {
+			if (state == 2 && task != null /* the task is being done */) {
 				task.OnKill ();
 				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.CompleteJob.Descriptor, new ConstructionJobResult (assignment, 420), constructionSite);
 			} else if (state > 2) {

@@ -206,43 +206,46 @@ namespace Assets.Gamelogic.Core {
 		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
 
 			Hurt (Random.Range (3.0f, 6.0f));
-			if (currentAction == null || !(currentAction is AIActionAttack || currentAction is AIActionDamage || currentAction.directCommand)) {
-				QueueActionImmediate (new AIActionAttack (this, request.source));
-			}
-			Collider[] cols = Physics.OverlapSphere (transform.position, 50);
-			System.Collections.Generic.List<CharacterController> enemies = new System.Collections.Generic.List<CharacterController>();
-			System.Collections.Generic.List<CharacterController> friends = new System.Collections.Generic.List<CharacterController>();
+//			if (currentAction == null || !(currentAction is AIActionAttack || currentAction is AIActionDamage || currentAction.directCommand)) {
+//				QueueActionImmediate (new AIActionAttack (this, request.source));
+//			}
 
-			for (int x = 0; x < cols.Length; x++) {
-				GameObject g = cols [x].gameObject;
+			//TODO add to hostile
 
-				// this is yourself
-				if (g.EntityId ().Id == gameObject.EntityId ().Id)
-					continue;
-				
-				CharacterController c = g.GetComponent<CharacterController> ();
-				if (c != null) {
-					if (c.characterWriter.Data.playerId == characterWriter.Data.playerId) {
-						//my character found 
-						friends.Add(c);
-					} else if (c.characterWriter.Data.playerId == request.playerId) {
-						//other HOSTILE character found
-						enemies.Add(c);
-					} else {
-						//other NEUTRAL/HOSTILE character found
-					}
-				}
-
-			}
-			int i = -1; 
-			for (int y = 0; y < friends.Count; y++) {
-				i++;
-				SpatialOS.Commands.SendCommand (characterWriter, Character.Commands.HostileAlert.Descriptor, new HostileAlertRequest(enemies[i].characterWriter.EntityId), friends[y].characterWriter.EntityId);
-				if (i >= (enemies.Count - 1)) {
-					i = -1;
-				}
-
-			}
+//			Collider[] cols = Physics.OverlapSphere (transform.position, 50);
+//			System.Collections.Generic.List<CharacterController> enemies = new System.Collections.Generic.List<CharacterController>();
+//			System.Collections.Generic.List<CharacterController> friends = new System.Collections.Generic.List<CharacterController>();
+//
+//			for (int x = 0; x < cols.Length; x++) {
+//				GameObject g = cols [x].gameObject;
+//
+//				// this is yourself
+//				if (g.EntityId ().Id == gameObject.EntityId ().Id)
+//					continue;
+//				
+//				CharacterController c = g.GetComponent<CharacterController> ();
+//				if (c != null) {
+//					if (c.characterWriter.Data.playerId == characterWriter.Data.playerId) {
+//						//my character found 
+//						friends.Add(c);
+//					} else if (c.characterWriter.Data.playerId == request.playerId) {
+//						//other HOSTILE character found
+//						enemies.Add(c);
+//					} else {
+//						//other NEUTRAL/HOSTILE character found
+//					}
+//				}
+//
+//			}
+//			int i = -1; 
+//			for (int y = 0; y < friends.Count; y++) {
+//				i++;
+//				SpatialOS.Commands.SendCommand (characterWriter, Character.Commands.HostileAlert.Descriptor, new HostileAlertRequest(enemies[i].characterWriter.EntityId), friends[y].characterWriter.EntityId);
+//				if (i >= (enemies.Count - 1)) {
+//					i = -1;
+//				}
+//
+//			}
 
 			return new Nothing ();
 		}
@@ -448,6 +451,7 @@ namespace Assets.Gamelogic.Core {
 				ClearWorkSite ();
 			}
 		}
+
 	}
 
 }

@@ -126,7 +126,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (3, 4, 4, 1000F, district, GameSettings.settlementBeds), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (1, 4, 4, 1000F, district, GameSettings.settlementBeds), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new District.Data (p, 0, new Improbable.Collections.Map<EntityId, JobInfoOption> (), new Improbable.Collections.List<EntityId> (), new Improbable.Collections.Map<int,ItemTrend>()), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, 4), CommonRequirementSets.PhysicsOnly)
@@ -214,7 +214,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				z = 4;
 			} else if (name == "construction-road") {
 				if (!GameSettings.debugMode) {
-					req.Add (1, new ConstructionRequirement (0, 3, 0));
+					req.Add (1, new ConstructionRequirement (0, 1, 0));
 				}
 			}
 				

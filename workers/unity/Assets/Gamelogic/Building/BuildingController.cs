@@ -67,37 +67,39 @@ namespace Assets.Gamelogic.Core {
 //				.AddShowDamage(new Nothing())
 			);
 
-			Collider[] cols = Physics.OverlapSphere (transform.position, 50);
-			System.Collections.Generic.List<CharacterController> enemies = new System.Collections.Generic.List<CharacterController>();
-			System.Collections.Generic.List<CharacterController> friends = new System.Collections.Generic.List<CharacterController>();
+			//TODO add to hostile
 
-			for (int x = 0; x < cols.Length; x++) {
-				GameObject g = cols [x].gameObject;
-				CharacterController c = g.GetComponent<CharacterController> ();
-				if (c != null) {
-					if (c.owned.getOwnerObject().Id == owned.getOwnerObject().Id) {
-						//my character found 
-						friends.Add(c);
-					} else if (c.owned.getOwnerObject().Id == request.playerEntityId.Id) {
-						//other HOSTILE character found
-						enemies.Add(c);
-					} else {
-						//other NEUTRAL/HOSTILE character found
-					}
-				}
-
-			}
-			if (enemies.Count > 0) {
-				int i = -1; 
-				for (int y = 0; y < friends.Count; y++) {
-					i++;
-					SpatialOS.Commands.SendCommand (buildingWriter, Character.Commands.HostileAlert.Descriptor, new HostileAlertRequest (enemies [i].characterWriter.EntityId), friends [y].characterWriter.EntityId);
-					if (i >= (enemies.Count - 1)) {
-						i = -1;
-					}
-
-				}
-			}
+//			Collider[] cols = Physics.OverlapSphere (transform.position, 50);
+//			System.Collections.Generic.List<CharacterController> enemies = new System.Collections.Generic.List<CharacterController>();
+//			System.Collections.Generic.List<CharacterController> friends = new System.Collections.Generic.List<CharacterController>();
+//
+//			for (int x = 0; x < cols.Length; x++) {
+//				GameObject g = cols [x].gameObject;
+//				CharacterController c = g.GetComponent<CharacterController> ();
+//				if (c != null) {
+//					if (c.owned.getOwnerObject().Id == owned.getOwnerObject().Id) {
+//						//my character found 
+//						friends.Add(c);
+//					} else if (c.owned.getOwnerObject().Id == request.playerEntityId.Id) {
+//						//other HOSTILE character found
+//						enemies.Add(c);
+//					} else {
+//						//other NEUTRAL/HOSTILE character found
+//					}
+//				}
+//
+//			}
+//			if (enemies.Count > 0) {
+//				int i = -1; 
+//				for (int y = 0; y < friends.Count; y++) {
+//					i++;
+//					SpatialOS.Commands.SendCommand (buildingWriter, Character.Commands.HostileAlert.Descriptor, new HostileAlertRequest (enemies [i].characterWriter.EntityId), friends [y].characterWriter.EntityId);
+//					if (i >= (enemies.Count - 1)) {
+//						i = -1;
+//					}
+//
+//				}
+//			}
 
 			return new Nothing ();
 		}
