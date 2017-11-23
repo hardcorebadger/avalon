@@ -22,7 +22,6 @@ namespace Assets.Gamelogic.Core {
 		[Require] private Position.Reader positionReader;
 		[Require] private Rotation.Reader rotationReader;
 
-		private Rigidbody rigidBody;
 		private SpriteRenderer sprite;
 		public CharacterState state;
 		public float ipAllowance = 0.1f;
@@ -36,6 +35,7 @@ namespace Assets.Gamelogic.Core {
 		public AudioClip[] acceptSounds;
 		public AudioClip[] cheeringSounds;
 		public SpriteRenderer itemSprite;
+		private float velocity;
 
 		private System.Collections.Generic.List<OnUIChange> listeners;
 
@@ -44,7 +44,6 @@ namespace Assets.Gamelogic.Core {
 				this.enabled = false;
 				return;
 			}
-			rigidBody = GetComponent<Rigidbody> ();
 			sprite = GetComponent<SpriteRenderer> ();
 			anim = GetComponent<Animator> ();
 			audioSrc = GetComponent<AudioSource> ();
@@ -78,6 +77,10 @@ namespace Assets.Gamelogic.Core {
 			SelectionManager.instance.OnCharacterDisabled (gameObject);
 		}
 
+		void Update() {
+			transform.position += facing * new Vector3 (0, 0, velocity) * Time.deltaTime;
+		}
+
 		void OnPositionUpdated(Position.Update update) {
 			if (!positionReader.HasAuthority && update.coords.HasValue) {
 				if (Vector3.Distance (update.coords.Value.ToVector3 (), transform.position) > ipAllowance) {
@@ -100,8 +103,7 @@ namespace Assets.Gamelogic.Core {
 					anim.SetBool ("walking", true);
 				else
 					anim.SetBool ("walking", false);
-				rigidBody.velocity = new Vector3(0f, rigidBody.velocity.y, 0f) + facing * new Vector3 (0, 0, update.velocity.Value);
-
+				velocity = update.velocity.Value;
 			}
 			if (!characterReader.HasAuthority && update.itemInHand.HasValue) {
 				SetItemInHand (update.itemInHand.Value);
@@ -125,7 +127,6 @@ namespace Assets.Gamelogic.Core {
 
 		private void SetIndoors(bool b) {
 			GetComponent<Collider> ().enabled = !b;
-			GetComponent<Rigidbody> ().isKinematic = b;
 		}
 
 		private void OnShowHit(Nothing n) {

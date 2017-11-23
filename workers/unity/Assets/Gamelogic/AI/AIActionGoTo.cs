@@ -77,7 +77,6 @@ namespace Assets.Gamelogic.Core {
 			foreach (Collider c in colliders) {
 				if (c.gameObject == agent.gameObject) {
 					agent.SetVelocity (0f);
-					agent.rigidBody.angularVelocity = Vector3.zero;
 					if (hasTargetEntity)
 						return 201;
 					return 200;
@@ -90,7 +89,6 @@ namespace Assets.Gamelogic.Core {
 				foreach (Collider c in colliders) {
 					if (c.gameObject.EntityId() == targetId) {
 						agent.SetVelocity (0f);
-						agent.rigidBody.angularVelocity = Vector3.zero;
 						return 200;
 					}
 				}

@@ -21,9 +21,6 @@ namespace Assets.Gamelogic.Core {
 		[Require] public Position.Writer positionWriter;
 		[Require] public Rotation.Writer rotationWriter;
 
-		[HideInInspector]
-		public Rigidbody rigidBody;
-
 		public float speed = 5f;
 		public float range = 5f;
 		public float maxRotation = 60f;
@@ -72,7 +69,6 @@ namespace Assets.Gamelogic.Core {
 			StartCoroutine (UpdateTransform());
 			StartCoroutine (UpdateVitals ());
 
-			rigidBody = GetComponent<Rigidbody> ();
 			district = characterWriter.Data.district;
 		
 			indoors = characterWriter.Data.isIndoors;
@@ -96,6 +92,8 @@ namespace Assets.Gamelogic.Core {
 		private void Update() {
 			if (health <= 0F)
 				DestroyCharacter ();
+
+			transform.position += facing * new Vector3 (0, 0, velocity) * Time.deltaTime;
 
 			if (transform.position.y < 0)
 				transform.position = new Vector3 (transform.position.x, 3f, transform.position.z);
@@ -301,7 +299,6 @@ namespace Assets.Gamelogic.Core {
 		public void SetVelocity(float f) {
 			velocity = f;
 			// preserve gravitational force
-			rigidBody.velocity = new Vector3(0f, rigidBody.velocity.y, 0f) + (facing * new Vector3 (0, 0, velocity));
 		}
 
 		public Vector3 GetFacingDirection() {
