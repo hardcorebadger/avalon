@@ -96,6 +96,9 @@ namespace Assets.Gamelogic.Core {
 		private void Update() {
 			if (health <= 0F)
 				DestroyCharacter ();
+
+			if (transform.position.y < 0)
+				transform.position = new Vector3 (transform.position.x, 3f, transform.position.z);
 			
 			UpdateAI ();
 		}

@@ -3,12 +3,13 @@ using UnityEngine;
 
 public class GameSettings : MonoBehaviour {
 
-	public static bool debugMode = false;
+	public static bool debugMode = true;
 	public static int initialCharacters = 4;
 	public static int settlementBeds = 4;
+	public static int settlementRadius = 5;
 
 	public static Improbable.Collections.Map<int,int> startingInventory = new Improbable.Collections.Map<int,int> () {
-		{0, 20},
+		{0, 100},
 		{1, 20},
 		{2, 20}
 	};

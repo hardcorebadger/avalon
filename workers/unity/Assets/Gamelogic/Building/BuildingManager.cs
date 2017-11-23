@@ -30,6 +30,8 @@ namespace Assets.Gamelogic.Core {
 			options.Add ("stockpile", new ConstructionInfo(3,1, true, true));
 			options.Add ("settlement", new ConstructionInfo(4,4, false, false));
 			options.Add ("road", new ConstructionInfo(1,1, true, true));
+			options.Add ("wall", new ConstructionInfo(1,1, true, true));
+			options.Add ("tower", new ConstructionInfo(1,1, true, true));
 
 		}
 
