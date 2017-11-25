@@ -1,0 +1,7 @@
+package improbable.core;
+
+component Tower {
+    id = 1024;
+    
+    int32 archery_state = 1;
+}

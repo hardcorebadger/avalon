@@ -107,7 +107,6 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private bool IsOffset(int xOff, int zOff, int x, int z) {
-			Debug.Log ((x - gridX)+" "+(z - gridZ));
 			return (x == gridX + xOff && z == gridZ + zOff);
 		}
 

@@ -95,8 +95,8 @@ namespace Assets.Gamelogic.Core {
 
 			transform.position += facing * new Vector3 (0, 0, velocity) * Time.deltaTime;
 
-			if (transform.position.y < 0)
-				transform.position = new Vector3 (transform.position.x, 3f, transform.position.z);
+			if (transform.position.y < 0.5f || transform.position.y > 1.5f)
+				transform.position = new Vector3 (transform.position.x, 1f, transform.position.z);
 			
 			UpdateAI ();
 		}
@@ -402,10 +402,8 @@ namespace Assets.Gamelogic.Core {
 			if (indoors) {
 				doorPosition = door;
 				GetComponent<Collider> ().enabled = false;
-				GetComponent<Rigidbody> ().isKinematic = true;
 			} else {
 				GetComponent<Collider> ().enabled = true;
-				GetComponent<Rigidbody> ().isKinematic = false;
 				transform.position = doorPosition.Value;
 			}
 		}

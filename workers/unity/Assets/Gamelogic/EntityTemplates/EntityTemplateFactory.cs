@@ -163,6 +163,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddComponent(new Building.Data(1,1,1, 1000F, district, 0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_TOWER, 4), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new Tower.Data(0), CommonRequirementSets.PhysicsOnly)
 					.Build();
 			}
 			return CreateBasicBuildingTemplate (name, pos, ownerId, ownerObject, district);

@@ -28,11 +28,11 @@ namespace Assets.Editor
 
 			for (float z = -500; z <= 500; z++) {
 				for (float x = -500; x <= 500; x++) {
-					if (Random.Range(0,2000) == 0)
+					if (Random.Range(0,1100) == 0)
 						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("pine", new Vector3(x,0,z)));
-					else if (Random.Range(0,2000) == 0)
+					else if (Random.Range(0,1100) == 0)
 						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("oak", new Vector3(x,0,z)));
-					else if (Random.Range(0,2000) == 0)
+					else if (Random.Range(0,1100) == 0)
 						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("rock", new Vector3(x,0,z)));
 					else if (Random.Range(0,2000) == 0)
 						snapshotEntities.Add(new EntityId(currentEntityId++), EntityTemplateFactory.CreateEntityTemplate("grass", new Vector3(x,0,z)));
