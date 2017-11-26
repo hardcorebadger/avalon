@@ -39,14 +39,19 @@ namespace Assets.Gamelogic.Core {
 			if (strength <= 0F && !hasDied) {
 				DistrictController district = GetComponent<DistrictController> ();
 				if (district != null) {
-					if (mostRecentAttacker.HasValue) {
-						Debug.LogWarning ("cedeing town to: " + mostRecentAttacker.Value.Id + " " + mostRecentAttackerId.Value);
-						district.Cede (mostRecentAttacker.Value, mostRecentAttackerId.Value);
-						strength = 1000f;
-						buildingWriter.Send (new Building.Update ()
-							.SetStrength (strength)
-						);
-					}
+					// nerf
+					strength = 100F;
+					buildingWriter.Send (new Building.Update ()
+						.SetStrength (strength)
+					);
+//					if (mostRecentAttacker.HasValue) {
+//						Debug.LogWarning ("cedeing town to: " + mostRecentAttacker.Value.Id + " " + mostRecentAttackerId.Value);
+//						district.Cede (mostRecentAttacker.Value, mostRecentAttackerId.Value);
+//						strength = 1000f;
+//						buildingWriter.Send (new Building.Update ()
+//							.SetStrength (strength)
+//						);
+//					}
 				} else {
 					hasDied = true;
 					ReplaceBuilding (EntityTemplates.EntityTemplateFactory.CreateDestroyedBuildingTemplate (constructionName, transform.position, owned.getOwner (), owned.getOwnerObject (), buildingWriter.Data.district), true);
@@ -169,6 +174,12 @@ namespace Assets.Gamelogic.Core {
 
 		private void OnReplacementBuildingRegistered(Nothing n) {
 			DestroyBuilding ();
+		}
+
+		public void PushItemGetNotification(int id) {
+			buildingWriter.Send (new Building.Update ()
+				.AddShowItemGet (new ShowItemGetEvent (id))
+			);
 		}
 
 	}

@@ -34,6 +34,9 @@ namespace Assets.Gamelogic.Core {
 		public AudioClip[] footstepSounds;
 		public AudioClip[] acceptSounds;
 		public AudioClip[] cheeringSounds;
+		public AudioClip[] hitSounds;
+		public AudioClip[] hurtSounds;
+
 		public SpriteRenderer itemSprite;
 		private float velocity;
 
@@ -200,6 +203,16 @@ namespace Assets.Gamelogic.Core {
 
 		public void OnAcceptCommand() {
 			audioSrc.PlayOneShot (acceptSounds [Random.Range (0, acceptSounds.Length - 1)]);
+		}
+
+		public void OnDealHit() {
+			if (!characterReader.HasAuthority)
+				audioSrc.PlayOneShot (hitSounds [Random.Range (0, hitSounds.Length - 1)]);
+		}
+
+		public void OnGetHit() {
+			if (!characterReader.HasAuthority)
+				audioSrc.PlayOneShot (hurtSounds [Random.Range (0, hurtSounds.Length - 1)]);
 		}
 
 	}

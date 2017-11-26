@@ -85,6 +85,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnCompleteJob(ForesterJobResult r, ICommandCallerInfo _) {
+			if (r.assignment.chop.HasValue && AIAction.OnSuccess(r.result))
+				GetComponent<BuildingController> ().PushItemGetNotification (0);
 			return new Nothing ();
 		}
 

@@ -79,6 +79,10 @@ namespace Assets.Gamelogic.Core {
 				horizontal.SetActive (true);
 				vertical.SetActive (false);
 				corner.SetActive (false);
+			} else {
+				corner.SetActive (true);
+				vertical.SetActive (false);
+				horizontal.SetActive (false);
 			}
 
 		}

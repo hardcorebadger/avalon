@@ -95,8 +95,8 @@ namespace Assets.Gamelogic.Core {
 
 			transform.position += facing * new Vector3 (0, 0, velocity) * Time.deltaTime;
 
-			if (transform.position.y < 0.5f || transform.position.y > 1.5f)
-				transform.position = new Vector3 (transform.position.x, 1f, transform.position.z);
+//			if (transform.position.y < 0.5f || transform.position.y > 1.5f)
+//				transform.position = new Vector3 (transform.position.x, 1f, transform.position.z);
 			
 			UpdateAI ();
 		}
@@ -205,11 +205,10 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnReceiveHit(ReceiveHitRequest request, ICommandCallerInfo callerinfo) {
-
 			Hurt (Random.Range (3.0f, 6.0f));
-//			if (currentAction == null || !(currentAction is AIActionAttack || currentAction is AIActionDamage || currentAction.directCommand)) {
-//				QueueActionImmediate (new AIActionAttack (this, request.source));
-//			}
+			if (currentAction == null || !(currentAction is AIActionAttack || currentAction is AIActionDamage || currentAction.directCommand)) {
+				QueueActionImmediate (new AIActionAttack (this, request.source));
+			}
 
 			//TODO add to hostile
 
@@ -252,7 +251,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnHostileAlert(HostileAlertRequest request, ICommandCallerInfo callerinfo) {
-
+			
 			if (currentAction == null || !(currentAction is AIActionAttack || currentAction is AIActionDamage || currentAction.directCommand)) {
 				QueueActionImmediate(new AIActionAttack (this, request.target));
 			}
@@ -370,9 +369,12 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public void OnDealHit() {
-			if (characterWriter != null && characterWriter.HasAuthority &&  currentAction != null) {
+			if (characterWriter != null && characterWriter.HasAuthority && currentAction != null) {
 				currentAction.OnDealHit ();
 			}
+//			else if (!characterWriter.HasAuthority) {
+//				GetComponent<CharacterVisualizer> ().OnDealHit ();
+//			}
 		}
 
 		public void DestroyCharacter() {

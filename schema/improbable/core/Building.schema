@@ -9,6 +9,10 @@ type ReceiveDamageRequest {
   EntityId player_entity_id = 3; 
 }
 
+type ShowItemGetEvent {
+  int32 id = 1;
+}
+
 
 component Building {
     id = 1013;
@@ -20,6 +24,7 @@ component Building {
     int32 beds = 6;
  
     command Nothing receive_damage(ReceiveDamageRequest);
-    event Nothing show_damage; 
+    event Nothing show_damage;
+    event ShowItemGetEvent show_item_get;  
 
 }

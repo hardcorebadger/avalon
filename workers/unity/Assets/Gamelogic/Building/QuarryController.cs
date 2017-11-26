@@ -26,6 +26,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Nothing OnCompleteJob(Nothing n, ICommandCallerInfo _) {
+			GetComponent<BuildingController> ().PushItemGetNotification (1);
 			SpatialOS.Commands.SendCommand (quarryWriter, Inventory.Commands.Give.Descriptor, new ItemStack (1, 1), GetComponent<BuildingController> ().district.Value);
 			return new Nothing ();
 		}

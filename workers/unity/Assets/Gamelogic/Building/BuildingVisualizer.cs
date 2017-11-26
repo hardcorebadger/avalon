@@ -22,6 +22,7 @@ namespace Assets.Gamelogic.Core {
 		public int tileMargin = 1;
 		public int xWidth = 1;
 		public int zWidth = 1;
+		public Transform itemGetParticles;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -35,6 +36,7 @@ namespace Assets.Gamelogic.Core {
 			zWidth = buildingReader.Data.zWidth;
 			district = buildingReader.Data.district;
 			buildingReader.ComponentUpdated.Add (OnBuildingUpdate);
+			buildingReader.ShowItemGetTriggered.Add (ShowItemGetTriggered);
 		}
 
 		private void OnBuildingUpdate(Building.Update u) {
@@ -43,6 +45,9 @@ namespace Assets.Gamelogic.Core {
 			}
 		}
 
+		private void ShowItemGetTriggered(ShowItemGetEvent e) {
+			PushItemGetNotification (e.id);
+		}
 
 		// Update is called once per frame
 		void OnDisable () {
@@ -51,6 +56,15 @@ namespace Assets.Gamelogic.Core {
 
 		public bool CanControl() {
 			return owned.GetOwnerId() == Bootstrap.playerId;
+		}
+
+		public void PushItemGetNotification(int id) {
+			// optional feature
+			if (itemGetParticles == null)
+				return;
+
+			itemGetParticles.FindChild ("item-" + id).GetComponent<ParticleSystem> ().Play ();
+
 		}
 	
 	}
