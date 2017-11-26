@@ -33,13 +33,13 @@ namespace Assets.Gamelogic.Core {
 			if (i > 1)
 				willDelete = true;
 			if (!touchingGround)
-				Destroy (gameObject);
+				BuildingManager.DestroyTile (gameObject);
 		}
 		
 		// Update is called once per frame
 		void Update () {
 			if (willDelete)
-				Destroy (gameObject);
+				BuildingManager.DestroyTile (gameObject);
 		}
 
 		bool OverlapTile(GameObject tile) {
@@ -64,7 +64,7 @@ namespace Assets.Gamelogic.Core {
 					pos = building.transform.position + new Vector3 (8 * x, 0f, 8 * z);
 					// if the building actually covers this block
 					if ((int)pos.x == (int)transform.position.x && (int)pos.z == (int)transform.position.z)
-						Destroy (gameObject);
+						BuildingManager.DestroyTile (gameObject);
 				}
 			}
 		}

@@ -84,28 +84,38 @@ namespace Assets.Gamelogic.Core {
 		private RaycastHit GetHit() {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
-			Physics.Raycast (ray, out hit);
+			Physics.Raycast (ray, out hit, 1000f, LayerMask.GetMask(LayerMask.LayerToName(10)));
 			return hit;
 		}
 
 		private Vector3 GetNearestBlock(Vector3 p) {
 
+			// shift footprint to center building on mouse
 			p.x -= (xWidth-1) * 4f;
-			p.x -= (zWidth-1) * 4f;
+			p.z -= (zWidth-1) * 4f;
 				
+			// get percent across the tile
 			int xmod = (int)p.x % 8;
 			int zmod = (int)p.z % 8;
 
-			if (xmod <= 4)
+			if (xmod >= 0 && xmod <= 4)
 				p.x = (int)p.x - xmod;
-			else
+			else if (xmod > 4)
 				p.x = (int)p.x + (8-xmod);
+			else if (xmod < 0 && xmod >= -4)
+				p.x = (int)p.x - xmod;
+			else if (xmod < -4)
+				p.x = (int)p.x - (8+xmod);
 
 
-			if (zmod <= 4)
+			if (zmod >= 0 && zmod <= 4)
 				p.z = (int)p.z - zmod;
-			else
+			else if (zmod > 4)
 				p.z = (int)p.z + (8-zmod);
+			else if (zmod < 0 && zmod >= -4)
+				p.z = (int)p.z - zmod;
+			else if (zmod < -4)
+				p.z = (int)p.z - (8+zmod);
 
 
 			p.y = 0;

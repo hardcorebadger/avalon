@@ -20,6 +20,8 @@ namespace Assets.Gamelogic.Core {
 		public static bool isBuilding = false;
 		private static string currentConstructionGhost;
 
+		private static List<GameObject> currentTiles;
+
 		public void OnEnable() {
 			instance = this;
 			options = new Dictionary<string, ConstructionInfo> ();
@@ -85,6 +87,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private static void CreateTiles() {
+			currentTiles = new List<GameObject>();
 			BuildingVisualizer[] buildings = FindObjectsOfType<BuildingVisualizer> ();
 			foreach (BuildingVisualizer building in buildings) {
 				if (!building.district.HasValue) {
@@ -96,16 +99,22 @@ namespace Assets.Gamelogic.Core {
 						Vector3 pos = building.transform.position + new Vector3(x * 8, 0f, z * 8);
 						GameObject g = GameObject.Instantiate (instance.tile, pos, Quaternion.identity);
 						g.GetComponent<ConstructionTile> ().SetDistrict (building.district.Value);
+						currentTiles.Add (g);
 					}
 				}
 			}
 		}
 
+		public static void DestroyTile(GameObject g) {
+			Destroy (g);
+			currentTiles.Remove (g);
+		}
+
 		private static void ClearTiles() {
-			ConstructionTile[] con = FindObjectsOfType<ConstructionTile> ();
-			foreach (ConstructionTile c in con) {
-				Destroy (c.gameObject);
+			foreach (GameObject c in currentTiles) {
+				Destroy (c);
 			}
+			currentTiles.Clear ();
 		}
 
 		[System.Serializable]
