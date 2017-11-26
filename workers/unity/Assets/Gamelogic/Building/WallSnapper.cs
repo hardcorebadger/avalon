@@ -9,6 +9,8 @@ namespace Assets.Gamelogic.Core {
 		public GameObject corner;
 		public GameObject vertical;
 		public GameObject horizontal;
+		public bool endcap = true;
+		public int snapId = 0;
 
 		private int gridX;
 		private int gridZ;
@@ -30,6 +32,9 @@ namespace Assets.Gamelogic.Core {
 				WallSnapper snap = c.GetComponent<WallSnapper> ();
 
 				if (snap == null || snap == this)
+					continue;
+
+				if (snap.snapId != snapId)
 					continue;
 
 				bool h = false;
@@ -62,7 +67,7 @@ namespace Assets.Gamelogic.Core {
 					vert = true;
 			}
 
-			if (count < 2 || horiz && vert) {
+			if ((endcap && count < 2) || horiz && vert) {
 				corner.SetActive (true);
 				vertical.SetActive (false);
 				horizontal.SetActive (false);

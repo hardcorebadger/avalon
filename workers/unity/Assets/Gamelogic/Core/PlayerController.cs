@@ -31,7 +31,7 @@ namespace Assets.Gamelogic.Core {
 			playerWriter.CommandReceiver.OnReceiveChat.RegisterResponse (OnReceiveChat);
 			playerWriter.CommandReceiver.OnReceiveNotification.RegisterResponse (OnReceiveNotification);
 
-			transform.eulerAngles = new Vector3 (30, 45, 0);
+			transform.eulerAngles = new Vector3 (40, 45, 0);
 			heartbeatCoroutine = StartCoroutine(TimerUtils.CallRepeatedly(SimulationSettings.HeartbeatSendingIntervalSecs, SendHeartbeat));
 		}
 
@@ -42,7 +42,7 @@ namespace Assets.Gamelogic.Core {
 		// Use this for initialization
 		void Start () {
 			Camera.main.transform.SetParent (transform);
-			Camera.main.transform.localPosition = new Vector3(0,0,-100);
+			Camera.main.transform.localPosition = new Vector3(0,0,-150);
 			Camera.main.transform.localEulerAngles = new Vector3 (0, 0, 0);
 			instance = this;
 		}

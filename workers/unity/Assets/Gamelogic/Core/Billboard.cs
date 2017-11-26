@@ -6,7 +6,7 @@ public class Billboard : MonoBehaviour {
 
 	// Use this for initialization
 	void OnEnable () {
-		transform.eulerAngles = new Vector3 (30, 45, 0);
+		transform.eulerAngles = new Vector3 (40, 45, 0);
 	}
 
 }
