@@ -121,13 +121,16 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void UpdateAI() {
-			if (currentAction == null) {
-				if (district.HasValue)
-					currentAction = new AIActionWander (this, 60f, district.Value, 60f);
-				else
-					currentAction = new AIActionWander (this, 60f, transform.position, 60f);
+			if (currentAction == null)
 				return;
-			}
+			
+//			if (currentAction == null) {
+//				if (district.HasValue)
+//					currentAction = new AIActionWander (this, 60f, district.Value, 60f);
+//				else
+//					currentAction = new AIActionWander (this, 60f, transform.position, 60f);
+//				return;
+//			}
 
 			if (AIAction.OnTermination (currentAction.Update ())) {
 				AIAction newAction = actionQueue.Dequeue ();

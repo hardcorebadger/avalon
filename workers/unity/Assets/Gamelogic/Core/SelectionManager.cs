@@ -15,7 +15,6 @@ namespace Assets.Gamelogic.Core {
 		public double downDelay = 0.2;
 		public double upDelay = 0.1;
 		public float dragTriggerDistance = 1f;
-		public bool leftMouseInputMode = true;
 
 		[HideInInspector]
 		public static SelectionManager instance;
@@ -96,10 +95,8 @@ namespace Assets.Gamelogic.Core {
 				if (radiusSelecting)
 					UpdateRadiusSelect ();
 
-				if (leftMouseInputMode) {
-					if (Input.GetKeyDown (KeyCode.Escape)) {
-						ClearSelected ();
-					}
+				if (Input.GetKeyDown (KeyCode.Escape)) {
+					ClearSelected ();
 				}
 
 				if (Input.GetKeyDown (KeyCode.I)) {
@@ -120,10 +117,7 @@ namespace Assets.Gamelogic.Core {
 				}
 
 				if (Input.GetMouseButtonUp (0)) {
-					if (leftMouseInputMode)
-						LeftClickLMBMode ();
-					else
-						LeftClickRMBMode ();
+					LeftClick();
 
 					hasTriggered = false;
 					if (boxSelecting)
@@ -135,12 +129,8 @@ namespace Assets.Gamelogic.Core {
 					downPos = Input.mousePosition;
 				}
 
-				if (Input.GetMouseButtonUp (1)) {
-					if (leftMouseInputMode)
-						RightClickLMBMode ();
-					else
-						RightClickRMBMode ();
-				}
+				if (Input.GetMouseButtonUp (1))
+					RightClick();
 
 				if (Input.GetKeyUp (KeyCode.Return) && !UIManager.instance.chat.isActive) {
 					isChatting = true;
@@ -198,46 +188,13 @@ namespace Assets.Gamelogic.Core {
 			return hit;
 		}
 
-		void RightClickRMBMode() {
-			RaycastHit hit = GetHit();
-			if (NothingSelected()) {
-				// info pop ups
-				if (hit.collider != null)
-					UIManager.OpenPreview (hit.collider.gameObject);
-			} else {
-				CommandCenter.InterpretClickCommand (selected, remoteSelected, hit);
-			}
-		}
-
-		void LeftClickRMBMode() {
-			// If Not Shift, clear selection
-			if (!Input.GetKey (KeyCode.LeftShift)) {
-				ClearSelected ();
-			}
-			// If pos hits a character, select them
-			RaycastHit hit = GetHit();
-			if (hit.collider != null) {
-				CharacterVisualizer s = hit.transform.GetComponent<CharacterVisualizer> ();
-				if (s != null) {
-					if (Input.GetKey (KeyCode.LeftShift)) {
-						AddSelected (s);
-					} else {
-						SetSelected (s);
-					}
-				}
-			} else {
-				// deselect
-				ClearSelected();
-			}
-		}
-
-		void RightClickLMBMode() {
+		void RightClickOld() {
 			RaycastHit hit = GetHit();
 			if (hit.collider != null)
 				UIManager.OpenPreview (hit.collider.gameObject);
 		}
 
-		void LeftClickLMBMode() {
+		void LeftClickOld() {
 			RaycastHit hit = GetHit ();
 			if (
 				Input.GetKey (KeyCode.LeftShift) || 
@@ -266,6 +223,48 @@ namespace Assets.Gamelogic.Core {
 				}
 			} else {
 				CommandCenter.InterpretClickCommand (selected, remoteSelected, hit);
+			}
+		}
+
+		void RightClick() {
+			
+			RaycastHit hit = GetHit ();
+			if (hit.collider == null)
+				return;
+			
+			// if anyone is selected, interpret the command
+			// else try to open a preview
+			if (!NothingSelected())
+				CommandCenter.InterpretClickCommand (selected, remoteSelected, hit);
+			else if (hit.collider.GetComponent<WorkSiteVisualizer>() != null)
+				UIManager.OpenPreview (hit.collider.gameObject);
+
+		}
+
+		void LeftClick() {
+			
+			RaycastHit hit = GetHit ();
+			if (hit.collider == null) {
+				ClearSelected ();
+				return;
+			}
+			
+			// if it's a character you can control - select (either set or add based on lshift
+			CharacterVisualizer c = hit.collider.GetComponent<CharacterVisualizer> ();
+			if (c != null && c.CanControl ()) {
+				if (Input.GetKey (KeyCode.LeftShift)) {
+					AddSelected (c);
+				} else {
+					SetSelected (c);
+				}
+				return;
+			}
+
+			// if it's a ws select the workers
+			WorkSiteVisualizer ws = hit.transform.GetComponent<WorkSiteVisualizer> ();
+			if (ws != null) {
+				SelectWorkers (ws);
+				return;
 			}
 		}
 

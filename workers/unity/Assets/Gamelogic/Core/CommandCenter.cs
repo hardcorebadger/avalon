@@ -39,11 +39,14 @@ namespace Assets.Gamelogic.Core {
 			foreach (Collider2D c in colliders) {
 				ParseOptions (ref options, c.gameObject);
 			}
-			if (options.Count == 1) {
+
+			if (options.Count == 0)
+				return;
+			else if (options.Count == 1)
 				OnCommandSelected (options.ToArray () [0]);
-			} else {
+			else
 				UIManager.OpenCommandPicker (options);
-			}
+			
 		}
 
 		// called from selection manager
@@ -84,6 +87,7 @@ namespace Assets.Gamelogic.Core {
 			} else {
 				ExecutePositionTargetedCommand (command);
 			}
+			SelectionManager.instance.ClearSelected ();
 		}
 
 		// called from ui picker
@@ -159,12 +163,15 @@ namespace Assets.Gamelogic.Core {
 			string command = "gather";
 			if (agents.Count < 1)
 				return;
-			
+
+			EntityId id = agents [0];
 			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, Character.Commands.EntityTarget.Descriptor, new EntityTargetRequest (target.EntityId(), command), agents[0]);
-			agents.RemoveAt (0);
+			agents.RemoveAll (x => x.Id == agents [0].Id);
 
 			if (agents.Count < 1)
 				return;
+
+			Debug.Log (agents.Contains(id));
 
 			Collider[] cols = Physics.OverlapSphere (position, UIManager.instance.coOpRadius);
 			List<Collider> clist = new List<Collider> (cols);

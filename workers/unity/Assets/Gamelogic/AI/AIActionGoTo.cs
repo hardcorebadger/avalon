@@ -51,6 +51,16 @@ namespace Assets.Gamelogic.Core {
 			targetId = eid;
 			hasTargetEntity = true;
 		}
+
+		public AIActionGoTo SetTimeout(float f) {
+			agent.StartCoroutine (TimeoutAction (f));
+			return this;
+		}
+
+		private IEnumerator TimeoutAction(float f) {
+			yield return new WaitForSeconds (f);
+			shouldRespond = 421;
+		}
 			
 		public override int Update () {
 

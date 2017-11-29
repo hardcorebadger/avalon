@@ -19,6 +19,7 @@ namespace Assets.Gamelogic.Core {
 
 		// reponse codes //
 		// 401 = assignment didnt ask to chop
+		// 421 = failed to get there
 
 		private AIActionGoTo seek;
 		private AIActionPlace place;
@@ -42,10 +43,14 @@ namespace Assets.Gamelogic.Core {
 			case 1:
 				// walk to tree
 				if (seek == null)
-					seek = new AIActionGoTo (agent, assignment.plant.Value.ToUnityVector());
-				if (AIAction.OnSuccess (seek.Update ())) {
+					seek = new AIActionGoTo (agent, assignment.plant.Value.ToUnityVector ()).SetTimeout (30f);
+				int result = seek.Update ();
+				if (AIAction.OnSuccess (result)) {
 					seek = null;
 					state++;
+				}
+				if (AIAction.OnUserError (result)) {
+					return 421;
 				}
 				break;
 			case 2:

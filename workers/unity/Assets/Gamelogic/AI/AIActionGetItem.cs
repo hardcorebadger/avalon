@@ -41,6 +41,7 @@ namespace Assets.Gamelogic.Core {
 		private ItemFindResponse findResponse;
 		private TakeResponse takeResponse;
 		private AIActionGoTo seek;
+		private bool needToWalk = true;
 
 		public AIActionGetItem(CharacterController o, int tg, Option<EntityId> d) : base(o,"get") {
 			toGet = tg;
@@ -52,6 +53,11 @@ namespace Assets.Gamelogic.Core {
 			toGet = tg;
 			districtId = d;
 			asker = new Option<EntityId>(a);
+		}
+
+		public AIActionGetItem DontWalkThere() {
+			needToWalk = false;
+			return this;
 		}
 
 		public override int Update(){
@@ -91,8 +97,12 @@ namespace Assets.Gamelogic.Core {
 				if (!findResponse.building.HasValue) {
 					return 403;
 				} else {
-					seek = new AIActionGoTo (agent, findResponse.building.Value, findResponse.position.Value.ToUnityVector());
-					state++;
+					if (!needToWalk)
+						state += 2;
+					else {
+						seek = new AIActionGoTo (agent, findResponse.building.Value, findResponse.position.Value.ToUnityVector ());
+						state++;
+					}
 				}
 				break;
 			case 4:

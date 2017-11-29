@@ -17,13 +17,14 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private Forester.Writer foresterWriter;
 
-		public float localTreeRefreshRate = 60f;
+		public float localTreeRefreshRate = 30f;
 		// doesnt work yet
-		public int maxTrees = 100;
+		public int maxTrees = 20;
 		public int minTrees = 10;
+		public float radius = 40f;
 		private float timer = -1f;
 		private List<EntityId> localTrees;
-		private bool treeDensitySatisfied = false;
+		private int plantedSinceLastRefresh = 0;
 
 		void OnEnable () {
 			foresterWriter.CommandReceiver.OnGetJob.RegisterResponse (OnGetJob);
@@ -47,7 +48,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void RefreshLocalTrees () {
-			var entityQuery = Query.And (Query.HasComponent<Gatherable> (), Query.InSphere (transform.position.x, transform.position.y,transform.position.z,100)).ReturnComponents (Gatherable.ComponentId);
+			var entityQuery = Query.And (Query.HasComponent<Gatherable> (), Query.InSphere (transform.position.x, transform.position.y,transform.position.z,radius)).ReturnComponents (Gatherable.ComponentId);
 			SpatialOS.WorkerCommands.SendQuery (entityQuery)
 				.OnSuccess (OnSuccessfulTreeQuery)
 				.OnFailure (OnFailedEntityQuery);
@@ -65,8 +66,7 @@ namespace Assets.Gamelogic.Core {
 					localTrees.Add (id);
 
 			}
-
-			treeDensitySatisfied = localTrees.Count > maxTrees;
+			plantedSinceLastRefresh = 0;
 		}
 
 		private void OnFailedEntityQuery (ICommandErrorDetails _) {
@@ -75,7 +75,9 @@ namespace Assets.Gamelogic.Core {
 
 		private ForesterJobAssignment OnGetJob(Nothing n, ICommandCallerInfo _) {
 			// basically "if you need to replant or the thing is full so be proactive why dont ya"
-			if (localTrees.Count < minTrees) {
+			Debug.LogWarning(localTrees.Count + plantedSinceLastRefresh);
+			if (localTrees.Count + plantedSinceLastRefresh < minTrees) {
+				plantedSinceLastRefresh++;
 				return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> (GetNewTreePlantPosition ()));
 			} else {
 				EntityId id = localTrees [0];
@@ -91,12 +93,12 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private Vector3d GetNewTreePlantPosition() {
-			Vector3 v = transform.position + new Vector3 (DonutRandom(), 0, DonutRandom());
+			Vector3 v = transform.position + new Vector3 (DonutRandom(8f) + 4f, 0, DonutRandom(4f));
 			return new Vector3d (v.x, v.y, v.z);
 		}
 
-		private float DonutRandom() {
-			float f = Random.Range (7f, 100f);
+		private float DonutRandom(float min) {
+			float f = Random.Range (min, radius);
 			if (Random.Range(0,2) == 0)
 				f *= -1;
 			return f;

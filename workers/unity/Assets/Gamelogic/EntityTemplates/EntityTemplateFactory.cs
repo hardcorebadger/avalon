@@ -78,7 +78,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (1, 2, 1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (GameSettings.standardRadius, 2, 1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_LOGGING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Forester.Data (), CommonRequirementSets.PhysicsOnly)
@@ -89,7 +89,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (1, 2, 2, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (GameSettings.standardRadius, 2, 2, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_MINING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Quarry.Data (), CommonRequirementSets.PhysicsOnly)
@@ -102,7 +102,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (1,3,1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (GameSettings.standardRadius,3,1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_STORAGE, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Storage.Data (sourcing, initialQuotas), CommonRequirementSets.PhysicsOnly)
@@ -113,7 +113,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (1,2,2, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (GameSettings.standardRadius,2,2, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_FARMING, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Farm.Data (), CommonRequirementSets.PhysicsOnly)
@@ -126,10 +126,10 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent (new Building.Data (GameSettings.settlementRadius, 4, 4, 1000F, district, GameSettings.settlementBeds), CommonRequirementSets.PhysicsOnly)
+					.AddComponent (new Building.Data (GameSettings.settlementRadius, 3, 3, 1000F, district, GameSettings.settlementBeds), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new District.Data (p, 0, new Improbable.Collections.Map<EntityId, JobInfoOption> (), new Improbable.Collections.List<EntityId> (), new Improbable.Collections.Map<int,ItemTrend>()), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
-					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, 4), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, 12), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Builder.Data (), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Inventory.Data (GameSettings.startingInventory, 200), CommonRequirementSets.PhysicsOnly)
 					.Build ();
@@ -140,7 +140,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent(new Building.Data(1,1,1, 100F, district, 2), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new Building.Data(GameSettings.standardRadius,1,1, 100F, district, 2), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.Build();
 			} else if (name == "building-wall") {
@@ -150,7 +150,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent(new Building.Data(1,1,1, 1000F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new Building.Data(GameSettings.standardRadius,1,1, 1000F, district, 0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.Build();
 			} else if (name == "building-tower") {
@@ -160,7 +160,7 @@ namespace Assets.Gamelogic.EntityTemplates
 					.AddMetadataComponent (name)
 					.SetPersistence (true)
 					.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-					.AddComponent(new Building.Data(1,1,1, 1000F, district, 0), CommonRequirementSets.PhysicsOnly)
+					.AddComponent(new Building.Data(GameSettings.standardRadius,1,1, 1000F, district, 0), CommonRequirementSets.PhysicsOnly)
 					.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_TOWER, 4), CommonRequirementSets.PhysicsOnly)
 					.AddComponent(new Tower.Data(0), CommonRequirementSets.PhysicsOnly)
@@ -176,7 +176,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.AddMetadataComponent (name)
 				.SetPersistence (true)
 				.SetReadAcl (CommonRequirementSets.PhysicsOrVisual)
-				.AddComponent(new Building.Data(1,1,1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Building.Data(GameSettings.standardRadius,1,1, 100F, district, 0), CommonRequirementSets.PhysicsOnly)
 				.AddComponent (new Owned.Data (ownerId, OwnedType.OWNED_BUILDING, ownerObject), CommonRequirementSets.PhysicsOnly)
 				.Build();
 
@@ -188,7 +188,6 @@ namespace Assets.Gamelogic.EntityTemplates
 			
 		public static Entity CreateConstructionTemplate(string name, Vector3 pos, int ownerId, EntityId ownerObject, Option<EntityId> district, bool wasDestroyed) {
 			Improbable.Collections.Map<int, ConstructionRequirement> req = new Improbable.Collections.Map<int, ConstructionRequirement> ();
-			int tileMargin = 1;
 			int x = 1;
 			int z = 1;
 
@@ -230,10 +229,9 @@ namespace Assets.Gamelogic.EntityTemplates
 			} else if (name == "construction-settlement") {
 				if (!GameSettings.debugMode) {
 					req.Add (0, new ConstructionRequirement (0, 5, 0));
-					req.Add (1, new ConstructionRequirement (0, 5, 0));
 				}
-				x = 4;
-				z = 4;
+				x = 3;
+				z = 3;
 			} else if (name == "construction-road") {
 				if (!GameSettings.debugMode) {
 					req.Add (1, new ConstructionRequirement (0, 1, 0));
@@ -255,7 +253,7 @@ namespace Assets.Gamelogic.EntityTemplates
 				.SetReadAcl(CommonRequirementSets.PhysicsOrVisual)
 				.AddComponent(new WorkSite.Data(new Improbable.Collections.List<EntityId>(), WorkType.WORK_BUILDING, 4), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Construction.Data(req,wasDestroyed), CommonRequirementSets.PhysicsOnly)
-				.AddComponent(new Building.Data(tileMargin,x,z, 100f, district, 0), CommonRequirementSets.PhysicsOnly)
+				.AddComponent(new Building.Data(GameSettings.standardRadius,x,z, 100f, district, 0), CommonRequirementSets.PhysicsOnly)
 				.AddComponent(new Owned.Data(ownerId, OwnedType.OWNED_CONSTRUCTION, ownerObject), CommonRequirementSets.PhysicsOnly)
 				.Build();
 		}

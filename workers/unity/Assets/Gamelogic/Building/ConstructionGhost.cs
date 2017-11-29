@@ -75,6 +75,11 @@ namespace Assets.Gamelogic.Core {
 				}
 			}
 
+			if (Input.GetMouseButtonDown (1)) {
+				Destroy (gameObject);
+				BuildingManager.StopBuilding ();
+			}
+
 			if (Input.GetKeyDown (KeyCode.Escape)) {
 				Destroy (gameObject);
 				BuildingManager.StopBuilding ();

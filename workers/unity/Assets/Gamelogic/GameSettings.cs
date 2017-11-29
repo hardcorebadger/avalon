@@ -6,12 +6,13 @@ public class GameSettings : MonoBehaviour {
 	public static bool debugMode = true;
 	public static int initialCharacters = 4;
 	public static int settlementBeds = 4;
-	public static int settlementRadius = 1;
+	public static int settlementRadius = 2;
+	public static int standardRadius = 2;
 
 	public static Improbable.Collections.Map<int,int> startingInventory = new Improbable.Collections.Map<int,int> () {
-		{0, 100},
-		{1, 30},
-		{2, 20}
+		{0, 40},
+		{1, 40},
+		{2, 40}
 	};
 
 	public static float speed = 1f;

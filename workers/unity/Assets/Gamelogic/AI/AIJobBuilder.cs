@@ -56,7 +56,7 @@ namespace Assets.Gamelogic.Core {
 					if (assignment.construction.HasValue) {
 						task = new AITaskConstruction (agent, assignment.construction.Value, district);
 					} else {
-						task = new AIActionWait (agent, 60f);
+						task = new AIActionWait (agent, 10f);
 					}
 				}
 				taskResult = task.Update ();

@@ -19,6 +19,7 @@ namespace Assets.Gamelogic.Core {
 		public static BuildingManager instance;
 		public static bool isBuilding = false;
 		private static string currentConstructionGhost;
+		private static GameObject currentConstructionGhostObject;
 
 		private static List<GameObject> currentTiles;
 
@@ -30,11 +31,10 @@ namespace Assets.Gamelogic.Core {
 			options.Add ("quarry", new ConstructionInfo(2,2, true, true));
 			options.Add ("farm", new ConstructionInfo(2,2, true, true));
 			options.Add ("stockpile", new ConstructionInfo(3,1, true, true));
-			options.Add ("settlement", new ConstructionInfo(4,4, false, false));
+			options.Add ("settlement", new ConstructionInfo(3,3, false, false));
 			options.Add ("road", new ConstructionInfo(1,1, true, true));
 			options.Add ("wall", new ConstructionInfo(1,1, true, true));
 			options.Add ("tower", new ConstructionInfo(1,1, true, true));
-
 		}
 
 		public void OnBuildButton() {
@@ -42,16 +42,27 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public static void StartBuilding(string option) {
+			if (isBuilding) {
+				Destroy (currentConstructionGhostObject);
+				StopBuilding ();
+				instance.StartCoroutine (RestartHelper (option));
+				return;
+			}
 			isBuilding = true;
 			currentConstructionGhost = option;
 			CreateTiles ();
-			GameObject o = Instantiate (instance.ghost);
-			o.GetComponent<ConstructionGhost> ().SetInfo (options [option]);
+			currentConstructionGhostObject = Instantiate (instance.ghost);
+			currentConstructionGhostObject.GetComponent<ConstructionGhost> ().SetInfo (options [option]);
 		}
 
 		public static void RefreshBuilding() {
 			ClearTiles ();
 			instance.StartCoroutine (RefreshBuildingHelper());
+		}
+
+		private static IEnumerator RestartHelper(string option) {
+			yield return null;
+			StartBuilding (option);
 		}
 
 		private static IEnumerator RefreshBuildingHelper() {

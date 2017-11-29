@@ -44,7 +44,7 @@ namespace Assets.Gamelogic.Core {
 			switch (state) {
 			case 0:
 				if (getItem == null)
-					getItem = new AIActionGetItem (agent, 2, agent.district);
+					getItem = new AIActionGetItem (agent, 2, agent.district).DontWalkThere();
 
 				int responseCode = getItem.Update ();
 				if (AIAction.OnSuccess (responseCode)) {

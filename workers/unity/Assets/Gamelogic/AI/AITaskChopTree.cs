@@ -47,7 +47,7 @@ namespace Assets.Gamelogic.Core {
 			case 1:
 				// walk to tree
 				if (seek == null)
-					seek = new AIActionGoTo (agent, assignment.chop.Value);
+					seek = new AIActionGoTo (agent, assignment.chop.Value).SetTimeout(30f);
 				int r = seek.Update ();
 				if (AIAction.OnTermination (r)) {
 					seek = null;
@@ -67,7 +67,7 @@ namespace Assets.Gamelogic.Core {
 			case 3:
 				// walk back, return get response
 				if (seek == null)
-					seek = new AIActionGoTo (agent, job.workSite, job.workSitePosition);
+					seek = new AIActionGoTo (agent, job.workSite, job.workSitePosition).SetTimeout(120f);
 				if (AIAction.OnSuccess (seek.Update ()))
 					state++;
 				break;
