@@ -35,5 +35,5 @@ We've developed a theoretical framework which describes how we believe civilizat
 
 ## Info
 
-- Current Release Version: 0.0
-- Current Sprint: https://github.com/hardcorebadger/avalon/projects/1
+- Current Release Version: 0.0.3
+- Devlog: http://www.lilsum.com
