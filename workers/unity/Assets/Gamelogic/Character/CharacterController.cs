@@ -406,9 +406,9 @@ namespace Assets.Gamelogic.Core {
 			);
 			if (indoors) {
 				doorPosition = door;
-				GetComponent<Collider> ().enabled = false;
+				GetComponentInChildren<Collider> ().enabled = false;
 			} else {
-				GetComponent<Collider> ().enabled = true;
+				GetComponentInChildren<Collider> ().enabled = true;
 				transform.position = doorPosition.Value;
 			}
 		}

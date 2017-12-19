@@ -47,9 +47,9 @@ namespace Assets.Gamelogic.Core {
 				this.enabled = false;
 				return;
 			}
-			sprite = GetComponent<SpriteRenderer> ();
-			anim = GetComponent<Animator> ();
-			audioSrc = GetComponent<AudioSource> ();
+			sprite = GetComponentInChildren<SpriteRenderer> ();
+			anim = GetComponentInChildren<Animator> ();
+			audioSrc = GetComponentInChildren<AudioSource> ();
 			PlayerColor c = new PlayerColor(Bootstrap.players [characterReader.Data.playerId].red, Bootstrap.players [characterReader.Data.playerId].green, Bootstrap.players [characterReader.Data.playerId].blue);
 			sprite.color = new Color(c.red, c.green, c.blue, 1f); 
 			transform.position = positionReader.Data.coords.ToVector3();
@@ -129,7 +129,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void SetIndoors(bool b) {
-			GetComponent<Collider> ().enabled = !b;
+			GetComponentInChildren<Collider> ().enabled = !b;
 		}
 
 		private void OnShowHit(Nothing n) {

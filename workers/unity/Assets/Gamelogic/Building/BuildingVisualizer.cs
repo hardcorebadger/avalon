@@ -63,7 +63,7 @@ namespace Assets.Gamelogic.Core {
 			if (itemGetParticles == null)
 				return;
 
-			itemGetParticles.FindChild ("item-" + id).GetComponent<ParticleSystem> ().Play ();
+			itemGetParticles.Find ("item-" + id).GetComponent<ParticleSystem> ().Play ();
 
 		}
 	

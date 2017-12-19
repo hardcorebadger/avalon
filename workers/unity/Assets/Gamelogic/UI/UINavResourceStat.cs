@@ -15,8 +15,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		void GetTextComponents() {
-			amount = transform.FindChild ("amount").GetComponent<Text> ();
-			trend = transform.FindChild ("trend").GetComponent<Text> ();
+			amount = transform.Find ("amount").GetComponent<Text> ();
+			trend = transform.Find ("trend").GetComponent<Text> ();
 		}
 
 		public void SetValues(int a, int t) {

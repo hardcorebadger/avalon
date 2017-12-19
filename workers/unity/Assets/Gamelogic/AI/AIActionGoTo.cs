@@ -85,7 +85,7 @@ namespace Assets.Gamelogic.Core {
 			// do this for either - if the entity ts looking for gets deleted this will trigger saying it got there
 			colliders = Physics.OverlapSphere (target, agent.arrivalRadius);
 			foreach (Collider c in colliders) {
-				if (c.gameObject == agent.gameObject) {
+				if (c.transform.parent.gameObject == agent.gameObject) {
 					agent.SetVelocity (0f);
 					if (hasTargetEntity)
 						return 201;

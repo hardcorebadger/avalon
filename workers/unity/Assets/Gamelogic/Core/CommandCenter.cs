@@ -171,22 +171,20 @@ namespace Assets.Gamelogic.Core {
 			if (agents.Count < 1)
 				return;
 
-			Debug.Log (agents.Contains(id));
-
 			Collider[] cols = Physics.OverlapSphere (position, UIManager.instance.coOpRadius);
 			List<Collider> clist = new List<Collider> (cols);
 			clist.Sort(delegate(Collider c1, Collider c2){
 				return Vector3.Distance(target.transform.position, c1.transform.position).CompareTo
 					((Vector3.Distance(target.transform.position, c2.transform.position)));   
 			});
-			WorkType t = target.GetComponent<GatherableVisualizer> ().gatherableReader.Data.workType;
+			WorkType t = target.GetComponentInParent<GatherableVisualizer> ().gatherableReader.Data.workType;
 			List<GameObject> used = new List<GameObject> ();
 			used.Add (target);
 
 			foreach (Collider c in clist) {
 				if (used.Contains (c.gameObject))
 					continue;
-				GatherableVisualizer gatherable = c.gameObject.GetComponent<GatherableVisualizer> ();
+				GatherableVisualizer gatherable = c.gameObject.GetComponentInParent<GatherableVisualizer> ();
 				if (gatherable == null)
 					continue;
 				if (gatherable.gatherableReader.Data.workType == t) {
@@ -217,28 +215,28 @@ namespace Assets.Gamelogic.Core {
 
 		//TODO this is the function the parses options from targets
 		private static void ParseOptions(ref List<string> options, GameObject g) {
-			GatherableVisualizer gatherable = g.GetComponent<GatherableVisualizer> ();
+			GatherableVisualizer gatherable = g.GetComponentInParent<GatherableVisualizer> ();
 			if (gatherable != null) {
 				//TODO actually add the options here
 				if (!options.Contains ("gather"))
 					options.Add ("gather");
 			}
-			WorkSiteVisualizer worksite = g.GetComponent<WorkSiteVisualizer> ();
+			WorkSiteVisualizer worksite = g.GetComponentInParent<WorkSiteVisualizer> ();
 			if (worksite != null) {
 				if (!options.Contains ("work"))
 					options.Add ("work");
 			}
-			CharacterVisualizer character = g.GetComponent<CharacterVisualizer> ();
+			CharacterVisualizer character = g.GetComponentInParent<CharacterVisualizer> ();
 			if (character != null && !character.CanControl()) {
 				if (!options.Contains ("attack"))
 					options.Add ("attack");
 			}
-			BuildingVisualizer building = g.GetComponent<BuildingVisualizer> ();
+			BuildingVisualizer building = g.GetComponentInParent<BuildingVisualizer> ();
 			if (building != null && !building.CanControl()) {
 				if (!options.Contains ("damage"))
 					options.Add ("damage");
 			}
-			ConstructionVisualizer construction = g.GetComponent<ConstructionVisualizer> ();
+			ConstructionVisualizer construction = g.GetComponentInParent<ConstructionVisualizer> ();
 			if (construction != null && construction.CanControl()) {
 				if (!options.Contains ("construction"))
 					options.Add ("construction");

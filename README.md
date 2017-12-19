@@ -37,3 +37,13 @@ We've developed a theoretical framework which describes how we believe civilizat
 
 - Current Release Version: 0.0
 - Current Sprint: https://github.com/hardcorebadger/avalon/projects/1
+
+---
+
+## Todo
+
+- Building Placement destroy surrounding objects
+- Foresters don't plant on buildings
+- Disable selection/hover while UI is open
+- Wall snapper bugs
+- Construction hang bug

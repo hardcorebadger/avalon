@@ -29,7 +29,7 @@ namespace Assets.Gamelogic.Core {
 			owned = GetComponent<OwnedController> ();
 			buildingWriter.CommandReceiver.OnReceiveDamage.RegisterResponse(OnReceiveDamage);
 			strength = buildingWriter.Data.strength;
-			door = transform.FindChild ("door");
+			door = transform.Find ("door");
 			district = buildingWriter.Data.district;
 		}
 

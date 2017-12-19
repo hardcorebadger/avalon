@@ -48,7 +48,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void CreateHoverEffects() {
-			SpriteRenderer sr = GetComponent<SpriteRenderer> ();
+			SpriteRenderer sr = GetComponentInChildren<SpriteRenderer> ();
 			if (sr != null) {
 				sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 0.8f);
 			}
@@ -60,7 +60,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void DestroyHoverEffects() {
-			SpriteRenderer sr = GetComponent<SpriteRenderer> ();
+			SpriteRenderer sr = GetComponentInChildren<SpriteRenderer> ();
 			if (sr != null) {
 				sr.color = new Color (sr.color.r, sr.color.g, sr.color.b, 1f);
 			}
