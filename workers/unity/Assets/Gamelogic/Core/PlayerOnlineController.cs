@@ -79,6 +79,10 @@ namespace Assets.Gamelogic.Core
 
 			SpatialOS.Commands.CreateEntity (playerOnlineWriter, EntityTemplates.EntityTemplateFactory.CreateEntityTemplate(entityName, request.position.ToUnityVector(), ownerId, gameObject.EntityId(), request.district))
 				.OnSuccess (entityId => OnContructionCreated (entityId.CreatedEntityId, request));
+
+			foreach (EntityId id in request.toDestroy) {
+				SpatialOS.WorkerCommands.DeleteEntity (id);
+			}
 			return new ConstructionResponse(true);
 		}
 

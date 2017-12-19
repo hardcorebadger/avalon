@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Improbable.Collections;
 using UnityEngine;
 using Improbable;
 using Improbable.Core;
@@ -12,7 +11,7 @@ namespace Assets.Gamelogic.Core {
 
 	public class BuildingManager : MonoBehaviour {
 
-		public static Dictionary<string, ConstructionInfo> options;
+		public static Map<string, ConstructionInfo> options;
 		public GameObject ghost;
 		public GameObject tile;
 
@@ -25,7 +24,7 @@ namespace Assets.Gamelogic.Core {
 
 		public void OnEnable() {
 			instance = this;
-			options = new Dictionary<string, ConstructionInfo> ();
+			options = new Map<string, ConstructionInfo> ();
 			options.Add ("house-3d", new ConstructionInfo(1,1, true, true));
 			options.Add ("forester", new ConstructionInfo(2,1, true, true));
 			options.Add ("quarry", new ConstructionInfo(2,2, true, true));
@@ -60,12 +59,12 @@ namespace Assets.Gamelogic.Core {
 			instance.StartCoroutine (RefreshBuildingHelper());
 		}
 
-		private static IEnumerator RestartHelper(string option) {
+		private static System.Collections.IEnumerator RestartHelper(string option) {
 			yield return null;
 			StartBuilding (option);
 		}
 
-		private static IEnumerator RefreshBuildingHelper() {
+		private static System.Collections.IEnumerator RefreshBuildingHelper() {
 			yield return null;
 			CreateTiles ();
 		}
@@ -75,13 +74,23 @@ namespace Assets.Gamelogic.Core {
 			ClearTiles ();
 		}
 
-		public static void Construct(Vector3 pos, EntityId id) {
-			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost, new Improbable.Collections.Option<EntityId>(id)), PlayerController.instance.gameObject.EntityId())
+		public static void Construct(Vector3 pos, Collider[] overlap, EntityId id) {
+			List<EntityId> toDestroy = new List<EntityId> ();
+			foreach (Collider c in overlap) {
+				if (c.gameObject.tag == "vegitation")
+					toDestroy.Add(c.gameObject.EntityId());
+			}
+			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost, new Improbable.Collections.Option<EntityId>(id), toDestroy), PlayerController.instance.gameObject.EntityId())
 				.OnSuccess(result => OnConstructionSuccess());
 		}
 
-		public static void Construct(Vector3 pos) {
-			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost, new Improbable.Collections.Option<EntityId>()), PlayerController.instance.gameObject.EntityId());
+		public static void Construct(Vector3 pos, Collider[] overlap) {
+			List<EntityId> toDestroy = new List<EntityId> ();
+			foreach (Collider c in overlap) {
+				if (c.gameObject.tag == "vegitation")
+					toDestroy.Add(c.gameObject.EntityId());
+			}
+			SpatialOS.Commands.SendCommand (PlayerController.instance.playerWriter, PlayerOnline.Commands.Construct.Descriptor, new ConstructionRequest(new Vector3d(pos.x,pos.y,pos.z),currentConstructionGhost, new Improbable.Collections.Option<EntityId>(), toDestroy), PlayerController.instance.gameObject.EntityId());
 		}
 
 		private static void OnConstructionSuccess() {

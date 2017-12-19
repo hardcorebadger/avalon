@@ -14,6 +14,7 @@ type ConstructionRequest {
   Vector3d position = 1;
   string building_name = 2;
   option<EntityId> district = 3;
+  list<EntityId> to_destroy = 4;
 }
 
 type ConstructionResponse {

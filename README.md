@@ -42,8 +42,6 @@ We've developed a theoretical framework which describes how we believe civilizat
 
 ## Todo
 
-- Building Placement destroy surrounding objects
 - Foresters don't plant on buildings
-- Disable selection/hover while UI is open
 - Wall snapper bugs
 - Construction hang bug

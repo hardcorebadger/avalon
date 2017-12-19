@@ -35,13 +35,13 @@ namespace Assets.Gamelogic.Core {
 			GameObject currentTile = null;
 			bool canBuild = true;
 
+			Collider[] overlap = Physics.OverlapBox (transform.position + new Vector3((xWidth-1)*4,0f,(zWidth-1)*4), new Vector3 (xWidth*4,0.125f,zWidth*4));
+
 			if (requiresDistrict) {
-				
-				Collider[] c = Physics.OverlapBox (transform.position + new Vector3((xWidth-1)*4,0f,(zWidth-1)*4), new Vector3 (xWidth*4,0.125f,zWidth*4));
 
 				int tileCount = 0;
 
-				foreach (Collider col in c) {
+				foreach (Collider col in overlap) {
 					if (col.gameObject.layer == 11 && TrueOverlap(col.gameObject)) {
 						tileCount++;
 						currentTile = col.gameObject;
@@ -65,9 +65,9 @@ namespace Assets.Gamelogic.Core {
 
 				if (canBuild) {
 					if (requiresDistrict)
-						BuildingManager.Construct (transform.position, currentTile.GetComponentInParent<ConstructionTile>().district);
+						BuildingManager.Construct (transform.position, overlap, currentTile.GetComponentInParent<ConstructionTile>().district);
 					else
-						BuildingManager.Construct (transform.position);
+						BuildingManager.Construct (transform.position, overlap);
 				}
 				if (!multiPlacementEnabled) {
 					Destroy (gameObject);
