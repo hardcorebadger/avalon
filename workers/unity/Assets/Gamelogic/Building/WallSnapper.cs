@@ -11,20 +11,24 @@ namespace Assets.Gamelogic.Core {
 		public GameObject horizontal;
 		public bool endcap = true;
 		public int snapId = 0;
+		public string debug = "";
 
 		private int gridX;
 		private int gridZ;
 
-		void Start() {
-			Refresh (true);
+		void OnEnable() {
+			StartCoroutine(Refresh (true));
 		}
 
-		public void Refresh(bool onStart) {
+		public IEnumerator Refresh(bool onStart) {
 
-			gridX = Mathf.RoundToInt(transform.position.x);
-			gridZ = Mathf.RoundToInt(transform.position.z);
+			yield return null;
 
-			Collider[] cols = Physics.OverlapBox(transform.position, new Vector3(8,8,8));
+
+			gridX = Mathf.RoundToInt (transform.position.x);
+			gridZ = Mathf.RoundToInt (transform.position.z);
+
+			Collider[] cols = Physics.OverlapBox (transform.position, new Vector3 (8, 8, 8));
 			bool horiz = false;
 			bool vert = false;
 			int count = 0;
@@ -58,7 +62,7 @@ namespace Assets.Gamelogic.Core {
 				}
 
 				if ((h || v) && onStart) {
-					snap.Refresh (false);
+					snap.StartCoroutine(snap.Refresh (false));
 				}
 
 				if (h)
@@ -67,7 +71,7 @@ namespace Assets.Gamelogic.Core {
 					vert = true;
 			}
 
-			if ((endcap && count < 2) || horiz && vert) {
+			if ((endcap && count < 2) || (horiz && vert)) {
 				corner.SetActive (true);
 				vertical.SetActive (false);
 				horizontal.SetActive (false);

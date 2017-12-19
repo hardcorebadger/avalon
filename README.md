@@ -42,5 +42,4 @@ We've developed a theoretical framework which describes how we believe civilizat
 
 ## Todo
 
-- Wall snapper bugs
 - Construction hang bug
