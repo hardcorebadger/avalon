@@ -32,11 +32,14 @@ namespace Assets.Gamelogic.Core {
 
 		// reponse codes //
 		// 501 
+		// 401 = something in the way
 
 		private Entity entityToPlace;
+		private Vector3 pos;
 
-		public AIActionPlace(CharacterController o, Entity e) : base(o,"place") {
+		public AIActionPlace(CharacterController o, Entity e, Vector3 p) : base(o,"place") {
 			entityToPlace = e;
+			pos = p;
 		}
 
 		public override int Update(){
@@ -47,6 +50,12 @@ namespace Assets.Gamelogic.Core {
 
 			switch (state) {
 			case 0:
+				Collider[] c = Physics.OverlapSphere (pos, 1f);
+				foreach (Collider col in c) {
+					if (col.GetComponentInParent<BuildingController>() != null)
+						return 400;
+				}
+
 				SpatialOS.Commands.CreateEntity (agent.characterWriter, entityToPlace)
 					.OnSuccess (entityId => OnCreated ())
 					.OnFailure (result => OnFailure ());

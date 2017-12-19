@@ -55,7 +55,7 @@ namespace Assets.Gamelogic.Core {
 				break;
 			case 2:
 				if (place == null)
-					place = new AIActionPlace (agent, GetTreeEntity ());
+					place = new AIActionPlace (agent, GetTreeEntity (), assignment.plant.Value.ToUnityVector ());
 				placeResult = place.Update ();
 				if (AIAction.OnTermination (placeResult))
 					state++;

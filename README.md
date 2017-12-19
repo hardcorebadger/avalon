@@ -42,6 +42,5 @@ We've developed a theoretical framework which describes how we believe civilizat
 
 ## Todo
 
-- Foresters don't plant on buildings
 - Wall snapper bugs
 - Construction hang bug
