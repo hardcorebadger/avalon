@@ -236,7 +236,7 @@ namespace Assets.Gamelogic.Core {
 			// else try to open a preview
 			if (!NothingSelected())
 				CommandCenter.InterpretClickCommand (selected, remoteSelected, hit);
-			else if (hit.collider.GetComponent<WorkSiteVisualizer>() != null)
+			else if (hit.collider.GetComponentInParent<WorkSiteVisualizer>() != null || hit.collider.GetComponentInParent<ConstructionVisualizer>() != null)
 				UIManager.OpenPreview (hit.collider.gameObject);
 
 		}

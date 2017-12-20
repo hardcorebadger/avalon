@@ -28,9 +28,16 @@ namespace Assets.Gamelogic.Core {
 	
 			owned = GetComponent<OwnedController> ();
 			buildingWriter.CommandReceiver.OnReceiveDamage.RegisterResponse(OnReceiveDamage);
+			buildingWriter.CommandReceiver.OnDestroyBuilding.RegisterResponse(OnDestroyBuilding);
+
 			strength = buildingWriter.Data.strength;
 			door = transform.Find ("door");
 			district = buildingWriter.Data.district;
+		}
+
+		private void OnDisable() {
+			buildingWriter.CommandReceiver.OnReceiveDamage.DeregisterResponse();
+			buildingWriter.CommandReceiver.OnDestroyBuilding.DeregisterResponse();
 		}
 
 		private void Update() {
@@ -107,6 +114,11 @@ namespace Assets.Gamelogic.Core {
 //			}
 
 			return new Nothing ();
+		}
+
+		private Nothing OnDestroyBuilding(Nothing _, ICommandCallerInfo __) {
+			DestroyBuilding();
+			return new Nothing();
 		}
 
 		public int GetBeds() {

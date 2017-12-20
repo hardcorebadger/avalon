@@ -23,6 +23,7 @@ namespace Assets.Gamelogic.Core {
 		public int xWidth = 1;
 		public int zWidth = 1;
 		public Transform itemGetParticles;
+		public GameObject flag;
 
 		// Use this for initialization
 		void OnEnable () {
@@ -37,6 +38,9 @@ namespace Assets.Gamelogic.Core {
 			district = buildingReader.Data.district;
 			buildingReader.ComponentUpdated.Add (OnBuildingUpdate);
 			buildingReader.ShowItemGetTriggered.Add (ShowItemGetTriggered);
+			if (flag != null) {
+				flag.GetComponent<SpriteRenderer> ().color = owned.GetOwnerColor ();
+			}
 		}
 
 		private void OnBuildingUpdate(Building.Update u) {

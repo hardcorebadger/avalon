@@ -36,7 +36,11 @@ namespace Assets.Gamelogic.Core {
 
 		private void Update() {
 			if (Input.GetKeyDown (KeyCode.Escape))
-				Destroy (gameObject);
+				Close ();
+		}
+
+		public void Close() {
+			Destroy (gameObject);
 		}
 
 	}

@@ -24,6 +24,7 @@ component Building {
     int32 beds = 6;
  
     command Nothing receive_damage(ReceiveDamageRequest);
+    command Nothing destroy_building(Nothing);
     event Nothing show_damage;
     event ShowItemGetEvent show_item_get;  
 
