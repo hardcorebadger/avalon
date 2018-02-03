@@ -25,13 +25,14 @@ namespace Assets.Gamelogic.Core {
 					OverlapBuidling (col.gameObject);
 				if (col.gameObject.layer == 10)
 					touchingGround = true;
-				if (col.gameObject.layer == 11) {
-					if (OverlapTile (col.gameObject))
-						i++;
-				}
+//				if (col.gameObject.layer == 11) {
+//					if (OverlapTile (col.gameObject))
+//						i++;
+//				}
 			}
-			if (i > 1)
-				willDelete = true;
+			// if new thing works this is gone
+//			if (i > 1)
+//				willDelete = true;
 			if (!touchingGround)
 				BuildingManager.DestroyTile (gameObject);
 		}

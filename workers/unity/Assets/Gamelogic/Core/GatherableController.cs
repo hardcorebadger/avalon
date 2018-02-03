@@ -19,11 +19,13 @@ namespace Assets.Gamelogic.Core {
 
 		[Require] private Gatherable.Writer gatherableWriter;
 		// Use this for initialization
-		void Start () {
-		
+		void OnEnable () {
 			gatherableWriter.CommandReceiver.OnRequestGather.RegisterResponse(OnGatherRequest);
-		
 		}	
+
+		void OnDisable () {
+			gatherableWriter.CommandReceiver.OnRequestGather.DeregisterResponse();
+		}
 
 		private GatherResponse OnGatherRequest(GatherRequest request, ICommandCallerInfo callerinfo) {
 			if (gatherableWriter.Data.items.amount - 1 == 0)

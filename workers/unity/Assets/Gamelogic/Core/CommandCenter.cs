@@ -64,6 +64,7 @@ namespace Assets.Gamelogic.Core {
 				target = hit.collider.gameObject;
 				ParseOptions (ref options, target);
 			} else {
+//				Debug.Log ("send");
 				// prematurely assume walk
 				ExecutePositionTargetedCommand ("goto");
 				return;
@@ -83,8 +84,10 @@ namespace Assets.Gamelogic.Core {
 			if (radial) {
 				ExecuteRadialTargetedCommand (command);
 			} if (target != null) {
+//				Debug.Log ("send");
 				ExecuteEntityTargetedCommand (command);
 			} else {
+//				Debug.Log ("send");
 				ExecutePositionTargetedCommand (command);
 			}
 			SelectionManager.instance.ClearSelected ();

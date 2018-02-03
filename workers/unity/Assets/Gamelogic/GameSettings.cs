@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class GameSettings : MonoBehaviour {
 
-	public static bool debugMode = false;
-	public static int initialCharacters = 4;
-	public static int settlementBeds = 4;
+	public static bool debugMode = true;
+	public static int initialCharacters = 10;
+	public static int settlementBeds = 10;
 	public static int settlementRadius = 2;
 	public static int standardRadius = 2;
 

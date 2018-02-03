@@ -125,6 +125,9 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		public override void OnKill () {
+			Debug.LogWarning ("Construction.OnKill");
+			if (state == 1)
+				Debug.LogWarning ("This");
 			if (state == 2 && task != null /* the task is being done */) {
 				task.OnKill ();
 				SpatialOS.Commands.SendCommand (agent.characterWriter, Construction.Commands.CompleteJob.Descriptor, new ConstructionJobResult (assignment, 420), constructionSite);

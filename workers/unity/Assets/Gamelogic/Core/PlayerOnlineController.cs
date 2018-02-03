@@ -49,6 +49,7 @@ namespace Assets.Gamelogic.Core
 		void OnDisable () {
 			playerReader.HeartbeatTriggered.Remove(OnHeartbeat);
 			StopCoroutine(heartbeatCoroutine);
+			playerOnlineWriter.CommandReceiver.OnPlayerLoginAccess.DeregisterResponse ();
 			playerOnlineWriter.CommandReceiver.OnConstruct.DeregisterResponse ();
 			playerOnlineWriter.CommandReceiver.OnRegisterCharacter.DeregisterResponse ();
 			playerOnlineWriter.CommandReceiver.OnDeregisterCharacter.DeregisterResponse ();

@@ -34,6 +34,7 @@ namespace Assets.Gamelogic.Core {
 		
 		void OnDisable () {
 			foresterWriter.CommandReceiver.OnGetJob.DeregisterResponse ();
+			foresterWriter.CommandReceiver.OnCompleteJob.DeregisterResponse ();
 		}
 
 		void Update() {
@@ -75,7 +76,6 @@ namespace Assets.Gamelogic.Core {
 
 		private ForesterJobAssignment OnGetJob(Nothing n, ICommandCallerInfo _) {
 			// basically "if you need to replant or the thing is full so be proactive why dont ya"
-			Debug.LogWarning(localTrees.Count + plantedSinceLastRefresh);
 			if (localTrees.Count + plantedSinceLastRefresh < minTrees) {
 				plantedSinceLastRefresh++;
 				return new ForesterJobAssignment (new Option<EntityId> (), new Option<Vector3d> (GetNewTreePlantPosition ()));

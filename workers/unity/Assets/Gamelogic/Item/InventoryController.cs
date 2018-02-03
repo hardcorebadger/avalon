@@ -22,7 +22,6 @@ namespace Assets.Gamelogic.Core {
 
 			inventoryWriter.CommandReceiver.OnGive.RegisterResponse(OnGive);
 			inventoryWriter.CommandReceiver.OnGiveMultiple.RegisterResponse(OnGiveMultiple);
-
 			inventoryWriter.CommandReceiver.OnTake.RegisterResponse(OnTake);
 			inventoryWriter.CommandReceiver.OnTakeMultiple.RegisterResponse(OnTakeMultiple);
 

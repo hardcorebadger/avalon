@@ -22,6 +22,10 @@ namespace Assets.Gamelogic.Core {
 			quarryWriter.CommandReceiver.OnCompleteQuarryJob.RegisterResponse (OnCompleteJob);
 		}
 
+		void OnDisable() {
+			quarryWriter.CommandReceiver.OnCompleteQuarryJob.DeregisterResponse ();
+		}
+
 		void Update() {
 		}
 

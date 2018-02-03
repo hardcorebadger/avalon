@@ -36,6 +36,8 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private void OnDisable() {
+			playerWriter.CommandReceiver.OnReceiveChat.DeregisterResponse ();
+			playerWriter.CommandReceiver.OnReceiveNotification.DeregisterResponse ();
 			StopCoroutine(heartbeatCoroutine);
 		}
 

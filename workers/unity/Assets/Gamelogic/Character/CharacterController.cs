@@ -133,6 +133,7 @@ namespace Assets.Gamelogic.Core {
 //			}
 
 			if (AIAction.OnTermination (currentAction.Update ())) {
+//				Debug.LogWarning ("terminate " + currentAction.name);
 				AIAction newAction = actionQueue.Dequeue ();
 				if (indoors && !(newAction is AIActionJob)) {
 					SetIndoors (false, new Option<Vector3>());
@@ -140,6 +141,8 @@ namespace Assets.Gamelogic.Core {
 				currentAction = newAction;
 				if (currentAction == null)
 					UpdateAI ();
+//				else
+//					Debug.LogWarning ("new: " + currentAction.name);
 			}
 		}
 
@@ -165,6 +168,7 @@ namespace Assets.Gamelogic.Core {
 			if (a.directCommand)
 				QuitJob ();
 			if (currentAction != null) {
+//				Debug.LogWarning ("QAI Kill: " + currentAction.name);
 				currentAction.OnKill ();
 				currentAction = a;
 			} else {
@@ -175,12 +179,14 @@ namespace Assets.Gamelogic.Core {
 		// Spatial Hooks //
 
 		private Nothing OnPositionTarget(PositionTargetRequest request, ICommandCallerInfo callerinfo) {
+//			Debug.LogWarning ("============");
 			if (request.command == "goto")
 				QueueActionImmediate (new AIActionGoTo (this, new Vector3 ((float)request.targetPosition.x, (float)request.targetPosition.y, (float)request.targetPosition.z)).DirectCommand());
 			return new Nothing ();
 		}
 
 		private Nothing OnEntityTarget(EntityTargetRequest request, ICommandCallerInfo callerinfo) {
+//			Debug.LogWarning ("============");
 			if (request.command == "gather")
 				QueueActionImmediate (new AITaskGoAndGather (this, request.target).DirectCommand());
 			else if (request.command == "work")
@@ -438,9 +444,10 @@ namespace Assets.Gamelogic.Core {
 			QuitJob (true);
 		}
 			
-		public void QuitJob(bool clearActions) {
+		public void QuitJob(bool clearActions) {				
 			if (clearActions) {
 				if (currentAction is AIActionJob) {
+//					Debug.LogWarning ("Job Kill");
 					currentAction.OnKill ();
 					actionQueue.CancelAllJobActions ();
 					currentAction = actionQueue.Dequeue ();

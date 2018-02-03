@@ -6,6 +6,7 @@ using Improbable.Unity;
 using Improbable.Unity.Configuration;
 using Improbable.Unity.Core;
 using Improbable.Unity.Core.EntityQueries;
+using System;
 
 namespace Assets.Gamelogic.Core {
 
@@ -21,6 +22,7 @@ namespace Assets.Gamelogic.Core {
 		private static GameObject currentConstructionGhostObject;
 
 		private static List<GameObject> currentTiles;
+		private static System.Collections.Generic.HashSet<TilePos> tiledPositions;
 
 		public void OnEnable() {
 			instance = this;
@@ -107,6 +109,7 @@ namespace Assets.Gamelogic.Core {
 		}
 
 		private static void CreateTiles() {
+			tiledPositions = new System.Collections.Generic.HashSet<TilePos> (new TilePosComparator());
 			currentTiles = new List<GameObject>();
 			BuildingVisualizer[] buildings = FindObjectsOfType<BuildingVisualizer> ();
 			foreach (BuildingVisualizer building in buildings) {
@@ -115,11 +118,15 @@ namespace Assets.Gamelogic.Core {
 				}
 				for (int z = -1 * building.tileMargin; z < building.zWidth + building.tileMargin; z++) {
 					for (int x = -1 * building.tileMargin; x < building.xWidth + building.tileMargin; x++) {
+						TilePos p = new TilePos (Mathf.RoundToInt (building.transform.position.x / 8) + x, Mathf.RoundToInt (building.transform.position.z / 8) + z);
+						if (tiledPositions.Contains (p))
+							continue;
 						// relative position to block locked bottom tile on building
 						Vector3 pos = building.transform.position + new Vector3(x * 8, 0f, z * 8);
 						GameObject g = GameObject.Instantiate (instance.tile, pos, Quaternion.identity);
 						g.GetComponent<ConstructionTile> ().SetDistrict (building.district.Value);
 						currentTiles.Add (g);
+						tiledPositions.Add (p);
 					}
 				}
 			}
@@ -152,5 +159,23 @@ namespace Assets.Gamelogic.Core {
 
 	}
 
+	public struct TilePos {
+		public int x;
+		public int y;
+		public TilePos(int xx, int yy) {
+			x = xx;
+			y = yy;
+		}
+	}
+
+	public class TilePosComparator : System.Collections.Generic.IEqualityComparer<TilePos> {
+		public bool Equals(TilePos p1, TilePos p2) {
+			return (p1.x == p2.x && p1.y == p2.y);
+		}
+		public int GetHashCode(TilePos p) {
+			int hCode = p.x ^ p.y;
+			return hCode.GetHashCode();
+		}
+	}
 
 }

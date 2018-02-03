@@ -21,6 +21,10 @@ namespace Assets.Gamelogic.Core {
 			farmWriter.CommandReceiver.OnCompleteFarmJob.RegisterResponse (OnCompleteJob);
 		}
 
+		void OnDisable () {
+			farmWriter.CommandReceiver.OnCompleteFarmJob.DeregisterResponse ();
+		}
+
 		void Update() {
 		}
 
