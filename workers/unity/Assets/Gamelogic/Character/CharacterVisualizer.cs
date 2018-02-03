@@ -39,6 +39,7 @@ namespace Assets.Gamelogic.Core {
 
 		public SpriteRenderer itemSprite;
 		private float velocity;
+		private OwnedVisualizer owned;
 
 		private System.Collections.Generic.List<OnUIChange> listeners;
 
@@ -47,11 +48,11 @@ namespace Assets.Gamelogic.Core {
 				this.enabled = false;
 				return;
 			}
-			sprite = GetComponentInChildren<SpriteRenderer> ();
+			owned = GetComponent<OwnedVisualizer> ();
 			anim = GetComponentInChildren<Animator> ();
+			sprite = anim.GetComponent<SpriteRenderer> ();
 			audioSrc = GetComponentInChildren<AudioSource> ();
-			PlayerColor c = new PlayerColor(Bootstrap.players [characterReader.Data.playerId].red, Bootstrap.players [characterReader.Data.playerId].green, Bootstrap.players [characterReader.Data.playerId].blue);
-			sprite.color = new Color(c.red, c.green, c.blue, 1f); 
+			sprite.color = owned.GetOwnerColor ();
 			transform.position = positionReader.Data.coords.ToVector3();
 			state = characterReader.Data.state;
 			facing = Quaternion.identity;
