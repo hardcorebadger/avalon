@@ -70,6 +70,10 @@ namespace Assets.Gamelogic.Core {
 			itemGetParticles.Find ("item-" + id).GetComponent<ParticleSystem> ().Play ();
 
 		}
+
+		public OwnedVisualizer GetOwner() {
+			return owned;
+		}
 	
 	}
 

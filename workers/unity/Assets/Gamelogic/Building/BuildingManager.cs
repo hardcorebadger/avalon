@@ -113,7 +113,7 @@ namespace Assets.Gamelogic.Core {
 			currentTiles = new List<GameObject>();
 			BuildingVisualizer[] buildings = FindObjectsOfType<BuildingVisualizer> ();
 			foreach (BuildingVisualizer building in buildings) {
-				if (!building.district.HasValue) {
+				if (!building.district.HasValue || building.GetOwner().GetOwnerId() != Bootstrap.playerId) {
 					continue;
 				}
 				for (int z = -1 * building.tileMargin; z < building.zWidth + building.tileMargin; z++) {
