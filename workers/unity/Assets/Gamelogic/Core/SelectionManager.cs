@@ -46,6 +46,10 @@ namespace Assets.Gamelogic.Core {
 			if (!isChatting) {
 				if (EventSystem.current.IsPointerOverGameObject () && !boxSelecting) {
 					wasControllingMouseDown = false;
+					if (currentHover != null) {
+						currentHover.SetHovered (Hoverable.HoverState.None);
+						currentHover = null;
+					}
 					return;
 				}
 
